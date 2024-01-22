@@ -1,0 +1,4 @@
+dist/
+require.js
+packages/@merx/cli/lib/template/
+node_modules/

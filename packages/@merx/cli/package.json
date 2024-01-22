@@ -1,0 +1,43 @@
+{
+  "name": "@merx/cli",
+  "version": "1.0.0",
+  "description": "基于vuecli的开发及生产配置build的命令行工具",
+  "main": "bin/merx.js",
+  "module": "bin/merx.js",
+  "bin": {
+    "merx": "bin/merx.js"
+  },
+  "keywords": [
+    "build",
+    "cli",
+    "merx"
+  ],
+  "author": "hongjia",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hongjia/mylib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hongjia/mylib/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "inquirer": "^9.2.12",
+    "minimist": "^1.2.8",
+    "ora": "^8.0.1",
+    "resolve": "^1.22.8",
+    "slash": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

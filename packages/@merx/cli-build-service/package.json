@@ -1,0 +1,19 @@
+{
+  "name": "@merx/cli-build-service",
+  "version": "1.0.0",
+  "description": "vuecli的开发及生产环境打包配置",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "build",
+    "service"
+  ],
+  "author": "hongjia",
+  "license": "MIT",
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}
