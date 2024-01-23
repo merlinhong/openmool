@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hongjia/mylib.git"
+    "url": "git://github.com/merlinhong/merx.git"
   },
   "bugs": {
     "url": "https://github.com/hongjia/mylib/issues"
@@ -39,5 +39,6 @@
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
-  }
+  },
+  "gitHead": "4d6a69de5b55b784e9a735a57d9615456e66a5f7"
 }
