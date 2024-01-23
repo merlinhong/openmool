@@ -1,6 +1,6 @@
 {
   "name": "@merx/cli-build-service",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.0",
   "description": "vuecli的开发及生产环境打包配置",
   "main": "index.js",
   "scripts": {
@@ -28,5 +28,5 @@
     "handlebars": "^4.7.8",
     "path": "^0.12.7"
   },
-  "gitHead": "a759295057b23d60053760fd1507d12697e6c19f"
+  "gitHead": "284cf784bd95991f1b9cfa2f6742dcc76119da0a"
 }
