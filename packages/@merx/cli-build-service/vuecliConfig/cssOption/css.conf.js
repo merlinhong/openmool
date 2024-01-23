@@ -1,4 +1,4 @@
-const proConfig = require('../src/shared/config');
+const proConfig = { Config: { rem: true } };
 
 ('use strict');
 const postcss = {

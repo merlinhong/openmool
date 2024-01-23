@@ -1,5 +1,5 @@
 const commander = require('commander');
-const { getIndexUrl } = require('@ml/cl-shared-utils');
+const { getIndexUrl } = require('@merx/cl-shared-utils');
 
 class programParse {
   constructor() {

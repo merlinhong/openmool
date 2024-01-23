@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const archiver = require('archiver');
 const chokidar = require('chokidar');
-const { isMultiple, getMultipleCompileData } = require('../multiple');
+// const { isMultiple, getMultipleCompileData } = require('../multiple');
 var argv = require('minimist')(process.argv.slice(2));
 // let ENV = process.env.NODE_ENV;
 let rootArr = process.argv;
@@ -256,18 +256,18 @@ class buildPlugin {
             }
           }
         }
-        // 生成多模块构建信息
-        if (isMultiple()) {
-          var multipleCompileData = getMultipleCompileData();
+        // // 生成多模块构建信息
+        // if (isMultiple()) {
+        //   var multipleCompileData = getMultipleCompileData();
 
-          if (multipleCompileData) {
-            fs.writeFileSync(
-              path.resolve(__dirname, '../dist/multiple.json'),
-              JSON.stringify(multipleCompileData, 4),
-              'utf8',
-            );
-          }
-        }
+        //   if (multipleCompileData) {
+        //     fs.writeFileSync(
+        //       path.resolve(__dirname, '../dist/multiple.json'),
+        //       JSON.stringify(multipleCompileData, 4),
+        //       'utf8',
+        //     );
+        //   }
+        // }
       });
     }
   }

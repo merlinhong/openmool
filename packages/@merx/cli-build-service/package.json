@@ -11,10 +11,22 @@
     "build",
     "service"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/merlinhong/merx.git",
+    "directory": "packages/@merx/cli-build-server"
+  },
   "author": "hongjia",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "dependencies": {
-    "handlebars": "^4.7.8"
+    "handlebars": "^4.7.8",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "chalk": "^5.3.0",
+    "path": "^0.12.7"
   },
-  "gitHead": "4d6a69de5b55b784e9a735a57d9615456e66a5f7"
+  "gitHead": "a759295057b23d60053760fd1507d12697e6c19f"
 }
