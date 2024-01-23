@@ -1,4 +1,4 @@
-# [mylib](https://github.com/hongjia/mylib)
+# [@merx/cli](https://github.com/hongjia/mylib)
 
 [![](https://img.shields.io/badge/Powered%20by-jslib%20base-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hongjia/mylib/blob/master/LICENSE)
