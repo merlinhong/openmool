@@ -1,0 +1,11 @@
+39 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
+39 error npm ERR! code CERT_HAS_EXPIRED
+39 error npm ERR! errno CERT_HAS_EXPIRED
+39 error npm ERR! request to https://registry.npm.taobao.org/@vue%2feslint-config-prettier failed, reason: certificate has expired
+39 error
+39 error npm ERR! A complete log of this run can be found in: /Users/hongjia/.npm/_logs/2024-01-23T10_14_34_101Z-debug-0.log
+39 error     at makeError (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/lib/error.js:59:11)
+39 error     at handlePromise (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/index.js:114:26)
+39 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+39 error     at async VersionCommand.updatePackageVersions (/Users/hongjia/mylib/node_modules/lerna/dist/index.js:8459:13)
+39 error     at async Promise.all (index 0)
