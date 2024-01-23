@@ -1,6 +1,6 @@
 {
   "name": "@merx/cli-shared-utils",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "@merx/cli的共享工具库，可单独引入项目",
   "keywords": [
     "utils",
@@ -21,14 +21,14 @@
     "access": "public"
   },
   "dependencies": {
-    "inquirer": "^9.2.12",
-    "minimist": "^1.2.8",
-    "resolve": "^1.22.8",
-    "slash": "^5.1.0",
+    "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "fs-extra": "^11.2.0",
-    "chalk": "^5.3.0",
-    "path": "^0.12.7"
+    "inquirer": "^9.2.12",
+    "minimist": "^1.2.8",
+    "path": "^0.12.7",
+    "resolve": "^1.22.8",
+    "slash": "^5.1.0"
   },
   "engines": {
     "node": ">=14.0.0",
