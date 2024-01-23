@@ -9,7 +9,7 @@
  */
 const fs = require('fs-extra');
 const path = require('path');
-const proConfig = require('../../src/shared/config');
+const proConfig = { isH5Multiple: true };
 
 /**
  * description: 获取多模块配置

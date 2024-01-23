@@ -1,4 +1,4 @@
-const { getMultiFile } = require('@ml/cli-shared-utils');
+const { getMultiFile } = require('@merx/cli-shared-utils');
 
 const getPath = (path) => {
   return getMultiFile(path.resolve(__dirname, path));

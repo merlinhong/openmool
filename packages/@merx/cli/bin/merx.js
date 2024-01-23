@@ -3,7 +3,7 @@
 // Check node version before requiring/doing anything else
 // The user may be on a very old node version
 
-const { chalk, semver, leven } = require('@vue/cli-shared-utils');
+const { chalk, semver, leven } = require('@merx/cli-shared-utils');
 const requiredVersion = require('../package.json').engines.node;
 function checkNodeVersion(wanted, id) {
   if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
