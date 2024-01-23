@@ -7,12 +7,12 @@
 1 notice cli v8.0.0
 2 verbose packageConfigs Explicit "packages" configuration found in lerna.json. Resolving packages using the configured glob(s): ["packages/@merx/*"]
 3 verbose rootPath /Users/hongjia/mylib
-4 verbose session 63fecc9cade1906b
+4 verbose session fbfb9091273d0031
 5 verbose user-agent lerna/8.0.0/node@v16.18.1+x64 (darwin)
 6 silly argv { _: [ 'publish' ], composed: 'publish', lernaVersion: '8.0.0' }
 7 verbose packageConfigs Explicit "packages" configuration found in lerna.json. Resolving packages using the configured glob(s): ["packages/@merx/*"]
 8 verbose rootPath /Users/hongjia/mylib
-9 info current version 1.0.0-alpha.2
+9 info current version 1.0.0-alpha.3
 10 silly isAnythingCommitted
 11 verbose isAnythingCommitted 1
 12 silly getCurrentBranch
@@ -22,42 +22,22 @@
 16 silly isBehindUpstream develop is behind origin/develop by 0 commit(s) and ahead by 0
 17 silly hasTags
 18 verbose hasTags true
-19 silly git-describe.sync "v1.0.0-alpha.2-1-g689b063" => {"lastTagName":"v1.0.0-alpha.2","lastVersion":"v1.0.0-alpha.2","refCount":"1","sha":"689b063","isDirty":false}
-20 info Looking for changed packages since v1.0.0-alpha.2
+19 silly git-describe.sync "v1.0.0-alpha.3-1-g7c822c0" => {"lastTagName":"v1.0.0-alpha.3","lastVersion":"v1.0.0-alpha.3","refCount":"1","sha":"7c822c0","isDirty":false}
+20 info Looking for changed packages since v1.0.0-alpha.3
 21 silly checking diff packages/@merx/cli
-22 silly found diff in packages/@merx/cli/bin/merx.js
-22 silly found diff in packages/@merx/cli/package-lock.json
 22 silly found diff in packages/@merx/cli/package.json
-23 verbose filtered diff [
-23 verbose filtered diff   'packages/@merx/cli/bin/merx.js',
-23 verbose filtered diff   'packages/@merx/cli/package-lock.json',
-23 verbose filtered diff   'packages/@merx/cli/package.json'
-23 verbose filtered diff ]
+23 verbose filtered diff [ 'packages/@merx/cli/package.json' ]
 24 silly checking diff packages/@merx/cli-build-service
-25 silly found diff in packages/@merx/cli-build-service/package-lock.json
 25 silly found diff in packages/@merx/cli-build-service/package.json
-25 silly found diff in packages/@merx/cli-build-service/vuecliConfig/command/index.js
-25 silly found diff in packages/@merx/cli-build-service/vuecliConfig/cssOption/css.conf.js
-25 silly found diff in packages/@merx/cli-build-service/vuecliConfig/multiple/index.js
-25 silly found diff in packages/@merx/cli-build-service/vuecliConfig/pages/entryTemplate.js
-25 silly found diff in packages/@merx/cli-build-service/vuecliConfig/plugin/build.js
-26 verbose filtered diff [
-26 verbose filtered diff   'packages/@merx/cli-build-service/package-lock.json',
-26 verbose filtered diff   'packages/@merx/cli-build-service/package.json',
-26 verbose filtered diff   'packages/@merx/cli-build-service/vuecliConfig/command/index.js',
-26 verbose filtered diff   'packages/@merx/cli-build-service/vuecliConfig/cssOption/css.conf.js',
-26 verbose filtered diff   'packages/@merx/cli-build-service/vuecliConfig/multiple/index.js',
-26 verbose filtered diff   'packages/@merx/cli-build-service/vuecliConfig/pages/entryTemplate.js',
-26 verbose filtered diff   'packages/@merx/cli-build-service/vuecliConfig/plugin/build.js'
-26 verbose filtered diff ]
+26 verbose filtered diff [ 'packages/@merx/cli-build-service/package.json' ]
 27 silly checking diff packages/@merx/cli-shared-utils
 28 silly found diff in packages/@merx/cli-shared-utils/package.json
 29 verbose filtered diff [ 'packages/@merx/cli-shared-utils/package.json' ]
 30 verbose updated @merx/cli
 31 verbose updated @merx/cli-build-service
 32 verbose updated @merx/cli-shared-utils
-33 verbose git-describe undefined => "v1.0.0-alpha.2-1-g689b063"
-34 silly git-describe parsed => {"lastTagName":"v1.0.0-alpha.2","lastVersion":"v1.0.0-alpha.2","refCount":"1","sha":"689b063","isDirty":false}
+33 verbose git-describe undefined => "v1.0.0-alpha.3-1-g7c822c0"
+34 silly git-describe parsed => {"lastTagName":"v1.0.0-alpha.3","lastVersion":"v1.0.0-alpha.3","refCount":"1","sha":"7c822c0","isDirty":false}
 35 info execute Skipping releases
 36 silly lifecycle No script for "preversion" in "mylib", continuing
 37 silly lifecycle No script for "preversion" in "@merx/cli", continuing
@@ -65,30 +45,30 @@
 39 silly lifecycle No script for "preversion" in "@merx/cli-shared-utils", continuing
 40 verbose version @merx/cli-shared-utils has no lockfile. Skipping lockfile update.
 41 silly lifecycle No script for "version" in "@merx/cli", continuing
-42 silly lifecycle No script for "version" in "@merx/cli-build-service", continuing
-43 silly lifecycle No script for "version" in "@merx/cli-shared-utils", continuing
+42 silly lifecycle No script for "version" in "@merx/cli-shared-utils", continuing
+43 silly lifecycle No script for "version" in "@merx/cli-build-service", continuing
 44 silly lifecycle No script for "version" in "mylib", continuing
 45 verbose version Updating root package-lock.json
 46 silly version Successfully applied prettier to updated file: packages/@merx/cli/package.json
 47 silly version Skipped applying prettier to ignored file: packages/@merx/cli/package-lock.json
-48 silly version Successfully applied prettier to updated file: packages/@merx/cli-build-service/package.json
-49 silly version Skipped applying prettier to ignored file: packages/@merx/cli-build-service/package-lock.json
-50 silly version Successfully applied prettier to updated file: packages/@merx/cli-shared-utils/package.json
+48 silly version Successfully applied prettier to updated file: packages/@merx/cli-shared-utils/package.json
+49 silly version Successfully applied prettier to updated file: packages/@merx/cli-build-service/package.json
+50 silly version Skipped applying prettier to ignored file: packages/@merx/cli-build-service/package-lock.json
 51 silly version Successfully applied prettier to updated file: lerna.json
 52 silly version Skipped applying prettier to ignored file: package-lock.json
 53 silly gitAdd [
 53 silly gitAdd   'packages/@merx/cli/package.json',
 53 silly gitAdd   'packages/@merx/cli/package-lock.json',
+53 silly gitAdd   'packages/@merx/cli-shared-utils/package.json',
 53 silly gitAdd   'packages/@merx/cli-build-service/package.json',
 53 silly gitAdd   'packages/@merx/cli-build-service/package-lock.json',
-53 silly gitAdd   'packages/@merx/cli-shared-utils/package.json',
 53 silly gitAdd   'lerna.json',
 53 silly gitAdd   'package-lock.json'
 53 silly gitAdd ]
-54 silly gitCommit v1.0.0-alpha.3
-55 verbose git [ 'commit', '-m', 'v1.0.0-alpha.3' ]
-56 silly gitTag v1.0.0-alpha.3 git tag %s -m %s
-57 verbose git [ 'tag', 'v1.0.0-alpha.3', '-m', 'v1.0.0-alpha.3' ]
+54 silly gitCommit v1.0.0
+55 verbose git [ 'commit', '-m', 'v1.0.0' ]
+56 silly gitTag v1.0.0 git tag %s -m %s
+57 verbose git [ 'tag', 'v1.0.0', '-m', 'v1.0.0' ]
 58 silly lifecycle No script for "postversion" in "@merx/cli", continuing
 59 silly lifecycle No script for "postversion" in "@merx/cli-build-service", continuing
 60 silly lifecycle No script for "postversion" in "@merx/cli-shared-utils", continuing
@@ -97,7 +77,7 @@
 63 silly gitPush origin develop
 64 info publish Publishing packages to npm...
 65 silly getCurrentSHA
-66 verbose getCurrentSHA 284cf784bd95991f1b9cfa2f6742dcc76119da0a
+66 verbose getCurrentSHA 89e7a6b56e5d0eb2d907683d7a021c3873e0951b
 67 silly lifecycle No script for "prepublish" in "mylib", continuing
 68 silly lifecycle "prepare" starting in "mylib"
 69 info lifecycle mylib@undefined~prepare: mylib@undefined
@@ -113,12 +93,12 @@
 79 silly lifecycle No script for "prepare" in "@merx/cli", continuing
 80 silly lifecycle No script for "prepare" in "@merx/cli-build-service", continuing
 81 silly lifecycle No script for "prepare" in "@merx/cli-shared-utils", continuing
-82 silly lifecycle No script for "prepublishOnly" in "@merx/cli-build-service", continuing
+82 silly lifecycle No script for "prepublishOnly" in "@merx/cli", continuing
 83 silly lifecycle No script for "prepublishOnly" in "@merx/cli-shared-utils", continuing
-84 silly lifecycle No script for "prepublishOnly" in "@merx/cli", continuing
-85 silly lifecycle No script for "prepack" in "@merx/cli-shared-utils", continuing
+84 silly lifecycle No script for "prepublishOnly" in "@merx/cli-build-service", continuing
+85 silly lifecycle No script for "prepack" in "@merx/cli", continuing
 86 silly lifecycle No script for "prepack" in "@merx/cli-build-service", continuing
-87 silly lifecycle No script for "prepack" in "@merx/cli", continuing
+87 silly lifecycle No script for "prepack" in "@merx/cli-shared-utils", continuing
 88 silly lifecycle No script for "postpack" in "@merx/cli-build-service", continuing
 89 verbose packed packages/@merx/cli-build-service
 90 silly lifecycle No script for "postpack" in "@merx/cli-shared-utils", continuing
@@ -129,7 +109,7 @@
 95 verbose publish @merx/cli
 96 verbose publish @merx/cli-build-service
 97 verbose publish @merx/cli-shared-utils
-98 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.25.34:443
+98 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.24.34:443
 98 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 98 silly     at ClientRequest.emit (node:events:513:28)
 98 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -137,7 +117,7 @@
 98 silly     at emitErrorNT (node:internal/streams/destroy:157:8)
 98 silly     at emitErrorCloseNT (node:internal/streams/destroy:122:3)
 98 silly     at processTicksAndRejections (node:internal/process/task_queues:83:21)
-98 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.25.34:443
+98 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.24.34:443
 98 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 98 silly     at ClientRequest.emit (node:events:513:28)
 98 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -148,14 +128,14 @@
 98 silly   code: 'ETIMEDOUT',
 98 silly   errno: 'ETIMEDOUT',
 98 silly   syscall: 'connect',
-98 silly   address: '104.16.25.34',
+98 silly   address: '104.16.24.34',
 98 silly   port: 443,
 98 silly   type: 'system'
 98 silly }
 99 warn notice Package failed to publish: @merx/cli
-100 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.25.34:443
+100 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.24.34:443
 101 error errno "ETIMEDOUT" is not a valid exit code - exiting with code 1
-102 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.25.34:443
+102 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.24.34:443
 102 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 102 silly     at ClientRequest.emit (node:events:513:28)
 102 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -163,7 +143,7 @@
 102 silly     at emitErrorNT (node:internal/streams/destroy:157:8)
 102 silly     at emitErrorCloseNT (node:internal/streams/destroy:122:3)
 102 silly     at processTicksAndRejections (node:internal/process/task_queues:83:21)
-102 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.25.34:443
+102 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.24.34:443
 102 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 102 silly     at ClientRequest.emit (node:events:513:28)
 102 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -174,14 +154,14 @@
 102 silly   code: 'ETIMEDOUT',
 102 silly   errno: 'ETIMEDOUT',
 102 silly   syscall: 'connect',
-102 silly   address: '104.16.25.34',
+102 silly   address: '104.16.24.34',
 102 silly   port: 443,
 102 silly   type: 'system'
 102 silly }
-103 warn notice Package failed to publish: @merx/cli-build-service
-104 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.25.34:443
+103 warn notice Package failed to publish: @merx/cli-shared-utils
+104 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.24.34:443
 105 error errno "ETIMEDOUT" is not a valid exit code - exiting with code 1
-106 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.25.34:443
+106 silly FetchError: request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.24.34:443
 106 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 106 silly     at ClientRequest.emit (node:events:513:28)
 106 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -189,7 +169,7 @@
 106 silly     at emitErrorNT (node:internal/streams/destroy:157:8)
 106 silly     at emitErrorCloseNT (node:internal/streams/destroy:122:3)
 106 silly     at processTicksAndRejections (node:internal/process/task_queues:83:21)
-106 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.25.34:443
+106 silly  FetchError: request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.24.34:443
 106 silly     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 106 silly     at ClientRequest.emit (node:events:513:28)
 106 silly     at TLSSocket.socketErrorListener (node:_http_client:494:9)
@@ -200,14 +180,14 @@
 106 silly   code: 'ETIMEDOUT',
 106 silly   errno: 'ETIMEDOUT',
 106 silly   syscall: 'connect',
-106 silly   address: '104.16.25.34',
+106 silly   address: '104.16.24.34',
 106 silly   port: 443,
 106 silly   type: 'system'
 106 silly }
-107 warn notice Package failed to publish: @merx/cli-shared-utils
-108 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli-shared-utils failed, reason: connect ETIMEDOUT 104.16.25.34:443
+107 warn notice Package failed to publish: @merx/cli-build-service
+108 error ETIMEDOUT request to https://registry.npmjs.org/@merx%2fcli-build-service failed, reason: connect ETIMEDOUT 104.16.24.34:443
 109 error errno "ETIMEDOUT" is not a valid exit code - exiting with code 1
-110 error FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.25.34:443
+110 error FetchError: request to https://registry.npmjs.org/@merx%2fcli failed, reason: connect ETIMEDOUT 104.16.24.34:443
 110 error     at ClientRequest.<anonymous> (/Users/hongjia/mylib/node_modules/minipass-fetch/lib/index.js:130:14)
 110 error     at ClientRequest.emit (node:events:513:28)
 110 error     at TLSSocket.socketErrorListener (node:_http_client:494:9)
