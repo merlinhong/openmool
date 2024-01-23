@@ -7,7 +7,9 @@
 [![NPM downloads](http://img.shields.io/npm/dm/mylib.svg?style=flat-square)](http://www.npmtrends.com/@ml-cli/build)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/hongjia/mylib.svg)](http://isitmaintained.com/project/hongjia/mylib 'Percentage of issues still open')
 
-## :bookmark_tabs: 文档
+## merx
+
+基于@vue/cli的项目工程化配置
 
 [API](./doc/api.md)
 
