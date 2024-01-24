@@ -53,6 +53,14 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"
   },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "npx --no -- commitlint --edit '$1'"
+  },
+  "lint-staged": {
+    "*.{js,vue}": "eslint --fix",
+    "packages/**/bin/*": "eslint --fix"
+  },
   "config": {
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
