@@ -35,7 +35,8 @@
     "path": "^0.12.7",
     "resolve": "^1.22.8",
     "slash": "^5.1.0",
-    "@merlin-build/cli-shared-utils": "1.0.1"
+    "@vuecli-build/cli-shared-utils": "1.0.1",
+    "@vuecli-build/cli-service": "1.0.1"
   },
   "engines": {
     "node": ">=14.0.0",
