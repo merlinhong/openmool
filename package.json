@@ -55,7 +55,7 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
-    "commit-msg": "npx commitlint"
+    "commit-msg": "npx commitlint -e"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint --fix",
