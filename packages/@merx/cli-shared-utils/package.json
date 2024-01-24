@@ -1,6 +1,6 @@
 {
   "name": "@vuecli-build/cli-shared-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "@vuecli-build/cli的共享工具库，可单独引入项目",
   "keywords": [
     "utils",
