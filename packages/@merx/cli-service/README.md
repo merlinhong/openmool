@@ -15,14 +15,14 @@
 
 下载方式
 
-```bash
-$ npm install @merx/cli-build-service
+```import
+$ npm install @vuecli-build/cli-build-service
 ```
 
 使用方式
 
-```bash
-$ require('@merx/clli-build-service')
+```node
+$ require('@vuecli-build/clli-build-service')
 ```
 
 ## 贡献者列表
