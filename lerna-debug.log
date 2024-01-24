@@ -1,16 +1,8 @@
-48 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
-48 error npm ERR! code E404
-48 error npm ERR! 404 Not Found - GET https://registry.npmjs.org/@vuecli-build%2fcli-service - Not found
-48 error npm ERR! 404
-48 error npm ERR! 404  '@vuecli-build/cli-service@1.0.1' is not in this registry.
-48 error npm ERR! 404
-48 error npm ERR! 404 Note that you can also install from a
-48 error npm ERR! 404 tarball, folder, http url, or git url.
-48 error
-48 error npm ERR! A complete log of this run can be found in:
-48 error npm ERR!     /Users/hongjia/.npm/_logs/2024-01-24T11_10_16_496Z-debug-0.log
-48 error     at makeError (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/lib/error.js:59:11)
-48 error     at handlePromise (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/index.js:114:26)
-48 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-48 error     at async VersionCommand.updatePackageVersions (/Users/hongjia/mylib/node_modules/lerna/dist/index.js:8459:13)
-48 error     at async Promise.all (index 0)
+59 error Error: Command failed with exit code 128: git tag v1.0.1 -m v1.0.1
+59 error fatal: tag 'v1.0.1' already exists
+59 error     at makeError (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/lib/error.js:59:11)
+59 error     at handlePromise (/Users/hongjia/mylib/node_modules/lerna/node_modules/execa/index.js:114:26)
+59 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+59 error     at async VersionCommand.gitCommitAndTagVersion (/Users/hongjia/mylib/node_modules/lerna/dist/index.js:8530:9)
+59 error     at async VersionCommand.commitAndTagUpdates (/Users/hongjia/mylib/node_modules/lerna/dist/index.js:8495:18)
+59 error     at async Promise.all (index 0)
