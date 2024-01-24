@@ -50,8 +50,11 @@ module.exports = {
     )[0].prompt;
     const mergeContent = require('../util/mergeContent');
     const { isexists, makeDir, removeDir } = require('../util');
+
     const path = require('path');
+
     const fs = require('fs-extra');
+
     let addContent = '';
     let templateDir = '../template';
     let temporaryDir = '../template/temporary';
