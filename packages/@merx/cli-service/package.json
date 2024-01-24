@@ -1,6 +1,6 @@
 {
   "name": "@vuecli-build/cli-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "vuecli的开发及生产环境打包配置",
   "main": "index.js",
   "scripts": {
