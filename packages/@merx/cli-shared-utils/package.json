@@ -1,6 +1,6 @@
 {
   "name": "@merx/cli-shared-utils",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "@merx/cli的共享工具库，可单独引入项目",
   "keywords": [
     "utils",
