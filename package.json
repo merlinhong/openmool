@@ -53,9 +53,11 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "npx commitlint -e"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "npx commitlint -e"
+    }
   },
   "lint-staged": {
     "*.{js,vue}": "eslint --fix",
