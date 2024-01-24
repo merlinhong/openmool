@@ -1,6 +1,9 @@
 {
   "npmClient": "npm",
+  "useWorkspaces": true,
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "packages": ["packages/@merx/*"],
-  "version": "1.0.2"
+  "packages": [
+    "packages/@merx/*"
+  ],
+  "version": "1.0.0"
 }

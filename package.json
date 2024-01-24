@@ -1,17 +1,15 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/@vue/*"
   ],
   "scripts": {
-    "preinstall": "npx only-allow npm",
-    "clean": "rimraf ./lib ./types",
+    "clean": "rimraf packages/**/dist/*",
     "start": "http-server -p 3000 -c-1",
     "test": "nyc mocha",
     "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags",
     "lint": "eslint -c .eslintrc.cjs 'src/**/*.ts'",
     "lint:fix": "eslint --fix -c .eslintrc.cjs 'src/**/*.ts' --fix",
-    "prepare": "husky install",
     "ci": "commit",
     "cz": "git-cz",
     "build:self": "rollup -c script/config/rollup.config.cjs",
