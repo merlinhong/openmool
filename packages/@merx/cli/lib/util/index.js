@@ -75,7 +75,7 @@ exports.copyFileSync = function (name, dirname, copyfilelist) {
   });
 };
 exports.copybuildConfig = function (name, cb) {
-  let sourcepath = path.resolve(__dirname, '@merx/cli-build-service');
+  let sourcepath = path.resolve(__dirname, '@vuecli-build/cli-build-service');
   fs.copySync(sourcepath, path.join(process.cwd(), `${name}/build`));
 
   setTimeout(() => {
