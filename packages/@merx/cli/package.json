@@ -1,6 +1,6 @@
 {
   "name": "@merx/cli",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "基于vuecli的开发及生产配置build的命令行工具",
   "bin": {
     "merx": "bin/merx.js"
@@ -39,6 +39,5 @@
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
-  },
-  "gitHead": "89e7a6b56e5d0eb2d907683d7a021c3873e0951b"
+  }
 }
