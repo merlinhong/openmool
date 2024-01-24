@@ -1,9 +1,7 @@
 {
   "npmClient": "npm",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "packages": [
-    "packages/@merx/*"
-  ],
+  "packages": ["packages/@merx/*"],
   "version": "1.0.1",
   "command": {
     "publish": {
