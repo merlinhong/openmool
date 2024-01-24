@@ -149,7 +149,7 @@ program.on('--help', () => {
 program.commands.forEach((c) => c.on('--help', () => console.log()));
 
 // enhance common error messages
-const enhanceErrorMessages = require('../util/enhanceErrorMessages');
+const enhanceErrorMessages = require('../lib/util/enhanceErrorMessages');
 
 enhanceErrorMessages('missingArgument', (argName) => {
   return `Missing required argument ${chalk.yellow(`<${argName}>`)}.`;

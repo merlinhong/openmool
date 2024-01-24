@@ -4,6 +4,14 @@
 
 module.exports = {
   prompts: {
+    eslint: {
+      type: 'confirm',
+      message: 'if need pre-commit hook for git',
+    },
+    githook: {
+      type: 'confirm',
+      message: 'if need githook config that verified in pre-commit',
+    },
     showcase: {
       type: 'confirm',
       message: 'if need showcase(a demo directory for vue project )?',

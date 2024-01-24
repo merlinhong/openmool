@@ -1,7 +1,7 @@
 const path = require('path');
 const mergeConfig = require('./mergeConfig');
 const fs = require('fs-extra');
-const ora = require('ora');
+const { ora } = require('@vuecli-build/cli-shared-utils');
 const permitConfiglist = [
   'jsconfig.json',
   'package.json',

@@ -21,7 +21,7 @@
     "access": "public"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
     "minimist": "^1.2.8",
     "ora": "^5.3.0",
