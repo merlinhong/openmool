@@ -1,10 +1,10 @@
 {
-  "name": "@merx/cli-shared-utils",
+  "name": "@merlin-build/cli-shared-utils",
   "version": "1.0.0",
-  "description": "@merx/cli的共享工具库，可单独引入项目",
+  "description": "@merlin-build/cli的共享工具库，可单独引入项目",
   "keywords": [
     "utils",
-    "@merx",
+    "@merlin-build",
     "cli"
   ],
   "author": "hongjia",
