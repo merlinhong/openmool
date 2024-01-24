@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/@vue/*"
+    "packages/@merx/*"
   ],
   "scripts": {
     "clean": "rimraf packages/**/dist/*",
@@ -10,7 +10,7 @@
     "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags",
     "lint": "eslint -c .eslintrc.cjs 'src/**/*.ts'",
     "lint:fix": "eslint --fix -c .eslintrc.cjs 'src/**/*.ts' --fix",
-    "ci": "commit",
+    "cm": "git add . && git commit -m",
     "cz": "git-cz",
     "build:self": "rollup -c script/config/rollup.config.cjs",
     "build:esm": "rollup -c script/config/rollup.config.esm.cjs",
