@@ -1,6 +1,6 @@
 {
   "name": "@merx/cli-build-service",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "vuecli的开发及生产环境打包配置",
   "main": "index.js",
   "scripts": {
