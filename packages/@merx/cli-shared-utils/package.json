@@ -1,6 +1,6 @@
 {
   "name": "@vuecli-build/cli-shared-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "@vuecli-build/cli的共享工具库，可单独引入项目",
   "keywords": [
     "utils",
@@ -23,6 +23,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
     "minimist": "^1.2.8",
     "ora": "^5.3.0",
     "path": "^0.12.7",

@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "lint-staged": "^14.0.1"
+    },
+    "gitHooks": {
+        "pre-commit": "lint-staged",
+        "commit-msg": "node scripts/verifyCommitMsg.js"
+    }
+}
