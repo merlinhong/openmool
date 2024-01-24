@@ -1,6 +1,6 @@
 {
   "name": "@vuecli-build/cli",
-  "version": "1.0.5",
+  "version": "1.0.1",
   "description": "基于vuecli的开发及生产配置build的命令行工具",
   "bin": {
     "merx": "bin/merx.js"
@@ -24,8 +24,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@vuecli-build/cli-service": "^1.0.5",
-    "@vuecli-build/cli-shared-utils": "^1.0.4",
+    "@vuecli-build/cli-service": "^1.0.1",
+    "@vuecli-build/cli-shared-utils": "^1.0.1",
     "chalk": "^5.3.0",
     "child_process": "^1.0.2",
     "commander": "^11.1.0",

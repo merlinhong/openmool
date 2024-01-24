@@ -1,4 +1,4 @@
-# [@merx/cli](https://github.com/hongjia/mylib)
+# [@vuecli-build/cli](https://github.com/hongjia/mylib)
 
 [![](https://img.shields.io/badge/Powered%20by-jslib%20base-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hongjia/mylib/blob/master/LICENSE)
@@ -16,7 +16,7 @@
 下载方式
 
 ```bash
-$ npm install @merx/cli
+$ npm install @vuecli-build/cli
 ```
 
 使用方式
