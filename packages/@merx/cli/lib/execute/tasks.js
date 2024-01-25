@@ -187,25 +187,15 @@ module.exports = [
           )
             .then(() => {
               // 引入vuecli的build配置
-              fs.readFile(
-                path.join(process.cwd(), `${name}/vue.config.js`),
-                'utf8',
-                (err, data) => {
+
+              fs.writeFile(
+                path.resolve(process.cwd(), `${name}/vue.config.js`),
+                `const config = require('./build');\nconst options = process.env.NODE_ENV === 'production' ? config.build : config.dev;\n\nmodule.exports = options;`,
+                (err) => {
                   if (err) {
-                    console.log(err);
+                    console.error(err);
                     return;
                   }
-                  data = data.replace(/@vue\/cli-service /, './build');
-                  fs.writeFile(
-                    path.resolve(process.cwd(), `${name}/vue.config.js`),
-                    data,
-                    (err) => {
-                      if (err) {
-                        console.error(err);
-                        return;
-                      }
-                    },
-                  );
                 },
               );
             })

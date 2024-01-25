@@ -98,14 +98,14 @@ module.exports = {
             path.resolve(process.cwd(), `${name}/.husky`),
           );
 
-          // 拷贝配置文件
+          // 写入配置文件
           fs.writeFileSync(
-            path.resolve(process.cwd(), `${name}/.lintstagedrc.cjs`),
+            path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
             `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
             `,
             'utf8',
           );
-          // 拷贝配置文件
+          // 写入配置文件
           fs.writeFileSync(
             path.resolve(process.cwd(), `${name}/commitlint.config.js`),
             `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
