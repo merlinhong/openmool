@@ -4,6 +4,7 @@
 const { execSync, exec } = require('child_process');
 const inquirer = require('inquirer');
 const path = require('path');
+const fs = require('fs-extra');
 const {
   mergeDirectories,
   isexists,
@@ -12,7 +13,6 @@ const {
   moveDir,
   copyTemplateConfig,
   copyFileSync,
-  copybuildConfig,
   _spinner,
 } = require('../util/index');
 
@@ -124,23 +124,11 @@ module.exports = [
             console.log('merge  successful!');
             removeDir(path.join(__dirname, 'merge'));
           }
-          let spinner = _spinner('building config....');
-          setTimeout(() => {
-            try {
-              if (isexists(process.cwd(), `${name}/build`)) {
-                removeDir(process.cwd(), `${name}/build`);
-              }
-            } catch (error) {
-              console.log('file permission denied');
-            }
-            makeDir(process.cwd(), `${name}/build`);
-            spinner.stop();
-            next();
-          }, 2000);
         } else {
           console.log('no file and is not a directory');
           process.exit(1);
         }
+        next();
       }
     },
   },
@@ -169,8 +157,8 @@ module.exports = [
         { name: 'router', prompt: true },
         { name: 'store', prompt: true },
       );
-      console.log('result', result);
       const shared = result.filter((answer) => answer.name === 'shared')[0];
+      const multiple = result.filter((answer) => answer.name === 'multiple')[0];
       const copyfilelist = ['index.html', 'index.vue', 'main.js'];
       if (!shared.prompt) {
         copyfilelist[2] = 'main1.js';
@@ -183,10 +171,48 @@ module.exports = [
         () => {
           spinner_1.stop();
           copyFileSync(name, moduleName, copyfilelist);
-          copybuildConfig(name, () => {
-            // removeDir(path.)
-            spinner_1.succeed('create build successful!');
-          });
+
+          // 创建build目录并拷贝
+          if (isexists(process.cwd(), `${name}/build`)) {
+            removeDir(path.resolve(process.cwd(), `${name}/build`));
+          }
+          makeDir(process.cwd(), `${name}/build`);
+          fs.copy(
+            path.resolve(__dirname, '../build'),
+            path.resolve(process.cwd(), `${name}/build`),
+            {
+              filter: (src) =>
+                !multiple.prompt ? !/multiple/.test(src) : true,
+            },
+          )
+            .then(() => {
+              // 引入vuecli的build配置
+              fs.readFile(
+                path.join(process.cwd(), `${name}/vue.config.js`),
+                'utf8',
+                (err, data) => {
+                  if (err) {
+                    console.log(err);
+                    return;
+                  }
+                  data = data.replace(/@vue\/cli-service /, './build');
+                  fs.writeFile(
+                    path.resolve(process.cwd(), `${name}/vue.config.js`),
+                    data,
+                    (err) => {
+                      if (err) {
+                        console.error(err);
+                        return;
+                      }
+                    },
+                  );
+                },
+              );
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          spinner_1.succeed('create build successful!');
         },
       );
     },

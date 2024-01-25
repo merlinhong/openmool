@@ -74,14 +74,6 @@ exports.copyFileSync = function (name, dirname, copyfilelist) {
     recursive: true,
   });
 };
-exports.copybuildConfig = function (name, cb) {
-  let sourcepath = path.resolve('@vuecli-build/cli-service');
-  fs.copySync(sourcepath, path.join(process.cwd(), `${name}/build`));
-
-  setTimeout(() => {
-    cb && cb();
-  }, 2000);
-};
 
 // 合并文件夹
 exports.mergeDirectories = function mergeDirectories(targetDir, sourceDir) {

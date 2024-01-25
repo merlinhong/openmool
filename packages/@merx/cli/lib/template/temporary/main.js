@@ -5,6 +5,8 @@ import router from '@router/index.js';
 import store from '@store/index.js';
 // 引入默认组件
 import Index from './index.vue';
+import '@shared/config.js';
+import '@assets/css/common.css';
 import loaderLibrary from '@tool/loadlibrary';
 import 'vant/lib/icon/local.css';
 loaderLibrary({

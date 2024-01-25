@@ -53,7 +53,7 @@ class MergeFile {
       // 将合并后的对象转为 JSON 格式的字符串
       let jsonStr = JSON.stringify(mergeConfig, null, 2);
       if (/(^\.|\.js$)/.test(this.targetFile)) {
-        jsonStr = mergeModuleExports + '\n' + 'module.exports=' + jsonStr;
+        jsonStr = mergeModuleExports + '\n' + 'module.exports =' + jsonStr;
       }
       // 将新的对象写入到文件中
       fs.writeFile(this.targetFile, jsonStr, (err) => {

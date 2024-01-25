@@ -1,0 +1,15 @@
+[
+    {
+        "multipleName": "multipleNameA",
+        "multiplePages": [
+            "module"
+        ]
+    },
+    {
+        "multipleName": "multipleNameB",
+        "multiplePages": [
+            "todo",
+            "mail"
+        ]
+    }
+]
