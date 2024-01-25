@@ -99,13 +99,18 @@ module.exports = {
           );
 
           // 拷贝配置文件
-          fs.copyFileSync(
-            path.resolve(__dirname, '../template/.lintstagedrc.cjs'),
-            path.resolve(process.cwd(), `${name}/..lintstagedrc.cjs`),
+          fs.writeFileSync(
+            path.resolve(process.cwd(), `${name}/.lintstagedrc.cjs`),
+            `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
+            `,
+            'utf8',
           );
-          fs.copyFileSync(
-            path.resolve(__dirname, '../template/commitlint.config.js'),
+          // 拷贝配置文件
+          fs.writeFileSync(
             path.resolve(process.cwd(), `${name}/commitlint.config.js`),
+            `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
+            `,
+            'utf8',
           );
         },
       );
