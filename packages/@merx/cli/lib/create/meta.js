@@ -2,6 +2,8 @@
  * @file meta.js
  */
 
+const { stdout } = require('process');
+
 module.exports = {
   prompts: {
     husky: {
@@ -44,11 +46,12 @@ module.exports = {
     const { name, result, next } = option;
 
     const mergeContent = require('../util/mergeContent');
-    const { isexists, makeDir, removeDir } = require('../util');
+    const { isexists, makeDir, removeDir, _spinner } = require('../util');
 
     const path = require('path');
     const deepMerge = require('deepMerge');
     const fs = require('fs-extra');
+    const { execSync, exec } = require('child_process');
     const client = result.filter((answer) => answer.name === 'client')[0];
     const assets = result.filter((answer) => answer.name === 'assets')[0];
     const shared = result.filter((answer) => answer.name === 'shared')[0];
@@ -65,6 +68,7 @@ module.exports = {
       makeDir(main, dir);
     };
 
+    // 是否提交前检测
     if (husky.prompt) {
       let sourceobj =
         JSON.parse(
@@ -92,25 +96,35 @@ module.exports = {
             return;
           }
 
-          makedirSquard(process.cwd(), `${name}/.husky`);
-          fs.copySync(
-            path.resolve(__dirname, '../template/.husky'),
-            path.resolve(process.cwd(), `${name}/.husky`),
-          );
-
-          // 写入配置文件
-          fs.writeFileSync(
-            path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
-            `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
+          const spinner = _spinner('init husky...');
+          exec(
+            `cd ${name} && npx husky-init && npm install`,
+            (err, stdout, stderr) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              spinner.succeed('husky init finished!');
+              removeDir(path.resolve(process.cwd(), `${name}/.husky`));
+              fs.copySync(
+                path.resolve(__dirname, '../template/.husky'),
+                path.resolve(process.cwd(), `${name}/.husky`),
+              );
+              // 写入配置文件
+              fs.writeFileSync(
+                path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
+                `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
             `,
-            'utf8',
-          );
-          // 写入配置文件
-          fs.writeFileSync(
-            path.resolve(process.cwd(), `${name}/commitlint.config.js`),
-            `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
+                'utf8',
+              );
+              // 写入配置文件
+              fs.writeFileSync(
+                path.resolve(process.cwd(), `${name}/commitlint.config.js`),
+                `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
             `,
-            'utf8',
+                'utf8',
+              );
+            },
           );
         },
       );
