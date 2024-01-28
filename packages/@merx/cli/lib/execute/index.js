@@ -1,18 +1,35 @@
 /**
  * @file index.js
  */
+class Task {
+  constructor(tasklistinstance, taskFn) {
+    this.tasklistinstance = tasklistinstance;
+    this.taskFn = taskFn;
+    this.context = Object.create(null);
+  }
+  run(option) {
+    this.taskFn(this.getContext(), this);
+  }
+  complete(option) {
+    this.tasklistinstance.next();
+  }
+  getContext() {
+    return this.tasklistinstance.getContext();
+  }
+  error() {}
+}
 
-module.exports = class Task {
+module.exports = class TaskList {
   constructor(task, option) {
     this._task = task;
     this._index = 0;
     this._status = 'ready';
     this._option = option;
+    this._context = Object.create(null);
     this._promise = new Promise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
-    console.log(333, this._index);
   }
   run() {
     // this.task
@@ -20,8 +37,14 @@ module.exports = class Task {
     this._startTask(0);
     return this._promise;
   }
+  getContext() {
+    return this._context;
+  }
   _startTask(index) {
-    this._task[index].task(this.next.bind(this), this._option);
+    // this._task[index].task(this.next.bind(this), this._option);
+    const { task, title } = this._task[index];
+    new Task(this, task).run(this._option);
+    this._resolve(this.context);
   }
   next() {
     this._index++;

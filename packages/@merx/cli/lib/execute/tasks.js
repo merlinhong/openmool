@@ -98,6 +98,7 @@ module.exports = [
             if (answers.operate == 2) {
               removeDir(path.join(process.cwd(), name));
             }
+            console.log(`vue create ${name}...`);
             next();
           });
         return;
@@ -196,13 +197,13 @@ module.exports = [
                     console.error(err);
                     return;
                   }
+                  spinner_1.succeed('create build successful!');
                 },
               );
             })
             .catch((err) => {
               console.log(err);
             });
-          spinner_1.succeed('create build successful!');
         },
       );
     },

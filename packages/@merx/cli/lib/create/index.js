@@ -1,4 +1,4 @@
-const Task = require('../execute/index');
+const TaskList = require('../execute/index');
 const tasks = require('../execute/tasks');
 
 process.on('exit', (code) => {
@@ -7,5 +7,13 @@ process.on('exit', (code) => {
 
 module.exports = (name, option) => {
   console.log('正在执行vue命令创建项目...');
-  new Task(tasks, { name }).run();
+  new TaskList(tasks, { name })
+    .run()
+    .then((option) => {
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.log(err);
+      process.exit(1);
+    });
 };

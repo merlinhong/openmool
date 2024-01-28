@@ -20,7 +20,6 @@ exports._spinner = function (text) {
 };
 // 移除文件夹
 exports.removeDir = function (path) {
-  console.log(path);
   try {
     fs.rmSync(path, { recursive: true });
   } catch (error) {
