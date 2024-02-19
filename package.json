@@ -38,7 +38,6 @@
     "eslint-plugin-import": "^2.29.0",
     "expect.js": "^0.3.1",
     "http-server": "^14.1.1",
-    "husky": "^8.0.3",
     "lerna": "^8.0.0",
     "lint-staged": "^14.0.1",
     "mocha": "^10.2.0",
@@ -50,17 +49,6 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "**/*.{js,mjs,cjs,ts,cts,mts}": [
-      "prettier --write",
-      "eslint --cache"
-    ]
   },
   "config": {
     "commitizen": {
