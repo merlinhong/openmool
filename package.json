@@ -51,12 +51,14 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": {
-      "extends": [
-        "@commitlint/config-conventional"
-      ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": {
+        "extends": [
+          "@commitlint/config-conventional"
+        ]
+      }
     }
   },
   "lint-staged": {
