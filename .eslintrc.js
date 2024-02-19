@@ -10,18 +10,18 @@ module.exports = {
     sourceType: 'module',
   },
   extends: ['eslint:recommended'],
-  overrides: [
-    {
-      env: {
-        node: true,
-      },
-      files: ['*.{js,cjs}'],
-      parserOptions: {
-        sourceType: 'script',
-      },
-      rules: {},
-    },
-  ],
+  // overrides: [
+  //   {
+  //     env: {
+  //       node: true,
+  //     },
+  //     files: ['*.{js,cjs}'],
+  //     parserOptions: {
+  //       sourceType: 'script',
+  //     },
+  //     rules: {},
+  //   },
+  // ],
   rules: {
     /**
      * ts 会检查

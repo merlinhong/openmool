@@ -16,7 +16,7 @@ import _ from './util/lodash';
 import deepClone from './util/cloneDeep';
 import { type } from './util/type';
 const os = (() => {
-  const { userAgent } = window.navigator;
+  const { userAgent, appVersion } = window.navigator;
 
   let version = null;
   let isBadAndroid = false;
@@ -191,53 +191,6 @@ const isPlainObject = function (obj) {
 };
 
 /**
- * 得到一个全路径
- * @param {String} path 路径
- * @return {String} 返回全路径
- */
-const getFullPath = (path) => {
-  // 全路径
-  if (/^(http|https|ftp|epth5|\/\/)/g.test(path)) {
-    return path;
-  }
-  // 是否是相对路径
-  var isRelative = /^(\.\/|\.\.\/)/.test(path);
-
-  // 非相对路径，页面路径默认从html目录开始
-  path = isRelative ? path : getProjectBasePath() + path;
-
-  return path;
-};
-/**
- * 将json参数拼接到url中
- * @param {String} url 地址
- * @param {Object} jsonObj 数据
- * @param {Boolean} isTpye 是否相对路径
- * @return {String} 返回最终的url
- */
-const getFullUrlByParams = (url, jsonObj, isTpye) => {
-  url = url || '';
-  url = isTpye === true ? url : getFullPath(url);
-  // 将jsonObj拼接到url上
-  var extrasDataStr = '';
-
-  if (jsonObj) {
-    for (var item in jsonObj) {
-      if (Object.prototype.hasOwnProperty.call(jsonObj, item)) {
-        if (extrasDataStr.indexOf('?') === -1 && url.indexOf('?') === -1) {
-          extrasDataStr += '?';
-        } else {
-          extrasDataStr += '&';
-        }
-        extrasDataStr += item + '=' + jsonObj[item];
-      }
-    }
-  }
-  url = url + extrasDataStr;
-
-  return url;
-};
-/**
  * 得到文件的后缀
  * @param {String} path 路径
  * @return {String} 返回后缀
@@ -260,8 +213,6 @@ export default {
   extend,
   uuid,
   getParamByUrl,
-  getFullUrlByParams,
-
   os,
   loaderLibrary,
   isNull,
@@ -273,6 +224,5 @@ export default {
   each,
   upload,
   getPathSuffix,
-  sm2,
   cookie,
 };
