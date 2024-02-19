@@ -65,8 +65,7 @@
     "**/*.{js,mjs,cjs,ts,cts,mts}": [
       "prettier --write",
       "eslint --cache"
-    ],
-    "packages/**/bin/*": "eslint --fix"
+    ]
   },
   "config": {
     "commitizen": {
