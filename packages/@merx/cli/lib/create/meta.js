@@ -36,26 +36,39 @@ module.exports = {
       type: 'confirm',
       message: 'if need assets of common css ',
     },
+    tool: {
+      type: 'confirm',
+      message: 'if need a tool library for your project',
+    },
     pages: {
       type: 'input',
       message: 'please tell me your module directory name',
       default: 'pages',
     },
   },
-  complete: async (option) => {
-    const { name, result, next } = option;
+  complete: async (option, taskIns) => {
+    const { name, result } = option;
 
     const mergeContent = require('../util/mergeContent');
     const { isexists, makeDir, removeDir, _spinner } = require('../util');
-
     const path = require('path');
     const deepMerge = require('deepMerge');
     const fs = require('fs-extra');
     const { execSync, exec } = require('child_process');
-    const client = result.filter((answer) => answer.name === 'client')[0];
-    const assets = result.filter((answer) => answer.name === 'assets')[0];
-    const shared = result.filter((answer) => answer.name === 'shared')[0];
-    const husky = result.filter((answer) => answer.name === 'husky')[0];
+
+    const resolve = (type) => {
+      const filter = (result, typeArr) =>
+        result.filter((answer) => typeArr.includes(answer.name));
+      return filter(result, [
+        'client',
+        'assets',
+        'shared',
+        'tool',
+        'vant',
+        'husky',
+      ]).find((item) => item.name === type);
+    };
+
     const isSubpackage = result.filter(
       (answer) => answer.name === 'routerAndstore',
     )[0].prompt;
@@ -69,7 +82,7 @@ module.exports = {
     };
 
     // 是否提交前检测
-    if (husky.prompt) {
+    if (resolve('husky').prompt) {
       let sourceobj =
         JSON.parse(
           fs.readFileSync(
@@ -96,7 +109,9 @@ module.exports = {
             return;
           }
 
-          const spinner = _spinner('init husky...');
+          // const spinner = _spinner('init husky...');
+          // spinner.stop();
+
           exec(
             `cd ${name} && npx husky-init && npm install`,
             (err, stdout, stderr) => {
@@ -104,7 +119,7 @@ module.exports = {
                 console.log(err);
                 return;
               }
-              spinner.succeed('husky init finished!');
+              // spinner.succeed('husky init finished!');
               removeDir(path.resolve(process.cwd(), `${name}/.husky`));
               fs.copySync(
                 path.resolve(__dirname, '../template/.husky'),
@@ -132,7 +147,7 @@ module.exports = {
 
     let addContent = '';
     let templateDir = '../template';
-    let temporaryDir = '../template/temporary';
+    let temporaryDir = '../template/temporary'; // 临时待拷贝的文件夹
     let splitStr = '// configMain hook';
 
     makedirSquard(__dirname, temporaryDir);
@@ -145,24 +160,30 @@ module.exports = {
       path.resolve(__dirname, temporaryDir),
     );
     // 全局配置文件
-    if (shared.prompt) {
+    if (resolve('shared').prompt) {
       addContent = `import '@shared/config.js';\n`;
     }
     // 公共css文件
-    if (assets.prompt) {
+    if (resolve('assets').prompt) {
       addContent += `import '@assets/css/common.css';\n`;
     }
     // 客户端
-    if (client.prompt === 'mobile') {
+    if (resolve('client').prompt === 'mobile') {
       option.result.unshift({ name: 'lib', prompt: true });
       addContent += `import loaderLibrary from '@tool/loadlibrary';\n`;
-      const vant = result.filter((answer) => answer.name === 'vant')[0];
-      if (vant.prompt) {
+      if (resolve('vant').prompt) {
         addContent += `import 'vant/lib/icon/local.css';\nloaderLibrary({\n   inject: 'head',\n    src: './lib/vconsole.min.js',\n    type: 'js'\n})\n`;
       }
     }
+    // 工具库
+    if (resolve('tool').prompt) {
+      fs.copySync(
+        path.resolve(__dirname, '../../../cli-shared-utils/util'),
+        path.join(process.cwd(), `${name}/src/tool`),
+      );
+    }
     mergeContent(temporaryDir, addContent, splitStr, () => {
-      next();
+      taskIns.complete();
     });
   },
 };

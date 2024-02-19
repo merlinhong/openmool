@@ -1,7 +1,7 @@
 [
   {
     "moduleName": "demo",
-    "indexURL": "m8demo/index",
+    "indexURL": "demo/index",
     "appId": "xxxx",
     "version": "0.0.1",
     "miniH5Type": "app",

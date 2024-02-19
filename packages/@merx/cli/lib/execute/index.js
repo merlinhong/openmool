@@ -5,7 +5,6 @@ class Task {
   constructor(tasklistinstance, taskFn) {
     this.tasklistinstance = tasklistinstance;
     this.taskFn = taskFn;
-    this.context = Object.create(null);
   }
   run(option) {
     this.taskFn(this.getContext(), this);
@@ -21,11 +20,13 @@ class Task {
 
 module.exports = class TaskList {
   constructor(task, option) {
+    console.log(option);
     this._task = task;
     this._index = 0;
     this._status = 'ready';
     this._option = option;
-    this._context = Object.create(null);
+    this._context = Object.create(option);
+    console.log('con', this._context);
     this._promise = new Promise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
@@ -42,9 +43,8 @@ module.exports = class TaskList {
   }
   _startTask(index) {
     // this._task[index].task(this.next.bind(this), this._option);
-    const { task, title } = this._task[index];
-    new Task(this, task).run(this._option);
-    this._resolve(this.context);
+    const { task, name } = this._task[index];
+    new Task(this, task).run();
   }
   next() {
     this._index++;
@@ -56,5 +56,7 @@ module.exports = class TaskList {
   }
   done() {
     this._status = 'done';
+    // this._reject('任务执行完成');
+    this._resolve(this._context);
   }
 };

@@ -20,7 +20,7 @@ module.exports = [
   {
     // 任务名称
     name: 'checking if install @vue/cli',
-    task(next, name) {
+    task(option, taskIns) {
       exec('vue --version', (err, stdout, stderr) => {
         if (err) {
           console.error(`执行命令出错: ${err}`);
@@ -31,7 +31,7 @@ module.exports = [
           /\d+(\.\d+){1,3}([.-]\w+)?/.test(stdout) ||
           stdout.includes('vue/cli')
         ) {
-          next();
+          taskIns.complete();
         } else {
           inquirer
             .prompt([
@@ -56,7 +56,7 @@ module.exports = [
   },
   {
     name: 'this action of project name existed ',
-    task(next, option) {
+    task(option, taskIns) {
       const { name } = option;
       if (isexists(process.cwd(), name)) {
         inquirer
@@ -79,7 +79,8 @@ module.exports = [
           .then((answers) => {
             // 退出
             if (answers.operate == 0) {
-              process.exit(1);
+              // taskIns.done();
+              process.emit(0);
             }
             // 合并
             if (answers.operate == 1) {
@@ -99,16 +100,17 @@ module.exports = [
               removeDir(path.join(process.cwd(), name));
             }
             console.log(`vue create ${name}...`);
-            next();
+            taskIns.complete();
           });
         return;
+      } else {
+        taskIns.complete();
       }
-      next();
     },
   },
   {
     name: 'create vue project and merge ',
-    task(next, option) {
+    task(option, taskIns) {
       const { name } = option;
       const spinner = _spinner(' overwriting...');
       spinner.stop();
@@ -129,24 +131,23 @@ module.exports = [
           console.log('no file and is not a directory');
           process.exit(1);
         }
-        next();
+        taskIns.complete();
       }
     },
   },
   {
     name: 'question the prompt to user and handle the answer',
-    task(next, option) {
+    task(option, taskIns) {
       require('../create/inquirer').prompt(option, {
         complete: (fn) => {
-          option.next = next;
-          fn(option);
+          fn(option, taskIns);
         },
       });
     },
   },
   {
     name: 'build config',
-    task(next, option) {
+    task(option, taskIns) {
       const { name, result } = option;
       const routerAndstoreInd = result.findIndex(
         (answer) => answer.name === 'routerAndstore',
@@ -164,7 +165,7 @@ module.exports = [
       if (!shared.prompt) {
         copyfilelist[2] = 'main1.js';
       }
-      const spinner_1 = _spinner('generate build config ......');
+      const spinner_1 = _spinner('create build config ......');
       const moduleName = result.pop().name;
       copyTemplateConfig(
         name,

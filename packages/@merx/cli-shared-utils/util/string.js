@@ -1,17 +1,12 @@
 /*
- * 作者: 吴松泽
- * 创建时间: 2019-07-30 17:52:39
- * 修改时间: 2021-01-25 15:30:01
- * 最后修改: 吴松泽
+ * 作者: merlinhong
  * 版本: [1.0]
- * 版权: 国泰新点软件股份有限公司
  * 描述: 字符串操作相关， 例如邮箱验证， 身份证验证等
  */
 import Util from '@utils';
 
 export default {
   /**
-   * 2019-06-13 14:05:46
    * 验证是否是整数
    * @param {String} v 要验证的数字
    * @returns {Boolean} 是否是整数
@@ -34,7 +29,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:05:46
    * 验证是否是数字
    * @param {String} v 要验证的数字或字符串数字
    * @returns {Boolean} 是否是数字或者字符串数字
@@ -62,7 +56,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:05:46
    * 验证是否是邮箱
    * @param {String} v 要验证的邮箱
    * @returns {Boolean} 是否是邮箱
@@ -84,7 +77,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:05:46
    * 验证是否是 url
    * @param {String} v url
    * @returns {Boolean} 是否是url
@@ -121,7 +113,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:06:59
    * 手机号码格式验证
    * @param {String} v 手机号码
    * @returns {Boolean} 是否是手机号码
@@ -135,7 +126,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:09:51
    * 固定电话号码验证
    * @param {String} v 固定电话号码
    * @returns {Boolean} 是否是固定电话号码
@@ -149,7 +139,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:15:29
    * 电话号码格式验证
    * @param {String} v 电话号码
    * @returns {Boolean} 是否是电话号码
@@ -167,7 +156,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:15:29
    * 邮政编码格式验证
    * @param {String} v 邮政编码
    * @returns {Boolean} 是否是邮政编码
@@ -181,7 +169,6 @@ export default {
   },
 
   /**
-   * 2019-06-13 14:15:29
    * 组织机构代码
    * @param {String} v 组织机构代码
    * @returns {Boolean} 是否是组织机构代码

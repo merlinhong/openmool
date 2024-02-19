@@ -37,6 +37,7 @@ exports.moveDir = function (source, target, name, merge = 'merge') {
 exports.isexists = function isexists(local, name) {
   return name && fs.existsSync(path.join(local, name));
 };
+
 exports.copyTemplateConfig = function (name, result, cb) {
   let sourcepath = path.resolve(__dirname, '../template');
   const targetdir = fs

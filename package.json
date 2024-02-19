@@ -23,8 +23,6 @@
     "@commitlint/cz-commitlint": "^16.3.0",
     "@commitlint/format": "^12.1.1",
     "@commitlint/prompt-cli": "^16.3.0",
-    "@js-lib/cli": "^2.3.4",
-    "@jsmini/extend": "^0.5.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
@@ -52,6 +50,21 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": {
+      "extends": [
+        "@commitlint/config-conventional"
+      ]
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,mjs,cjs,ts,cts,mts}": [
+      "prettier --write",
+      "eslint --cache"
+    ],
+    "packages/**/bin/*": "eslint --fix"
   },
   "config": {
     "commitizen": {

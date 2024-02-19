@@ -1,28 +1,20 @@
 /*
- * 作者: 吴松泽
- * 创建时间: 2020-07-29 20:20:26
- * 修改时间: 2021-08-24 19:47:51
- * @最后修改: 吴松泽
+ * 作者: merlinhong
  * 版本: [1.0]
- * 版权: 国泰新点软件股份有限公司
- * 描述: Util库
+ * 描述: 工具函数库
  */
-import { ajax, ajaxAll } from './request';
-import upload from './upload';
-import base64 from './base64';
-import charset from './charset';
-import MyDate from './date';
-import imagescale from './imagescale';
-import math from './math';
-import sha1 from './sha1';
-import sha256 from './sha256';
-import storage from './storage';
-import string from './string';
-import sm2 from './sm2';
-import loaderLibrary from './loadlibrary';
-import cookie from './cookie';
-const ejsVer = Config.ejsVer;
-
+import { ajax, ajaxAll } from './util/util/request';
+import upload from './util/upload';
+import base64 from './util/base64';
+import MyDate from './util/date';
+import math from './util/math';
+import storage from './util/storage';
+import string from './util/string';
+import loaderLibrary from './util/loadlibrary';
+import cookie from './util/cookie';
+import _ from './util/lodash';
+import deepClone from './util/cloneDeep';
+import { type } from './util/type';
 const os = (() => {
   const { userAgent, appVersion } = window.navigator;
 
@@ -69,16 +61,12 @@ const os = (() => {
     return false;
   })();
 
-  let ejs = (() => {
-    return userAgent.match(/EpointEJS/i) || false;
-  })();
-
   let dd = (() => {
     return userAgent.match(/DingTalk/i) || false;
   })();
 
   let h5 = (() => {
-    return (!ejs && !dd) || false;
+    return !dd || false;
   })();
 
   return {
@@ -88,41 +76,10 @@ const os = (() => {
     ios,
     iphone,
     ipad,
-    ejs,
     dd,
     h5,
   };
 })();
-
-/**
- * 打开页面
- * @param {String} url 要打开的地址
- */
-const openPage = (url) => {
-  const { location } = window;
-  const { pathname } = location;
-
-  let openUrl = null;
-
-  if (typeof pathname === 'string') {
-    if (url.indexOf('http') !== -1) {
-      openUrl = url;
-    } else {
-      const pathArr = pathname.split('/');
-
-      pathArr.length -= 1;
-      openUrl = `${location.protocol}//${location.host}${pathArr.join(
-        '/',
-      )}/${url}`;
-    }
-  }
-
-  if (os.ejs) {
-    ejsVer === 3 ? ejs.page.open(openUrl) : ejs.page.openPage(openUrl);
-  } else {
-    location.href = openUrl;
-  }
-};
 
 const extend = (...args) => Object.assign({}, ...args);
 
@@ -163,7 +120,7 @@ const uuid = (options) => {
  * @param {String} key 关键字
  * @returns {String} 返回参数
  */
-const getExtraDataByKey = (key) => {
+const getParamByUrl = (key) => {
   var url = window.location.href;
   var params = {},
     query = url.substring(url.indexOf('?') + 1),
@@ -196,51 +153,6 @@ const getExtraDataByKey = (key) => {
 };
 
 /**
- * 数据处理
- * @param {Object} response 处理数据
- * @param {Object} options 配置项
- * @returns {Boolean} data or true
- */
-const dataProcess = (response, options) => {
-  if (typeof response !== 'object') {
-    throw new Error(`response的类型为 ${typeof response}`);
-  }
-
-  let dataPath = options.dataPath;
-  let data = null;
-
-  const handler = (pathAssembly) => {
-    let result = null;
-
-    pathAssembly.forEach((path, index) => {
-      let resolvePathData = result ? result[path] : response[path];
-
-      if (resolvePathData) {
-        result = resolvePathData;
-      } else if (index === pathAssembly.length - 1) {
-        result = undefined;
-      }
-    });
-
-    return result;
-  };
-
-  if (dataPath) {
-    if (Array.isArray(dataPath)) {
-      dataPath.forEach((e) => {
-        data = handler(e.split('.'));
-      });
-
-      return data;
-    }
-
-    return handler(dataPath.split('.'));
-  }
-
-  return undefined;
-};
-
-/**
  * 判断值是否为空
  * @param {String} value 值
  * @returns {Boolean} 验证结果
@@ -265,30 +177,6 @@ const each = (arr, callback) => {
     }
   }
 };
-let class2type = {};
-
-const type = function (obj) {
-  return obj === null || obj === undefined
-    ? String(obj)
-    : class2type[{}.toString.call(obj)] || 'object';
-};
-
-each(
-  [
-    'Boolean',
-    'Number',
-    'String',
-    'Function',
-    'Array',
-    'Date',
-    'RegExp',
-    'Object',
-    'Error',
-  ],
-  function (i, name) {
-    class2type['[object ' + name + ']'] = name.toLowerCase();
-  },
-);
 
 const isObject = function (obj) {
   return type(obj) === 'object';
@@ -301,52 +189,7 @@ const isPlainObject = function (obj) {
     Object.getPrototypeOf(obj) === Object.prototype
   );
 };
-/**
- * 得到一个项目的根路径,只适用于混合开发
- * h5模式下例如:http://id:端口/项目名/
- * @param {String} reg 项目需要读取的基本目录
- * @return {String} 项目的根路径
- */
-const getProjectBasePath = function (reg) {
-  reg = reg || '/pages/';
-  var basePath = '';
-  var obj = window.location;
-  var patehName = obj.pathname;
-  // h5
-  var contextPath = '';
 
-  // 兼容pages
-  // 普通浏览器
-  contextPath = patehName.substr(0, patehName.lastIndexOf(reg) + 1);
-  // 暂时放一个兼容列表，兼容一些固定的目录获取
-  var pathCompatibles = ['/html/', '/'];
-
-  for (
-    var i = 0, len = pathCompatibles.length;
-    i < len && (!contextPath || contextPath === '/');
-    i++
-  ) {
-    var regI = pathCompatibles[i];
-
-    // 这种获取路径的方法有一个要求,那就是所有的html必须在regI文件夹中,并且regI文件夹中不允许再出现regI目录
-    contextPath = patehName.substr(0, patehName.lastIndexOf(regI) + 1);
-
-    if (regI === '/') {
-      // 最后的根目录单独算
-      var path = patehName;
-
-      if (/^\//.test(path)) {
-        // 如果是/开头
-        path = path.substring(1);
-      }
-      contextPath = '/' + path.split('/')[0] + '/';
-    }
-  }
-  // 兼容在网站根路径时的路径问题
-  basePath = obj.protocol + '//' + obj.host + (contextPath || '/');
-
-  return basePath;
-};
 /**
  * 得到一个全路径
  * @param {String} path 路径
@@ -407,32 +250,29 @@ const getPathSuffix = function (path) {
 };
 
 export default {
-  openPage,
+  _,
+  deepClone,
+  type,
+  isObject,
+  isPlainObject,
   ajax,
   ajaxAll,
   extend,
   uuid,
-  getExtraDataByKey,
+  getParamByUrl,
+  getFullUrlByParams,
+
   os,
-  dataProcess,
   loaderLibrary,
   isNull,
   base64,
-  charset,
   MyDate,
-  imagescale,
   math,
-  sha1,
-  sha256,
   storage,
   string,
   each,
   upload,
-  getFullUrlByParams,
   getPathSuffix,
   sm2,
-  type,
-  isObject,
-  isPlainObject,
   cookie,
 };

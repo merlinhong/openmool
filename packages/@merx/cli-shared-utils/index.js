@@ -9,6 +9,8 @@
   'getNetWorkInterface',
   'isObject',
   'leven',
+  'pick',
+  'type',
 ].forEach((m) => {
   Object.assign(exports, require(`./lib/${m}`));
 });

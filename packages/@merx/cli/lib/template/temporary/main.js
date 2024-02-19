@@ -10,10 +10,10 @@ import '@assets/css/common.css';
 import loaderLibrary from '@tool/loadlibrary';
 import 'vant/lib/icon/local.css';
 loaderLibrary({
-  inject: 'head',
-  src: './lib/vconsole.min.js',
-  type: 'js',
-});
+   inject: 'head',
+    src: './lib/vconsole.min.js',
+    type: 'js'
+})
 // configMain hook
 Vue.config.devtools = true;
 Vue.config.productionTip = false;
