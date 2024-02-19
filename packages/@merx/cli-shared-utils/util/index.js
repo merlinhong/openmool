@@ -16,7 +16,7 @@ import _ from './util/lodash';
 import deepClone from './util/cloneDeep';
 import { type } from './util/type';
 const os = (() => {
-  const { userAgent, appVersion } = window.navigator;
+  const { userAgent } = window.navigator;
 
   let version = null;
   let isBadAndroid = false;

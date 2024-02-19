@@ -15,7 +15,6 @@
  *  0.2 + 0.4 == 0.6000000000000001  （多了 0.0000000000001）
  *  19.9 * 100 == 1989.9999999999998 （少了 0.0000000000002）
  *
- * mathTools.add(0.1, 0.2) >> 0.3
  * mathTools.multiply(19.9, 100) >> 1990
  *
  */
@@ -152,7 +151,4 @@ export default {
    * @param {Number} num2 The second number
    * @return {Number} The divide of the two numbers.
    */
-  divide(num1, num2) {
-    return innerUtil.operation(num1, num2, 'divide');
-  },
 };
