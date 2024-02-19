@@ -53,12 +53,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": {
-        "extends": [
-          "@commitlint/config-conventional"
-        ]
-      }
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
