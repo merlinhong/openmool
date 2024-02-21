@@ -38,7 +38,7 @@ function deepClone(x, cache) {
 
     // 循环条件， 这里通过判断子节点是否为对象作为循环体执行下去继续深克隆的循环条件
     for (let k in data) {
-      if (data.hasOwnProperty(k)) {
+      if (Object.prototype.hasOwnProperty.call(data, k)) {
         if (typeof data[k] === 'object' && data[k] !== null) {
           // 下一次循环
           looplist.push({

@@ -11,8 +11,7 @@
     "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags",
     "lint": "eslint -c .eslintrc.cjs 'src/**/*.ts'",
     "lint:fix": "eslint --fix -c .eslintrc.cjs 'src/**/*.ts' --fix",
-    "cz": "git-cz",
-    "prepare": "husky install"
+    "cz": "git-cz"
   },
   "author": "hongjia",
   "license": "MIT",
@@ -39,7 +38,6 @@
     "eslint-plugin-import": "^2.29.0",
     "expect.js": "^0.3.1",
     "http-server": "^14.1.1",
-    "husky": "^8.0.0",
     "lerna": "^8.0.0",
     "lint-staged": "^14.0.1",
     "mocha": "^10.2.0",

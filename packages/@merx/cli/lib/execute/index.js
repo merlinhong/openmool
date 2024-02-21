@@ -26,7 +26,6 @@ module.exports = class TaskList {
     this._status = 'ready';
     this._option = option;
     this._context = Object.create(option);
-    console.log('con', this._context);
     this._promise = new Promise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;

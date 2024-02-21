@@ -27,7 +27,7 @@ export default {
     if (typeof x != 'object') {
       return typeof x;
     }
-    if (typeof x === 'null') {
+    if (x === null) {
       return 'null';
     }
     function _type(o) {

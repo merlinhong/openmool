@@ -2,14 +2,10 @@
  * @file meta.js
  */
 
-const { stdout } = require('process');
+const { log } = require('console');
 
 module.exports = {
   prompts: {
-    husky: {
-      type: 'confirm',
-      message: 'if need pre-commit hook for git',
-    },
     routerAndstore: {
       type: 'confirm',
       message: `if need configure module's own route and store(subpackage)? (recommond)`,
@@ -52,9 +48,7 @@ module.exports = {
     const mergeContent = require('../util/mergeContent');
     const { isexists, makeDir, removeDir, _spinner } = require('../util');
     const path = require('path');
-    const deepMerge = require('deepMerge');
     const fs = require('fs-extra');
-    const { execSync, exec } = require('child_process');
 
     const resolve = (type) => {
       const filter = (result, typeArr) =>
@@ -65,7 +59,6 @@ module.exports = {
         'shared',
         'tool',
         'vant',
-        'husky',
       ]).find((item) => item.name === type);
     };
 
@@ -80,70 +73,6 @@ module.exports = {
       }
       makeDir(main, dir);
     };
-
-    // 是否提交前检测
-    if (resolve('husky').prompt) {
-      let sourceobj =
-        JSON.parse(
-          fs.readFileSync(
-            path.resolve(__dirname, '../template/package.json'),
-            'utf8',
-          ),
-        ) || {};
-      let targetobj =
-        JSON.parse(
-          fs.readFileSync(
-            path.join(process.cwd(), `${name}/package.json`),
-            'utf8',
-          ),
-        ) || {};
-      let mergeObj = deepMerge(targetobj, sourceobj);
-
-      // 将新的对象写入到文件中
-      fs.writeFile(
-        path.join(process.cwd(), `${name}/package.json`),
-        JSON.stringify(mergeObj, null, 2),
-        (err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-
-          // const spinner = _spinner('init husky...');
-          // spinner.stop();
-
-          exec(
-            `cd ${name} && npx husky-init && npm install`,
-            (err, stdout, stderr) => {
-              if (err) {
-                console.log(err);
-                return;
-              }
-              // spinner.succeed('husky init finished!');
-              removeDir(path.resolve(process.cwd(), `${name}/.husky`));
-              fs.copySync(
-                path.resolve(__dirname, '../template/.husky'),
-                path.resolve(process.cwd(), `${name}/.husky`),
-              );
-              // 写入配置文件
-              fs.writeFileSync(
-                path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
-                `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
-            `,
-                'utf8',
-              );
-              // 写入配置文件
-              fs.writeFileSync(
-                path.resolve(process.cwd(), `${name}/commitlint.config.js`),
-                `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
-            `,
-                'utf8',
-              );
-            },
-          );
-        },
-      );
-    }
 
     let addContent = '';
     let templateDir = '../template';

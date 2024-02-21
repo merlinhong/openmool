@@ -5,6 +5,8 @@ const { execSync, exec } = require('child_process');
 const inquirer = require('inquirer');
 const path = require('path');
 const fs = require('fs-extra');
+const deepMerge = require('deepMerge');
+
 const {
   mergeDirectories,
   isexists,
@@ -55,84 +57,134 @@ module.exports = [
     },
   },
   {
-    name: 'this action of project name existed ',
+    name: 'if need husky(gitHooks) for your project',
     task(option, taskIns) {
       const { name } = option;
-      if (isexists(process.cwd(), name)) {
-        inquirer
-          .prompt([
-            {
-              type: 'list',
-              name: 'operate',
-              message: 'The project name is already existed,pick an action:',
-              choices: ['overwrite', 'merge', 'cancel'],
-              filter: (val) => {
-                const map = {
-                  overwrite: 2,
-                  merge: 1,
-                  cancel: 0,
-                };
-                return map[val];
+      inquirer
+        .prompt([
+          {
+            type: 'confirm',
+            name: 'confirmation',
+            message: 'if need husky(gitHooks) for your project',
+            default: false, // 默认为 "No"
+          },
+        ])
+        .then((answers) => {
+          if (answers.confirmation) {
+            fs.mkdir(
+              path.resolve(process.cwd(), name),
+              { recursive: true },
+              (err) => {
+                fs.copyFile(
+                  path.resolve(__dirname, '../template/package.json'),
+                  path.resolve(process.cwd(), `${name}/package.json`),
+                  (err) => {
+                    if (err) {
+                      console.error(err);
+                      return;
+                    }
+                    taskIns.complete();
+                  },
+                );
               },
-            },
-          ])
-          .then((answers) => {
-            // 退出
-            if (answers.operate == 0) {
-              // taskIns.done();
-              process.emit(0);
-            }
-            // 合并
-            if (answers.operate == 1) {
-              // 合并本地配置文件
-              try {
-                if (isexists(__dirname, 'merge')) {
-                  removeDir(path.join(__dirname, 'merge'));
-                }
-                moveDir(process.cwd(), __dirname, name);
-              } catch (error) {
-                console.log('file permission denied ', error);
-                process.exit(1);
-              }
-            }
-            // 重写
-            if (answers.operate == 2) {
-              removeDir(path.join(process.cwd(), name));
-            }
-            console.log(`vue create ${name}...`);
+            );
+          } else {
             taskIns.complete();
-          });
-        return;
-      } else {
-        taskIns.complete();
-      }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // // 是否提交前检测
+      // if (resolve('husky').prompt) {
+      //   let sourceobj =
+      //     JSON.parse(
+      //       fs.readFileSync(
+      //         path.resolve(__dirname, '../template/package.json'),
+      //         'utf8',
+      //       ),
+      //     ) || {};
+      //   let targetobj =
+      //     JSON.parse(
+      //       fs.readFileSync(
+      //         path.join(process.cwd(), `${name}/package.json`),
+      //         'utf8',
+      //       ),
+      //     ) || {};
+      //   let mergeObj = deepMerge(targetobj, sourceobj);
+
+      //   fs.writeFile(
+      //     path.join(process.cwd(), `${name}/package.json`),
+      //     JSON.stringify(mergeObj, null, 2),
+      //     (err) => {
+      //       if (err) {
+      //         console.error(err);
+      //         return;
+      //       }
+      //     },
+      //   );
+      // }
     },
   },
   {
-    name: 'create vue project and merge ',
+    name: 'create vue project and init husky ',
     task(option, taskIns) {
       const { name } = option;
-      const spinner = _spinner(' overwriting...');
-      spinner.stop();
+
       execSync(`vue create ${name}`, { stdio: 'inherit' });
-      createVueProject(name);
-      // 获取生成的项目目录
-      function createVueProject(name) {
-        if (isexists(process.cwd(), name)) {
-          if (isexists(__dirname, 'merge')) {
-            mergeDirectories(
-              path.join(process.cwd(), name),
-              path.join(__dirname, 'merge'),
-            );
-            console.log('merge  successful!');
-            removeDir(path.join(__dirname, 'merge'));
-          }
-        } else {
-          console.log('no file and is not a directory');
-          process.exit(1);
-        }
+
+      const spinner = _spinner('initing husky...');
+
+      try {
+        execSync(`cd ${name} && npx husky-init`, {
+          stdio: 'inherit',
+        });
+        removeDir(path.resolve(process.cwd(), `${name}/.husky`));
+        fs.copySync(
+          path.resolve(__dirname, '../template/.husky'),
+          path.resolve(process.cwd(), `${name}/.husky`),
+        );
+        // console.log('husky init finished!');
+        console.log('\n');
+        spinner.succeed('husky init finished!');
+
+        // 写入配置文件
+        fs.writeFileSync(
+          path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
+          `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
+            `,
+          'utf8',
+        );
+        // 写入配置文件
+        fs.writeFileSync(
+          path.resolve(process.cwd(), `${name}/commitlint.config.js`),
+          `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
+            `,
+          'utf8',
+        );
         taskIns.complete();
+      } catch (error) {
+        console.log(error);
+        return;
       }
+      // createVueProject(name);
+      // // 获取生成的项目目录
+      // function createVueProject(name) {
+      //   if (isexists(process.cwd(), name)) {
+      //     if (isexists(__dirname, 'merge')) {
+      //       mergeDirectories(
+      //         path.join(process.cwd(), name),
+      //         path.join(__dirname, 'merge'),
+      //       );
+      //       console.log('merge  successful!');
+      //       removeDir(path.join(__dirname, 'merge'));
+      //     }
+      //   } else {
+      //     console.log('no file and is not a directory');
+      //     process.exit(1);
+      //   }
+      // taskIns.complete();
+      // }
     },
   },
   {

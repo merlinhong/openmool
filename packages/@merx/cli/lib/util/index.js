@@ -14,8 +14,7 @@ const permitConfiglist = [
   '.prettierrc',
 ];
 exports._spinner = function (text) {
-  const spinner = ora('Loading...').start();
-  spinner.text = text;
+  const spinner = ora(text).start();
   return spinner;
 };
 // 移除文件夹
