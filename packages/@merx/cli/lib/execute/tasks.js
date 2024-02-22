@@ -18,6 +18,14 @@ const {
   _spinner,
 } = require('../util/index');
 
+// 创建目录守卫函数
+const makedirSquard = (main, dir, callback) => {
+  if (isexists(main, dir)) {
+    removeDir(path.resolve(main, dir));
+  }
+  callback && callback();
+};
+
 module.exports = [
   {
     // 任务名称
@@ -57,134 +65,85 @@ module.exports = [
     },
   },
   {
-    name: 'if need husky(gitHooks) for your project',
+    name: 'init project config',
     task(option, taskIns) {
       const { name } = option;
-      inquirer
-        .prompt([
-          {
-            type: 'confirm',
-            name: 'confirmation',
-            message: 'if need husky(gitHooks) for your project',
-            default: false, // 默认为 "No"
-          },
-        ])
-        .then((answers) => {
-          if (answers.confirmation) {
-            fs.mkdir(
-              path.resolve(process.cwd(), name),
-              { recursive: true },
-              (err) => {
-                fs.copyFile(
-                  path.resolve(__dirname, '../template/package.json'),
-                  path.resolve(process.cwd(), `${name}/package.json`),
-                  (err) => {
-                    if (err) {
-                      console.error(err);
-                      return;
-                    }
-                    taskIns.complete();
-                  },
-                );
+      const spinner = _spinner(
+        'creating vue project. The may take a while...\n',
+      );
+      const configFile = [
+        'shared',
+        'router',
+        'store',
+        'mock',
+        '.husky',
+        'temporary',
+        'multiple.json',
+        'plugin.json',
+        'main.js',
+        'main1.js',
+        'package.json',
+        '_.eslintrc.js',
+      ];
+      makedirSquard(process.cwd(), name, () => {
+        fs.mkdir(
+          path.resolve(process.cwd(), `${name}/src`),
+          { recursive: true },
+          async (err) => {
+            const fileArr = [];
+
+            await fs.copy(
+              path.resolve(__dirname, `../template/`),
+              path.resolve(process.cwd(), `${name}`),
+              {
+                filter(src) {
+                  const mt1 = src.match(
+                    /\/template\/(\S\.?[a-z]*(\.[a-z]*)?(\.[a-z]*)?)|$/,
+                  )[1];
+
+                  if (!fileArr.includes(mt1) && !configFile.includes(mt1)) {
+                    fileArr.push(mt1);
+                  }
+                  if (!configFile.includes(mt1)) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                },
               },
             );
-          } else {
-            taskIns.complete();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      // // 是否提交前检测
-      // if (resolve('husky').prompt) {
-      //   let sourceobj =
-      //     JSON.parse(
-      //       fs.readFileSync(
-      //         path.resolve(__dirname, '../template/package.json'),
-      //         'utf8',
-      //       ),
-      //     ) || {};
-      //   let targetobj =
-      //     JSON.parse(
-      //       fs.readFileSync(
-      //         path.join(process.cwd(), `${name}/package.json`),
-      //         'utf8',
-      //       ),
-      //     ) || {};
-      //   let mergeObj = deepMerge(targetobj, sourceobj);
+            // 防止触发eslint校验，读取_.eslintrc.js源文件内容写入项目,
 
-      //   fs.writeFile(
-      //     path.join(process.cwd(), `${name}/package.json`),
-      //     JSON.stringify(mergeObj, null, 2),
-      //     (err) => {
-      //       if (err) {
-      //         console.error(err);
-      //         return;
-      //       }
-      //     },
-      //   );
-      // }
-    },
-  },
-  {
-    name: 'create vue project and init husky ',
-    task(option, taskIns) {
-      const { name } = option;
+            const fileContents = fs.readFileSync(
+              path.resolve(__dirname, `../template/_.eslintrc.js`),
+              'utf8',
+            );
 
-      execSync(`vue create ${name}`, { stdio: 'inherit' });
+            // 将源文件内容写入目标文件
+            fs.writeFileSync(
+              path.resolve(process.cwd(), `${name}/.eslintrc.js`),
+              fileContents,
+              'utf8',
+            );
+            console.log(`create .eslintrc.js finish`);
+            fileArr.map((file) => {
+              if (file == 'assets' || file == 'pages') {
+                fs.moveSync(
+                  path.resolve(process.cwd(), `${name}/${file}`),
+                  path.resolve(process.cwd(), `${name}/src/${file}`),
+                );
+              }
+              // console.log(file);
 
-      const spinner = _spinner('initing husky...');
-
-      try {
-        execSync(`cd ${name} && npx husky-init`, {
-          stdio: 'inherit',
-        });
-        removeDir(path.resolve(process.cwd(), `${name}/.husky`));
-        fs.copySync(
-          path.resolve(__dirname, '../template/.husky'),
-          path.resolve(process.cwd(), `${name}/.husky`),
+              file && console.log(`create ${file} finish`);
+            });
+            setTimeout(() => {
+              spinner.succeed('init project finished!\n');
+              taskIns.complete();
+            }, 2000);
+          },
         );
-        // console.log('husky init finished!');
-        console.log('\n');
-        spinner.succeed('husky init finished!');
-
-        // 写入配置文件
-        fs.writeFileSync(
-          path.resolve(process.cwd(), `${name}/.lintstagedrc.js`),
-          `module.exports = {\n  '**/*.{js,mjs,cjs,ts,cts,mts}': ['prettier --write', 'eslint --cache']\n  };
-            `,
-          'utf8',
-        );
-        // 写入配置文件
-        fs.writeFileSync(
-          path.resolve(process.cwd(), `${name}/commitlint.config.js`),
-          `module.exports = {\n  extends: ['@commitlint/config-conventional']\n  };
-            `,
-          'utf8',
-        );
-        taskIns.complete();
-      } catch (error) {
-        console.log(error);
-        return;
-      }
-      // createVueProject(name);
-      // // 获取生成的项目目录
-      // function createVueProject(name) {
-      //   if (isexists(process.cwd(), name)) {
-      //     if (isexists(__dirname, 'merge')) {
-      //       mergeDirectories(
-      //         path.join(process.cwd(), name),
-      //         path.join(__dirname, 'merge'),
-      //       );
-      //       console.log('merge  successful!');
-      //       removeDir(path.join(__dirname, 'merge'));
-      //     }
-      //   } else {
-      //     console.log('no file and is not a directory');
-      //     process.exit(1);
-      //   }
-      // taskIns.complete();
-      // }
+      });
     },
   },
   {
@@ -204,39 +163,38 @@ module.exports = [
       const routerAndstoreInd = result.findIndex(
         (answer) => answer.name === 'routerAndstore',
       );
-      result.splice(routerAndstoreInd, 1);
-      result.splice(
-        routerAndstoreInd,
-        0,
-        { name: 'router', prompt: true },
-        { name: 'store', prompt: true },
-      );
-      const shared = result.filter((answer) => answer.name === 'shared')[0];
-      const multiple = result.filter((answer) => answer.name === 'multiple')[0];
-      const copyfilelist = ['index.html', 'index.vue', 'main.js'];
-      if (!shared.prompt) {
-        copyfilelist[2] = 'main1.js';
+      if (result[routerAndstoreInd].prompt) {
+        result.splice(routerAndstoreInd, 1);
+        result.splice(
+          routerAndstoreInd,
+          0,
+          { name: 'router', prompt: true },
+          { name: 'store', prompt: true },
+        );
       }
+
+      console.log('result', result);
+      const subpackage = result.filter(
+        (answer) => answer.name === 'subpackage',
+      )[0];
+
       const spinner_1 = _spinner('create build config ......');
-      const moduleName = result.pop().name;
       copyTemplateConfig(
         name,
         result.filter((answers) => answers.prompt),
         () => {
           spinner_1.stop();
-          copyFileSync(name, moduleName, copyfilelist);
-
           // 创建build目录并拷贝
           if (isexists(process.cwd(), `${name}/build`)) {
             removeDir(path.resolve(process.cwd(), `${name}/build`));
           }
           makeDir(process.cwd(), `${name}/build`);
           fs.copy(
-            path.resolve(__dirname, '../build'),
+            path.resolve(__dirname, '../../../cli-service/build'),
             path.resolve(process.cwd(), `${name}/build`),
             {
               filter: (src) =>
-                !multiple.prompt ? !/multiple/.test(src) : true,
+                !subpackage.prompt ? !/multiple/.test(src) : true,
             },
           )
             .then(() => {

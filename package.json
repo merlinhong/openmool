@@ -9,9 +9,10 @@
     "ci": "commit",
     "test": "nyc mocha",
     "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags",
-    "lint": "eslint -c .eslintrc.cjs 'src/**/*.ts'",
+    "lint": "eslint -c .eslintrc.js 'src/**/*.js'",
     "lint:fix": "eslint --fix -c .eslintrc.cjs 'src/**/*.ts' --fix",
-    "cz": "git-cz"
+    "cz": "git-cz",
+    "prepare": "husky install"
   },
   "author": "hongjia",
   "license": "MIT",
@@ -45,7 +46,8 @@
     "prettier": "3.1.0",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "husky": "^8.0.0"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.2"

@@ -66,18 +66,12 @@ exports.copyFileSync = function (name, dirname, copyfilelist) {
       ),
     );
   }
-  fs.rmSync(path.join(process.cwd(), `${name}/src/main.js`), {
-    recursive: true,
-  });
-  fs.rmSync(path.join(process.cwd(), `${name}/src/App.vue`), {
-    recursive: true,
-  });
 };
 
 // 合并文件夹
 exports.mergeDirectories = function mergeDirectories(targetDir, sourceDir) {
   try {
-    // 读取源文件夹和目标文件夹中的所有文件列表
+    // 读取源文件夹和目标文件夹中的所有文件列表y
     const sourceFiles = fs
       .readdirSync(sourceDir)
       .filter((file) => file !== 'node_modules' && file != '.git');

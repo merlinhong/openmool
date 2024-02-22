@@ -6,8 +6,6 @@ process.on('exit', (code) => {
 });
 
 module.exports = (name, option) => {
-  console.log(name);
-  console.log('正在执行vue命令创建项目...');
   new TaskList(tasks, { name })
     .run()
     .then((option) => {

@@ -1,6 +1,6 @@
 {
   "name": "@vuecli-build/cli-shared-utils",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "@vuecli-build/cli的共享工具库，可单独引入项目",
   "main": "index.js",
   "module": "index.esm.js",

@@ -35,7 +35,6 @@ exports.devServerConfig = function (devServerProxy, proxy) {
       if (Object.hasOwnProperty.call(proxy, key)) {
         const element = proxy[key];
         const proxyObj = assignProxyReq(element);
-
         Object.assign(devServer[key], proxyObj);
       }
     }

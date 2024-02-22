@@ -22,8 +22,9 @@ async function prompt(option, { complete }) {
       name,
       ...meta.prompts[name],
     };
+    const when = answers.find((item) => item.name == 'client')?.prompt;
     // console.log(evaluate('mobile', answers));
-    if (question.name === 'vant' && question.when != 'mobile') {
+    if (question.name === 'vant' && when == 'pc') {
       continue;
     }
     const response = await inquirer.prompt([question]);

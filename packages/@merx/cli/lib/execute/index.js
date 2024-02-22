@@ -20,7 +20,6 @@ class Task {
 
 module.exports = class TaskList {
   constructor(task, option) {
-    console.log(option);
     this._task = task;
     this._index = 0;
     this._status = 'ready';

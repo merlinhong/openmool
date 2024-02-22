@@ -13,13 +13,6 @@ module.exports = (mergePath, mergeContent, splitStr, cb) => {
       0,
       splitStrIndex,
     )}${mergeContent}${data.substring(splitStrIndex)}`;
-
-    fs.writeFile(path.resolve(__dirname, mergePath), updatedContent, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      cb && cb();
-    });
+    cb && cb(updatedContent);
   });
 };
