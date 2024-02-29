@@ -1,11 +1,10 @@
 import Util from './index';
 import qs from 'qs';
 import axios from 'axios';
-import ejsFetch from './request.fetch';
 import { Toast } from 'vant';
-import refreshToken from './request.refresh';
 import Cookie from './cookie';
-
+let Config = window.Config;
+console.log(Config && Config.ajax.isAutoProxy);
 const defaultSettings = {
   type: 'post',
   url: '',
@@ -16,7 +15,7 @@ const defaultSettings = {
   contentType: 'application/x-www-form-urlencoded',
   withCredentials: false,
   delay: 0,
-  isAutoProxy: Config.ajax.isAutoProxy,
+  isAutoProxy: Config && Config.ajax.isAutoProxy,
   baseURL: '',
   transformRequest: [],
   transformResponse: [],
@@ -31,12 +30,10 @@ const defaultSettings = {
   validateStatus: null,
   auth: null,
   proxy: null,
-  isUseEjsFetchAjax: Config.isUseEjsFetchAjax,
   success: () => {},
   error: () => {},
   complete: () => {},
 };
-
 // 声明一个数组用于存储每个下拉刷新ajax请求的取消函数
 let pending = [];
 // 构造函数，用于取消接口请求
@@ -68,31 +65,9 @@ let requests = [];
 // 请求次数，如果大于最大请求次数则会直接进入错误回调，防止无限循环
 let requestCount = 0;
 
-/**
- * 判断组件是否大于某版本
- * @param {String} pluginName 组件名称
- * @param {String} version 需要判断的版本
- * @return {Boolean} 返回布尔值
- */
-function pluginVersion(pluginName, version) {
-  return new Promise(function (resolve, reject) {
-    ejs.runtime.getPluginVersion({
-      pluginName: pluginName,
-      success: function (result) {
-        if (result.version >= version) {
-          resolve(true);
-        } else {
-          reject(false);
-        }
-      },
-      error: function () {
-        reject(false);
-      },
-    });
-  });
-}
 axios.interceptors.request.use(
   async (config) => {
+    console.log('config', config);
     if (isMinirefresh) {
       // 标识为下拉刷新请求时，需要取消上一次下拉刷新请求
       removePending();
@@ -104,12 +79,9 @@ axios.interceptors.request.use(
 
     if (config.isAutoProxy) {
       const token = await getToken();
-
+      console.log('token', token);
       if (typeof token === 'string') {
         config.headers.Authorization = `Bearer ${token}`;
-      }
-      if (!ejs.os.ejs) {
-        config.withCredentials = true;
       }
     }
 
@@ -129,34 +101,29 @@ axios.interceptors.response.use(
         isRefreshing = true;
 
         // 说明token过期了,刷新token
-        return refreshToken(requestCount)
-          .then(() => {
-            requestCount++;
+        // return refreshToken(requestCount)
+        //   .then(() => {
+        //     requestCount++;
 
-            isRefreshing = false;
-            // 获取当前失败的请求
-            // 已经刷新了token，将所有队列中的请求进行重试
-            requests.forEach((cb) => cb());
-            // 重试完了别忘了清空这个队列
-            requests = [];
+        //     isRefreshing = false;
+        //     // 获取当前失败的请求
+        //     // 已经刷新了token，将所有队列中的请求进行重试
+        //     requests.forEach((cb) => cb());
+        //     // 重试完了别忘了清空这个队列
+        //     requests = [];
 
-            return axios(config);
-          })
-          .catch(() => {
-            //   超过最大次数，返回登陆页面
-            isRefreshing = false;
-            if (ejs.os.ejs) {
-              ejs.auth.logoutUserWithAlert({
-                title: '提醒',
-                message: '用户身份失效，请重新登录',
-              });
-            } else if (Config.token.isUseSelfToken) {
-              Config.token.refreshToken && Config.token.refreshToken();
-            }
+        //     return axios(config);
+        //   })
+        //   .catch(() => {
+        //     //   超过最大次数，返回登陆页面
+        //     isRefreshing = false;
+        //     // if (Config.token.isUseSelfToken) {
+        //     //   Config.token.refreshToken && Config.token.refreshToken();
+        //     // }
 
-            // 刷新token失败，跳转到首页重新登录吧
-            return response;
-          });
+        //     // 刷新token失败，跳转到首页重新登录吧
+        //     return response;
+        //   });
       }
 
       // 正在刷新token，返回一个未执行resolve的promise
@@ -167,25 +134,9 @@ axios.interceptors.response.use(
         });
       });
     } else if (status === 401) {
-      if (ejs.os.ejs) {
-        ejs.auth.logoutUserWithAlert({
-          title: '提醒',
-          message: '用户身份失效，请重新登录',
-        });
-      }
+      console.log('用户身份失效，请重新登录');
     } else if (status === 417) {
-      // ejs框架版本需大于3.5.0
-      pluginVersion(ejs.os.ios ? 'EJSFramework' : 'ejs', '3.5.0').then(
-        function () {
-          ejs.auth.logoutUserWithAlert({
-            title: '提醒',
-            message:
-              '您的账号已在其他设备登录，若不是本人操作，请尽快修改密码！',
-            success: function () {},
-            error: function () {},
-          });
-        },
-      );
+      console.log('您的账号已在其他设备登录，若不是本人操作，请尽快修改密码！');
     } else if (status === 429) {
       // 429状态进入，用于验证频繁请求
       const { responseText } = response;
@@ -195,37 +146,28 @@ axios.interceptors.response.use(
         isRefreshing = true;
 
         // 说明token过期了,刷新token
-        return refreshToken(requestCount, responseText)
-          .then(() => {
-            requestCount++;
+        // return refreshToken(requestCount, responseText)
+        //   .then(() => {
+        //     requestCount++;
 
-            isRefreshing = false;
-            // 获取当前失败的请求
-            // 已经刷新了token，将所有队列中的请求进行重试
-            requests.forEach((cb) => cb());
-            // 重试完了别忘了清空这个队列
-            requests = [];
+        //     isRefreshing = false;
+        //     // 获取当前失败的请求
+        //     // 已经刷新了token，将所有队列中的请求进行重试
+        //     requests.forEach((cb) => cb());
+        //     // 重试完了别忘了清空这个队列
+        //     requests = [];
 
-            return axios(config);
-          })
-          .catch(() => {
-            //   超过最大次数，返回登陆页面
-            isRefreshing = false;
-            if (ejs.os.ejs) {
-              pluginVersion(ejs.os.ios ? 'EJSFramework' : 'ejs', '3.5.0').then(
-                function () {
-                  ejs.auth.logoutUserWithAlert({
-                    title: '提醒',
-                    message: '用户身份失效，请重新登录',
-                  });
-                },
-              );
-            } else if (Config.token.isUseSelfToken) {
-              Config.token.refreshToken && Config.token.refreshToken();
-            }
+        //     return axios(config);
+        //   })
+        //   .catch(() => {
+        //     //   超过最大次数，返回登陆页面
+        //     isRefreshing = false;
+        //     // if (Config.token.isUseSelfToken) {
+        //     //   Config.token.refreshToken && Config.token.refreshToken();
+        //     // }
 
-            return response.data;
-          });
+        //     return response.data;
+        //   });
       }
 
       // 正在刷新token，返回一个未执行resolve的promise
@@ -251,8 +193,8 @@ axios.interceptors.response.use(
       error.message === 'Network Error' ||
       error.message.includes('timeout')
     ) {
-      ejs.ui.closeWaiting();
-      ejs.ui.toast('请求超时，请稍后重试');
+      // ejs.ui.closeWaiting();
+      Toast('请求超时，请稍后重试');
     }
 
     // 对响应错误做点什么
@@ -262,167 +204,18 @@ axios.interceptors.response.use(
 
 function getToken() {
   return new Promise((resolve, reject) => {
-    if (ejs.os.ejs) {
-      ejs.auth.getToken({
-        success: function (result) {
-          resolve(result.access_token);
-        },
-        error(err) {
-          reject(new Error(err));
-        },
-      });
-    } else if (Config.token.isUseSelfToken) {
-      if (ejs.os.xm) {
-        // iam  Token获取
-        ejs.storage.getShareItem({
-          key: 'xmtoken',
-          success: function (result) {
-            let xmtoken = result.xmtoken || '';
-
-            if (xmtoken) {
-              resolve(xmtoken);
-            } else {
-              xm.getAuthCode({ type: 'iam' }).then((res) => {
-                var data = {
-                  appId: Config.h5Env && Config.h5Env.appId,
-                  appSecret: Config.h5Env && Config.h5Env.appSecret,
-                  ssoToken: res.encryptedString,
-                };
-
-                data = {
-                  params: JSON.stringify(data),
-                };
-                ajax({
-                  url: Config.serverUrl + 'shinemo/getToken',
-                  data: data,
-                  isAutoProxy: false,
-                  success: function (result) {
-                    if (result.status && Number(result.status) === 1) {
-                      let token = result.data.token;
-                      console.log('token', token);
-                      ejs.storage.setShareItem({
-                        xmtoken: result.data.token,
-                        success: function (result) {
-                          resolve(token);
-                        },
-                        error: function (error) {},
-                      });
-                    } else {
-                      const message =
-                        result.message || '令牌失效,请重新开启认证';
-
-                      reject({
-                        message: message,
-                      });
-                    }
-                  },
-                  error: function (err) {
-                    reject(err);
-                  },
-                });
-              });
-            }
-          },
-          error: function (error) {},
+    if (Config.token.isUseSelfToken) {
+      if (!Config.isProduction) {
+        // 主要用于在浏览器调试 外网和内网环境
+        Config.token.getToken().then((token) => {
+          if (typeof token === 'string') {
+            resolve(token);
+          } else {
+            reject(new Error());
+          }
         });
 
-        /*xm.getStorage({ key: 'xmtoken', isGlobal: true })
-                    .then((result) => {
-                        if (result) {
-                            if (result.indexOf("'") != -1 || result.indexOf('"') != -1) {
-                                resolve(JSON.parse(result));
-                            } else {
-                                resolve(result);
-                            }
-                        } else {
-                            ajax({
-                                url: Config.serverUrl + 'shinemo/getStillToken',
-                                data: {
-                                    params: JSON.stringify({
-                                        logidid: Config.tokenLogidid
-                                    })
-                                },
-                                isAutoProxy: false,
-                                success: function (result) {
-                                    xm.setStorage({ key: 'xmtoken', value: result.data.token, isGlobal: true }).then(
-                                        () => {
-                                            resolve(result.data.token);
-                                        }
-                                    );
-                                },
-                                error: function (err) {
-                                    reject(err);
-                                }
-                            });
-                        }
-                    })
-                    .catch((result) => {
-                        ajax({
-                            url: Config.serverUrl + 'shinemo/getStillToken',
-                            data: {
-                                params: JSON.stringify({
-                                    logidid: Config.tokenLogidid
-                                })
-                            },
-                            isAutoProxy: false,
-                            success: function (result) {
-                                xm.setStorage({ key: 'xmtoken', value: result.data.token, isGlobal: true }).then(() => {
-                                    resolve(result.data.token);
-                                });
-                            },
-                            error: function (err) {
-                                reject(err);
-                            }
-                        });
-                    });*/
-      } else {
-        if (Config.isProduction) {
-          // 主要用于在浏览器调试 外网和内网环境
-          Config.token.getToken().then((token) => {
-            if (typeof token === 'string') {
-              resolve(token);
-            } else {
-              reject(new Error());
-            }
-          });
-
-          return;
-        }
-        ejs.storage.getShareItem({
-          key: 'xmtoken',
-          success: function (result) {
-            let xmtoken = result.xmtoken || '';
-
-            if (xmtoken) {
-              resolve(xmtoken);
-            } else {
-              ajax({
-                url: Config.serverUrl + 'shinemo/getStillToken',
-                data: {
-                  params: JSON.stringify({
-                    logidid: Config.tokenLogidid,
-                  }),
-                },
-                isAutoProxy: false,
-                success: function (result) {
-                  let token = result.data.token;
-
-                  ejs.storage.setShareItem({
-                    xmtoken: result.data.token,
-                    success: function (result) {
-                      resolve(token);
-                    },
-                    error: function (error) {},
-                  });
-                },
-                error: function (err) {
-                  reject(err);
-                },
-              });
-            }
-          },
-          error: function (error) {},
-        });
+        return;
       }
     } else {
       let token = Cookie.get('access_token') || '';
@@ -434,7 +227,6 @@ function getToken() {
 async function ajax(options) {
   options = Util.extend(defaultSettings, options);
   isMinirefresh = options.isMinirefresh || false;
-
   params = {
     url: options.url,
     method: options.type,
@@ -456,7 +248,6 @@ async function ajax(options) {
     validateStatus: options.validateStatus,
     proxy: options.proxy,
   };
-
   const {
     delay,
     contentType,
@@ -466,16 +257,10 @@ async function ajax(options) {
     success,
     complete,
     beforeSend,
-    isUseEjsFetchAjax,
   } = options;
 
   // 设置重试延迟
   axios.defaults.retryDelay = delay;
-
-  // 采用原生fetch代理所有ajax
-  if (ejs.os.ejs && isUseEjsFetchAjax) {
-    axios.defaults.adapter = ejsFetch;
-  }
 
   for (const key in headers) {
     if (Object.prototype.hasOwnProperty.call(headers, key)) {
@@ -500,19 +285,19 @@ async function ajax(options) {
   if (typeof beforeSend === 'function') {
     beforeSend(axios);
   }
-
   return new Promise((resolve, reject) => {
+    console.log(3, params);
+
     axios(params)
       .then((response) => {
         const { status, statusText, data } = response;
-
         if (
           (status !== 200 && statusText !== 'OK') ||
           typeof data.errcode === 'number' ||
           data.error
         ) {
-          if (Config.ajax.isAutoErrToast) {
-            Toast(data.errmsg);
+          if (Config && Config.ajax.isAutoErrToast) {
+            Toast(data.statusText);
           }
           reject(data);
           error && error(data);

@@ -3,7 +3,7 @@
  * 版本: [1.0]
  * 描述: 字符串操作相关， 例如邮箱验证， 身份证验证等
  */
-import Util from '@utils';
+import Util from '@tool';
 
 export default {
   /**

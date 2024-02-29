@@ -43,9 +43,13 @@ exports.copyTemplateConfig = function (name, result, cb) {
     .readdirSync(sourcepath)
     .filter((filepath) => result.map((i) => i.name).includes(filepath));
   for (const dir of targetdir) {
+    let _path = `${name}/src/${dir}`;
+    if (/mock/.test(dir)) {
+      _path = `${name}/${dir}`;
+    }
     fs.copySync(
       path.resolve(__dirname, `../template/${dir}`),
-      path.join(process.cwd(), `${name}/src/${dir}`),
+      path.join(process.cwd(), _path),
     );
   }
   setTimeout(() => {

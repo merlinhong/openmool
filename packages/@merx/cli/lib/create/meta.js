@@ -20,6 +20,10 @@ module.exports = {
       type: 'confirm',
       message: 'if need to create a globalConfig file ',
     },
+    mock: {
+      type: 'confirm',
+      message: 'if need mock data for your project',
+    },
     client: {
       type: 'list',
       message: ' please choose your client(mobile or pc)',
@@ -39,7 +43,7 @@ module.exports = {
     const { name, result } = option;
 
     const mergeContent = require('../util/mergeContent');
-    const { isexists, makeDir, removeDir, _spinner } = require('../util');
+    const { _spinner } = require('../util');
     const deepMerge = require('deepMerge');
     const path = require('path');
     const fs = require('fs-extra');
@@ -59,6 +63,7 @@ module.exports = {
         'vant',
         'husky',
         'subpackage',
+        'mock',
       ]).find((item) => item.name === type);
     };
 
@@ -122,24 +127,37 @@ module.exports = {
     // 添加公共css文件
     addContent += `import '@assets/css/common.css';\n`;
 
-    // 客户端
-    if (resolve('client').prompt === 'mobile') {
-      option.result.unshift({ name: 'lib', prompt: true });
-      addContent += `import loaderLibrary from '@tool/loadlibrary';\n`;
-      if (resolve('vant').prompt) {
-        addContent += `import 'vant/lib/icon/local.css';\nloaderLibrary({\n   inject: 'head',\n    src: './lib/vconsole.min.js',\n    type: 'js'\n})\n`;
-        packageJson.dependencies = {
-          vant: '^2.12.7',
-        };
-      }
-    }
+    let tool = '';
+
     // 工具库
     if (resolve('tool').prompt) {
       fs.copySync(
         path.resolve(__dirname, '../../../cli-shared-utils/util'),
         path.join(process.cwd(), `${name}/src/tool`),
       );
+      tool = `import { Utils } from '@tool';\n\nVue.use(Utils);\n\n`;
     }
+    // 客户端
+    if (resolve('client').prompt === 'mobile') {
+      option.result.unshift({ name: 'lib', prompt: true });
+      addContent += `import loaderLibrary from '@tool/loadlibrary';\n`;
+
+      if (resolve('vant').prompt) {
+        addContent += `import 'vant/lib/icon/local.css'\n;${
+          tool || ''
+        } \nloaderLibrary({\n   inject: 'head',\n    src: './lib/vconsole.min.js',\n    type: 'js'\n})\n`;
+        packageJson.dependencies = {
+          vant: '^2.12.7',
+        };
+      }
+    } else {
+      addContent += tool;
+    }
+    if (resolve('mock').prompt) {
+      packageJson.dependencies.mockjs = '^1.1.0';
+      addContent += `if (Config.isMock) {\n    if (\n  process.env.NODE_ENV === 'development' ||(process.env.NODE_ENV === 'production' && !Config.isProductionExternalMock))\n  {require('../../mock/index');}}`;
+    }
+
     if (resolve('subpackage').prompt) {
       fs.copySync(
         path.resolve(__dirname, '../template/multiple.json'),
@@ -150,6 +168,7 @@ module.exports = {
         path.resolve(process.cwd(), `${name}/plugin.json`),
       );
     }
+
     // 写入package.json文件
     fs.readFile(
       path.resolve(__dirname, '../template/package.json'),
@@ -171,7 +190,7 @@ module.exports = {
       splitStr,
       async (mergeData) => {
         fs.writeFile(
-          path.resolve(process.cwd(), `${name}/src/pages${mainpath}`),
+          path.resolve(process.cwd(), `${name}/src/pages/main.js`),
           mergeData,
           async (err) => {
             if (err) {

@@ -3,18 +3,20 @@
  * 版本: [1.0]
  * 描述: 工具函数库
  */
-import { ajax, ajaxAll } from './util/util/request';
-import upload from './util/upload';
-import base64 from './util/base64';
-import MyDate from './util/date';
-import math from './util/math';
-import storage from './util/storage';
-import string from './util/string';
-import loaderLibrary from './util/loadlibrary';
-import cookie from './util/cookie';
-import _ from './util/lodash';
-import deepClone from './util/cloneDeep';
-import { type } from './util/type';
+import { ajax, ajaxAll } from './request';
+import upload from './upload';
+import base64 from './base64';
+import MyDate from './date';
+import math from './math';
+// import storage from './storage';
+import string from './string';
+import loaderLibrary from './loadlibrary';
+import cookie from './cookie';
+import _ from './lodash';
+import deepClone from './cloneDeep';
+import { type } from './type';
+
+let tools = {};
 const os = (() => {
   const { userAgent, appVersion } = window.navigator;
 
@@ -202,27 +204,37 @@ const getPathSuffix = function (path) {
   return suffix;
 };
 
-export default {
-  _,
-  deepClone,
-  type,
-  isObject,
-  isPlainObject,
-  ajax,
-  ajaxAll,
-  extend,
-  uuid,
-  getParamByUrl,
-  os,
-  loaderLibrary,
-  isNull,
-  base64,
-  MyDate,
-  math,
-  storage,
-  string,
-  each,
-  upload,
-  getPathSuffix,
-  cookie,
+tools = (function () {
+  return {
+    _,
+    deepClone,
+    type,
+    isObject,
+    isPlainObject,
+    ajax,
+    ajaxAll,
+    extend,
+    uuid,
+    getParamByUrl,
+    os,
+    loaderLibrary,
+    isNull,
+    base64,
+    MyDate,
+    math,
+    // storage,
+    string,
+    each,
+    upload,
+    getPathSuffix,
+    cookie,
+  };
+})();
+
+export const Utils = {
+  install(Vue) {
+    Vue.prototype.$Util = tools;
+  },
 };
+
+export default tools;

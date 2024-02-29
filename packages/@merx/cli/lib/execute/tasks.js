@@ -199,7 +199,6 @@ module.exports = [
           )
             .then(() => {
               // 引入vuecli的build配置
-
               fs.writeFile(
                 path.resolve(process.cwd(), `${name}/vue.config.js`),
                 `const config = require('./build');\nconst options = process.env.NODE_ENV === 'production' ? config.build : config.dev;\n\nmodule.exports = options;`,

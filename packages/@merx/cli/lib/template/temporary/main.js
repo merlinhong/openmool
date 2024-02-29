@@ -1,3 +1,6 @@
+// 添加core解析代码
+// import "core-js/stable";
+// import "regenerator-runtime/runtime";
 // 引入vue与vur-router核心库
 import Vue from 'vue';
 // 引入定义当前模块使用的路由文件

@@ -1,11 +1,18 @@
 const loaderUtils = require('loader-utils');
 const fs = require('fs');
 const path = require('path');
-let isExist = (item, dir, filename) => {
+const proConfig = require('../../src/shared/config');
+
+const {
+  getMultipleToArray,
+  isMultiple,
+  setMultipleCompileData,
+} = require('../multiple');
+let isExist = (item, filename) => {
   return new Promise((resolve, reject) => {
     let file = path.resolve(
       __dirname,
-      `../../src/pages/${item}/${dir}/${filename}.js`,
+      `../../src/pages/${item}/${filename}.js`,
     );
 
     // 判断文件是否存在
@@ -25,7 +32,8 @@ module.exports = function (content) {
   let moduleName = process.m8Argv?.moduleName || '';
   let moduleType = process.m8Argv?.moduleType || 'h5';
   let multipleName = process.m8Argv?.multipleName || '';
-
+  const multipleArray = getMultipleToArray();
+  const isMultipleFlag = isMultiple();
   fs.readdir(path.resolve(__dirname, '../../src/pages'), function (err, files) {
     if (err) {
       console.error(err);
@@ -34,13 +42,28 @@ module.exports = function (content) {
     }
     let regArray = ['index.html', 'index.vue', 'main.js', '.DS_Store'];
     let configRouters = [];
-    console.log('rr', files, moduleName);
 
     files.forEach((filename) => {
       if (regArray.indexOf(filename) > -1) {
         return;
       }
-      if (moduleName && moduleType !== 'h5') {
+      if (isMultipleFlag) {
+        if (Object.keys(multipleArray).length === 0) {
+          throw new Error(
+            '使用 multiple 请检查 multiple.json 文件是否配置正确',
+          );
+        }
+        console.log('44mu', multipleArray, multipleArray[multipleName]);
+        if (multipleArray[multipleName]) {
+          // 模块在多模块列表内构建
+          if (multipleArray[multipleName].indexOf(filename) > -1) {
+            configRouters.push(filename);
+          }
+        } else {
+          configRouters.push(filename);
+        }
+        console.log('mul', configRouters);
+      } else if (moduleName && moduleType !== 'h5') {
         // 如果指定模块，只构建指定模块
         if (moduleName === filename) {
           configRouters.push(filename);
@@ -51,83 +74,52 @@ module.exports = function (content) {
     });
 
     if (configRouters.length >= 1) {
+      // 保存使用多模块构建的模块信息
+      if (isMultipleFlag) {
+        setMultipleCompileData(multipleName, configRouters);
+      }
       let header = '';
-      let ml_header = '';
       let compute = '';
-      let ml_compute = '';
       let routerHookReg = new RegExp('// configRouters hook([\\s\\S]+?)', 'g');
       let storeHookReg = new RegExp('// storeModules hook([\\s\\S]+?)', 'g');
-      let regArray = ['css', 'img', 'component', '.vue'];
+      let mockHookReg = new RegExp('// mockData hook([\\s\\S]+?)', 'g');
 
-      if (content.match(routerHookReg)) {
-        // 路由文件解析
-        let getCon = async () => {
-          for (let index = 0; index < configRouters.length; index++) {
-            let item = configRouters[index];
-            let dir = '';
-            // 至多一层router
-            const multiplRouters = fs.readdirSync(
-              path.resolve(__dirname, `../../src/pages/${item}`),
-            );
-            for (let i = 0; i < multiplRouters.length; i++) {
-              dir = multiplRouters[i];
-              // if (regArray.indexOf(dir) != -1) {
-              //     return;
-              // }
-              await isExist(item, dir, 'router')
-                .then(() => {
-                  ml_header += `import ${dir} from '../pages/${item}/${dir}/router.js';\n`;
-                  ml_compute += `multiplRouters = multiplRouters.concat(${dir});\n`;
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }
-            console.log('ml_compute', ml_compute);
-            header += `import ${item} from '../pages/${item}/router.js';\n`;
-            compute += `configRouters = configRouters.concat(${item});\n`;
-            con = ml_header + header + content;
-            con = con.replace(routerHookReg, ml_compute + compute).trim();
-            console.log('con', con);
-          }
-        };
+      let getCon = async () => {
+        if (content.match(routerHookReg)) {
+          for (let i = 0; i < configRouters.length; i++) {
+            let item = configRouters[i];
 
-        // 路由文件解析
-        let afuc = async () => {
-          await getCon();
-          if (!con) {
-            con = content;
+            await isExist(item, 'router')
+              .then(() => {
+                header += `import ${item} from '../pages/${item}/router.js';\n`;
+                compute += `configRouters = configRouters.concat(${item});\n`;
+              })
+              .catch((res) => {
+                if (moduleName && moduleName === res) {
+                  // 如果指定了模块，但是模块下没有路由文件，报错
+                  throw new Error(
+                    `\n\n指定构建的${moduleName}模块下没有路由文件！请解决此问题后重新构建！\n\n`,
+                  );
+                }
+              });
           }
 
-          callback(null, con);
-        };
-        afuc();
-      } else if (content.match(storeHookReg)) {
-        // store文件解析
-        let isExist = (item) => {
-          return new Promise((resolve) => {
-            let file = path.resolve(
-              __dirname,
-              `../../src/pages/${item}/store.js`,
-            );
+          con = header + content;
 
-            // 判断store.js是否存在
-            fs.access(file, fs.constants.F_OK, (fsErr) => {
-              if (!fsErr) {
-                header += `import ${item} from '../pages/${item}/store.js';\n`;
-                compute += `configStore = configStore.concat(${item});\n`;
-              }
-              resolve();
-            });
-          });
-        };
-        let afuc = async () => {
+          con = con.replace(routerHookReg, compute).trim();
+        } else if (content.match(storeHookReg)) {
+          // store文件解析
           compute += 'let configStore = [];\n';
 
           for (let i = 0; i < configRouters.length; i++) {
             let item = configRouters[i];
 
-            await isExist(item);
+            await isExist(item, 'store')
+              .then(() => {
+                header += `import ${item} from '../pages/${item}/store.js';\n`;
+                compute += `configStore = configStore.concat(${item});\n`;
+              })
+              .catch(() => {});
           }
 
           con = header + content;
@@ -140,16 +132,42 @@ module.exports = function (content) {
                    `;
 
           con = con.replace(storeHookReg, compute).trim();
+        } else if (content.match(mockHookReg)) {
+          if (proConfig.isMock) {
+            if (
+              process.env.NODE_ENV === 'development' ||
+              (process.env.NODE_ENV === 'production' &&
+                !proConfig.isProductionExternalMock)
+            ) {
+              for (let i = 0; i < configRouters.length; i++) {
+                let item = configRouters[i];
 
-          if (!con) {
-            con = content;
+                await isExist(item, 'mock')
+                  .then(() => {
+                    header += `import ${item} from '../src/pages/${item}/mock.js';\n`;
+                    compute += `mockData = mockData.concat(${item});\n`;
+                  })
+                  .catch(() => {});
+              }
+              con = header + content;
+              con = con.replace(mockHookReg, compute).trim();
+            }
           }
+        }
+      };
 
-          callback(null, con);
-        };
+      // 路由文件解析
+      let afuc = async () => {
+        await getCon();
+        if (!con) {
+          con = content;
+        }
 
-        afuc();
-      }
+        callback(null, con);
+      };
+      afuc();
+    } else {
+      throw new Error('\n\n没有找到匹配的模块！请解决此问题后重新构建！\n\n');
     }
   });
 };

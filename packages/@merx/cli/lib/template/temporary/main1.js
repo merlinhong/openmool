@@ -1,3 +1,6 @@
+// 添加core解析代码
+// import "core-js/stable";
+// import "regenerator-runtime/runtime";
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
