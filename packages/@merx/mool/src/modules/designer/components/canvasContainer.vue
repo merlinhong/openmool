@@ -1,0 +1,768 @@
+<script setup lang="tsx">
+import { h, type PropType, computed, resolveComponent, shallowRef, VNode } from "vue";
+import type { ComponentType, Render, Col, RowScope } from "@/mool/types/BasicForm";
+import { dragUtil,omit } from "@/mool/utils";
+
+defineOptions({
+  inheritAttrs: false,
+});
+
+const props = defineProps({
+  // 页面区块的配置json schema
+  schema: {
+    type: Object as PropType<Col>,
+    default: () => [],
+  },
+
+  currAEl: {
+    type: Object as PropType<{ id: null | string; clickId: null | string; overId: string | null }>,
+    default: () => ({
+      clickId: null,
+      id: null,
+      overId: null,
+    }),
+  },
+});
+
+type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
+
+const parseComponentString = (
+  componentString: string,
+): { tagName: string; content: any[]; props?: Record<string, string> } | null => {
+  // 使用正则表达式解析组件字符串，支持自闭合标签和嵌套标签
+  const tagMatch =
+    componentString.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || componentString.match(/<(\w+(-\w+)*)([^>]*)\/>/);
+  if (tagMatch) {
+    const tagName = tagMatch[1] || tagMatch[5];
+    const propsString = tagMatch[3] || tagMatch[7];
+    const content = tagMatch[4] || "";
+
+    // 解析属性
+    const props: Record<string, string> = {};
+    const propsMatch = (propsString ?? "").match(/(\w+)=["']([^"']+)["']/g);
+    if (propsMatch) {
+      propsMatch.forEach((prop) => {
+        const [key, value] = prop.split("=");
+        props[key] = value.replace(/["']/g, "");
+      });
+    }
+
+    // 递归解析嵌套内容
+    const nestedContent = content ? parseNestedContent(content) : [];
+
+    // 返回解析结果
+    return { tagName, content: nestedContent, props };
+  }
+
+  // 如果没有匹配到任何标签，返回 null
+  return null;
+};
+
+const parseNestedContent = (content: string): any[] => {
+  // 递归解析嵌套内容
+  const result: any[] = [];
+  let remainingContent = content;
+
+  while (remainingContent) {
+    const nestedTagMatch =
+      remainingContent.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || remainingContent.match(/<(\w+(-\w+)*)([^>]*)\/>/);
+    if (nestedTagMatch) {
+      const nestedTagName = nestedTagMatch[1] || nestedTagMatch[5];
+      const nestedPropsString = nestedTagMatch[3] || nestedTagMatch[7];
+      const nestedContent = nestedTagMatch[4] || "";
+
+      // 解析属性
+      const nestedProps: Record<string, string> = {};
+      const nestedPropsMatch = (nestedPropsString ?? "").match(/(\w+)=["']([^"']+)["']/g);
+      if (nestedPropsMatch) {
+        nestedPropsMatch.forEach((prop) => {
+          const [key, value] = prop.split("=");
+          nestedProps[key] = value.replace(/["']/g, "");
+        });
+      }
+
+      // 递归解析嵌套内容
+      const nestedParsedContent = nestedContent ? parseNestedContent(nestedContent) : [];
+
+      // 构建嵌套标签对象
+      const nestedTagObject = { tagName: nestedTagName, content: nestedParsedContent, props: nestedProps };
+      result.push(nestedTagObject);
+
+      // 更新剩余内容
+      remainingContent = remainingContent.slice(nestedTagMatch[0].length);
+    } else {
+      result.push(remainingContent);
+      break;
+    }
+  }
+
+  return result;
+};
+const renderForm: {
+  [K in ComponentType]: Partial<{
+    [K in KeyType]: Render;
+  }>;
+} = {
+  Box: {
+    render: (data, col, child) => {
+      return <div></div>;
+    },
+  },
+  ElForm: {
+    render: (data, col, child) => {
+      return <el-form></el-form>;
+    },
+  },
+  ElFormItem: {
+    render: (data, col, child) => {
+      return <el-form-item></el-form-item>;
+    },
+  },
+  Text: {
+    render: (data, col) => {
+      return (
+        <div>
+          <span>{data}</span>
+        </div>
+      );
+    },
+  },
+  ElInput: {
+    render: (data, col) => {
+      return (
+        <div>
+          <el-input />
+        </div>
+      );
+    },
+    append: (data, col) => {
+      return <div></div>;
+    },
+    tooltip: (data, col) => {
+      return <div></div>;
+    },
+  },
+  TextArea: {
+    render: (data, col) => {
+      return (
+        <div>
+          <el-input type="textarea" />
+        </div>
+      );
+    },
+    append: (data, col) => {
+      return <div></div>;
+    },
+    tooltip: (data, col) => {
+      return <div></div>;
+    },
+  },
+  ElSelect: {
+    render: (data, col, child) => {
+      let option: { label: string; value: number }[] = [];
+      for (const obj of col?.props?.option) {
+        option[obj.order] = {
+          label: obj.label,
+          value: obj.value,
+        };
+      }
+      return (
+        <div>
+          <el-select>
+            {option?.map((item) => {
+              return <el-option label={item.label} value={item.value}></el-option>;
+            })}
+          </el-select>
+        </div>
+      );
+    },
+    append: (data, col) => {
+      return <div></div>;
+    },
+    tooltip: (data, col) => {
+      return <div></div>;
+    },
+  },
+  ElRadio: {
+    render: (data, col) => {
+      let option: { label: string; value: number }[] = [];
+      for (const obj of col?.props?.option!) {
+        option[obj.order] = {
+          label: obj.label,
+          value: obj.value,
+        };
+      }
+
+      return (
+        <div>
+          <el-radio-group>
+            {option.map((item) => {
+              return <el-radio label={item.value}>{item.label}</el-radio>;
+            })}
+          </el-radio-group>
+        </div>
+      );
+    },
+    append: (data, col) => {
+      return <div></div>;
+    },
+    tooltip: (data, col) => {
+      return <div></div>;
+    },
+  },
+  ElCheckBox: {
+    render: (data, col) => {
+      let option: { label: string; value: number }[] = [];
+      for (const obj of col?.props?.option!) {
+        option[obj.order] = {
+          label: obj.label,
+          value: obj.value,
+        };
+      }
+      return (
+        <div>
+          <el-checkbox-group>
+            {option.map((item) => {
+              return <el-checkbox label={item.value}>{item.label}</el-checkbox>;
+            })}
+          </el-checkbox-group>
+        </div>
+      );
+    },
+    append: (data, col) => {
+      return <el-input />;
+    },
+    tooltip: (data, col) => {
+      return <el-input />;
+    },
+  },
+  ElDatePicker: {
+    render: (data, col) => {
+      return (
+        <div>
+          <el-date-picker />
+        </div>
+      );
+    },
+  },
+
+  ElButton: {
+    render: (data, col, index, formEl) => {
+      return (
+        <div>
+          <el-button>{col?.label}</el-button>
+        </div>
+      );
+    },
+  },
+  ElTable: {
+    render(data, col) {
+      const componentOption = shallowRef<
+        ReturnType<typeof parseComponentString> & { render?: () => VNode; children?: any[] }
+      >();
+
+      return (
+        <div>
+          <el-table>
+            {col?.props?.columns?.map((item: any, index: number) => {
+              let result = "";
+              if (item.render) {
+                const renderFunction = new Function(`return ${item.render?.value || ""}`)();
+                const renderComp = (
+                  res: ReturnType<typeof parseComponentString>[],
+                ): (typeof componentOption.value)[] => {
+                  return res.map((ctx) => {
+                    if (typeof ctx == "string") {
+                      return {
+                        tagName: "",
+                        content: ctx,
+                      };
+                    }
+                    const { content, tagName, props } = ctx!;
+                    return {
+                      content,
+                      tagName,
+                      props,
+                      render: resolveComponent(tagName) as () => VNode,
+                      children: Array.isArray(content) ? renderComp(content) : undefined,
+                    };
+                  });
+                };
+                result = renderFunction() as string;
+
+                //判断是否是html字符串标签
+                if (result.startsWith("<")) {
+                  const { content, tagName, props } = parseComponentString(result)!;
+                  componentOption.value = {
+                    tagName,
+                    content,
+                    props,
+                    children: Array.isArray(content) ? renderComp(content) : undefined,
+                    render: resolveComponent(tagName) as () => VNode,
+                  };
+                }
+              }
+
+              return (
+                <el-table-column
+                  label={item.title}
+                  prop={item.dataIndex}
+                  {...item}
+                  v-slots={{
+                    default: (scope: RowScope) => {
+                      if (item.render) {
+                        if (componentOption.value?.render) {
+                          return (
+                            <componentOption.value.render {...componentOption.value.props}>
+                              {componentOption.value.children?.map((item) => {
+                                if (!item.render) return item.content;
+                                return <item.render {...item.props}>{item.content}</item.render>;
+                              })}
+                            </componentOption.value.render>
+                          );
+                        } else {
+                          return result;
+                        }
+                      } else {
+                        scope.row.data;
+                      }
+                    },
+                  }}
+                ></el-table-column>
+              );
+            })}
+          </el-table>
+          <el-pagination
+            v-model:current-page={((col?.pagerConfig ?? {}).value ?? {}).currentPage}
+            v-model:page-size={((col?.pagerConfig ?? {}).value ?? {}).pageSize}
+            {...col?.pagerConfig?.value}
+          />
+        </div>
+      );
+    },
+  },
+  ElCard: {
+    render(data, col) {
+      return (
+        <div>
+          <el-card shadow="hover" {...col?.props}>
+            Hover
+          </el-card>
+        </div>
+      );
+    },
+  },
+  ElTags: {
+    render(data, col) {
+      
+      return (
+        <div>
+          <el-tabs
+            type="card"
+            modelValue={col?.active}
+            onTabChange={(n: number) => {
+              dragUtil.componentMap.set(col?.id, { ...col, active: n });
+            }}
+          >
+            {col?.props.tabItems?.map((item: any) => (
+              <el-tab-pane label={item.label} name={item.name}>
+                {item?.children.length
+                  ? item.children.map((_col: Col) => {
+                      return CanvasComp(_col);
+                    })
+                  : <p style={{margin:'auto'}}>{"请将元素拖放到此"}</p>}
+              </el-tab-pane>
+            ))}
+          </el-tabs>
+        </div>
+      );
+    },
+  },
+  ElBreadCrumb: {
+    render(data, col) {
+      return (
+        <div>
+          <el-breadcrumb separator-icon={<i-ep-arrowRight />}>
+            {col?.option?.map((opt) => {
+              return <el-breadcrumb-item>{opt.label}</el-breadcrumb-item>;
+            })}
+          </el-breadcrumb>
+        </div>
+      );
+    },
+  },
+  ElDivider: {
+    render(data, col) {
+      return <el-divider />;
+    },
+  },
+  ElSteps: {
+    render(data, col) {
+      return (
+        <div>
+          <el-steps>
+            <el-step title="步骤1" description="描述信息" />
+            <el-step title="步骤2" description="描述信息" />
+            <el-step title="步骤3" description="描述信息" />
+          </el-steps>
+        </div>
+      );
+    },
+  },
+  ElCol: {
+    render(data, col) {
+      return <el-col></el-col>;
+    },
+  },
+  ElRow: {
+    render(data, col) {
+      return <el-row></el-row>;
+    },
+  },
+};
+const FooterBar = function () {
+  return (
+    <div
+      class="mllowcode_footerBar"
+      style={{
+        position: "absolute",
+        bottom: "-25px",
+        right: 0,
+        width: "3rem",
+        height: "25px",
+        backgroundColor: "#32adf7",
+        borderTop: "1px solid #f1f1f1",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 999,
+      }}
+    >
+      <i-ep-document-copy
+        style={{ color: "#fff", fontSize: "1rem", cursor: "pointer" }}
+        onClick={() => {
+          emit("copy", currAEl.value.clickId);
+        }}
+      />
+      <i-ep-delete
+        style={{ color: "#fff", fontSize: "1rem", cursor: "pointer" }}
+        onClick={() => {
+          emit("delete", currAEl.value.clickId);
+        }}
+      />
+    </div>
+  );
+};
+const HeaderBar = function (props: { name?: string }) {
+  return (
+    <div
+      class="mllowcode_footerBar"
+      style={{
+        position: "absolute",
+        top: "-30px",
+        left: "-2px",
+        padding: "2px 5px",
+        width: "fit-content",
+        height: "25px",
+        backgroundColor: "#32adf7",
+        borderTop: "1px solid #f1f1f1",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 999,
+      }}
+    >
+      <span style={{ color: "#fff", fontSize: "16px" }}>{props.name}</span>
+      <i-ep-setting
+        style={{ color: "#fff", fontSize: "0.8rem", cursor: "pointer" }}
+        onClick={() => {
+          // 打开设置弹窗
+        }}
+      />
+    </div>
+  );
+};
+const CanvasComp: (col: Col) => VNode = (col) => {
+  console.log(44);
+
+  
+  const Component = renderForm[col?.componentName as ComponentType]?.render?.(col?.label, col) || <div></div>;
+  return h(
+    Component,
+    {
+      ...col?.props,
+      style: { ...col?.props.style, boxSizing: "border-box" },
+      "data-tag": col?.componentName,
+      "data-id": col?.id,
+      draggable: true,
+      class: [
+        "canvascomp",
+        {
+          hover_child: currAEl.value.overId == col?.id,
+          box: col?.children !== undefined,
+          dragover: currAEl.value.id == col?.id,
+          nonEmpty: !!col?.children?.length,
+          enter_page: currAEl.value.overId == col?.id,
+        },
+      ],
+      id: currAEl.value.clickId == col?.id ? "active" : "",
+      onClick: (e) => {
+        e.stopPropagation();
+        currAEl.value.clickId = col?.id as string;
+        emit("current", col);
+      },
+      onMouseover: (e: MouseEvent) => {
+        e.stopPropagation();
+        currAEl.value.overId = col?.id as string;
+      },
+      onDragstart(el) {
+        emit("start", el);
+      },
+    },
+    {
+      default: () => [
+        currAEl.value.clickId == col?.id ? <HeaderBar name={col?.componentName} /> : null,
+        h("div", {
+          "data-id": col?.id,
+          class: [
+            "overlay",
+            {
+              insertBottom: currAEl.value.insertBottomId == col?.id,
+              insertTop: currAEl.value.insertTopId == col?.id,
+            },
+          ],
+          style: { zIndex: col?.componentName == "ElTags" ? 0 : 1 },
+          onDragenter(el) {
+            emit("enter", el);
+            el.preventDefault();
+          },
+          onDragleave(el) {
+            el.preventDefault();
+            emit("leave", el);
+          },
+          onDragover(el) {
+            emit("over", el);
+            el.preventDefault();
+          },
+          onDrop(el) {
+            emit("end", el);
+          },
+        }),
+        Array.isArray(Component.children)
+          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
+          : Component.children,
+        col?.children && col?.componentName != "ElTags"
+          ? col?.children.length
+            ? col?.children.map((child) => CanvasComp(child))
+            : "请将元素拖放到此"
+          : null,
+        currAEl.value.clickId == col?.id ? <FooterBar /> : null,
+      ],
+    },
+  );
+};
+const emit = defineEmits(["delete", "copy", "start", "enter", "leave", "over", "end", "current"]);
+const currAEl = defineModel<{
+  id: null | string;
+  clickId: null | string;
+  overId: null | string;
+  insertTopId: string | null;
+  insertBottomId: string | null;
+}>("currAEl", {
+  required: true,
+});
+const schema = computed<Col>(() => {
+  return props.schema;
+});
+</script>
+
+<template>
+  <component :is="CanvasComp(schema)"> </component>
+</template>
+
+<style lang="less" scoped>
+:deep(.hover-effect) {
+  &:hover {
+    background-color: #f1f1f1 !important;
+  }
+}
+
+:deep(.el-col) {
+  position: relative;
+}
+
+:deep(.el-form-item__content) {
+  align-items: start;
+  position: static;
+}
+
+#active {
+  position: relative;
+  border: 2px solid #32adf7 !important;
+}
+
+.box {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding: 3px 0;
+  height: 50px;
+  font-size: 13px;
+  background-color: #f1f1f1;
+  color: #999;
+}
+
+.nonEmpty {
+  height: fit-content;
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.canvascomp {
+  position: relative;
+  cursor: move;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.insertTop {
+  border-top: 3px solid #32adf7 !important;
+}
+
+.insertBottom {
+  border-bottom: 3px solid #32adf7 !important;
+}
+
+.enter_page {
+  border: 1px dashed #32adf7;
+}
+
+.hover_child {
+  position: relative;
+  // padding: 0 5px 5px 0;
+  box-sizing: border-box;
+
+  &:hover {
+    border: 1px dashed #32adf7;
+
+    &::before {
+      display: block;
+      content: attr(data-tag);
+      position: absolute;
+      top: -20px;
+      left: 0;
+      width: fit-content;
+      color: #32adf7;
+      z-index: 999;
+    }
+  }
+}
+
+.dragover {
+  position: relative;
+  border: 1px dashed #32adf7;
+  background-color: rgb(233, 250, 250);
+
+  &::before {
+    display: block;
+    content: attr(data-tag);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: fit-content;
+    color: #32adf7;
+  }
+}
+
+.editBtn {
+  //绝对定位布局
+
+  position: absolute;
+
+  right: 10px;
+
+  bottom: 3px;
+
+  font-size: 20px;
+
+  color: #ccc;
+
+  cursor: pointer;
+
+  color: #838383;
+
+  border-radius: 20px;
+
+  border: 1px solid #ccc;
+
+  background-color: #fff;
+
+  padding: 4px 0;
+
+  width: 55px;
+
+  font-size: 12px;
+
+  height: 13px;
+
+  display: flex;
+
+  justify-content: space-evenly;
+}
+
+.page_search {
+  background-color: #f1f1f1;
+
+  height: auto;
+
+  border-radius: 5px;
+
+  padding: 10px 20px;
+
+  :deep(.linebreak) {
+    .el-form-item__label {
+      width: 80px;
+
+      height: auto !important;
+
+      line-height: 20px;
+
+      text-align: right;
+    }
+  }
+
+  .form6-inline {
+    padding: 10px 0 0 30px;
+  }
+}
+
+:deep(.el-form-item__label-wrap) {
+  margin-left: 0px !important;
+}
+
+:deep(.el-radio:last-child) {
+  margin-right: 32px;
+}
+
+:deep(.el-radio-group) {
+  align-items: start;
+}
+
+.demo-tabs > .el-tabs__content {
+  color: #6b778c;
+  font-size: 32px;
+  font-weight: 600;
+  height: 88%;
+}
+:deep(.el-tabs__content){
+  padding: 22px;
+}
+</style>
