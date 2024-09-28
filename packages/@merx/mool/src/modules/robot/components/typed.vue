@@ -52,7 +52,8 @@ export default defineComponent({
     const handleOptionChange = (event: Event) => {
       selectedOption.value = (event.target as HTMLElement).value; // 获取用户选择的选项
       messages.value.isqt = false;
-      messages.value.content = `你选择了${selectedOption.value}`;
+      messages.value.content = `你选择了${selectedOption.value},请稍等，正在创建表单...`;
+      messages.value.choosed?.(selectedOption.value); // 调用父组件的回调函数
     };
     const options: TypedOptions = {
       strings: [messages.value.content],
@@ -71,6 +72,7 @@ export default defineComponent({
         self.stop();
         if (messages.value.isqt) {
           insertRadioButtons(); // 插入单选框
+          spanInd++;
         }
       },
     };
@@ -84,10 +86,8 @@ export default defineComponent({
           const typed_container = document.getElementById(props.id);
           typed_container?.appendChild(span);
           options.strings = [n];
-          console.log(options);
-
           nextTick(() => {
-            new Typed(typed_container?.childNodes[spanInd], options);
+            new Typed(typed_container?.children[spanInd], options);
           });
         },
         { deep: true },

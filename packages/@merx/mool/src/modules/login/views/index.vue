@@ -7,8 +7,17 @@
 					<span v-for="text in app.info.name" :key="text">{{ text }}</span>
 				</div>
 			</div> -->
-
-      <p class="desc" style="font-size: 28px;font-weight: bold;letter-spacing: 5px;">MlDesigner低代码设计平台</p>
+      <div >
+        <svg>
+        <use xlink:href="#icon-website" />
+      </svg>
+      </div>
+      <p
+        class="desc"
+        style="font-size: 28px; font-weight: bold; letter-spacing: 5px;margin-top:20px"
+      >
+        MlDesigner低代码官网CMS
+      </p>
 
       <div class="form">
         <el-form label-position="top" class="form" :disabled="saving">
@@ -25,12 +34,22 @@
           </el-form-item>
 
           <el-form-item label="密码">
-            <input v-model="form.password" type="password" placeholder="请输入密码" maxlength="20" autocomplete="off" />
+            <input
+              v-model="form.password"
+              type="password"
+              placeholder="请输入密码"
+              maxlength="20"
+              autocomplete="off"
+            />
           </el-form-item>
 
           <el-form-item label="验证码">
             <div class="row">
-              <input v-model="form.verifyCode" placeholder="图片验证码" maxlength="4" />
+              <input
+                v-model="form.verifyCode"
+                placeholder="图片验证码"
+                maxlength="4"
+              />
 
               <pic-captcha
                 v-model="form.captchaId"
@@ -44,45 +63,16 @@
           </el-form-item>
 
           <div class="op">
-            <el-button type="primary" :loading="saving" @click="toLogin">登录</el-button>
+            <el-button type="primary" :loading="saving" @click="toLogin"
+              >登录</el-button
+            >
           </div>
         </el-form>
       </div>
     </div>
     <div class="bg">
-      <svg class="cl-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 350">
-        <g transform="">
-          <g transform="translate(628,-17) scale(100)" opacity="0.3">
-            <path
-              d="M4.10125 0 C4.10125 0.5525 4.3542 0.8338 4.1835 1.3593 S3.6427 1.9637 3.318 2.4107 S3.0325 3.2339 2.5855 3.5587 S1.7928 3.7298 1.2674 3.9005 S0.5525 4.3988 0 4.3988 S-0.7419 4.0713 -1.2674 3.9005 S-2.1385 3.8834 -2.5855 3.5587 S-2.9932 2.8576 -3.318 2.4107 S-4.0127 1.8847 -4.1835 1.3593 S-4.1013 0.5525 -4.1013 0 S-4.3542 -0.8338 -4.1835 -1.3593 S-3.6427 -1.9637 -3.318 -2.4107 S-3.0325 -3.2339 -2.5855 -3.5587 S-1.7928 -3.7298 -1.2674 -3.9005 S-0.5525 -4.3988 0 -4.3988 S0.7419 -4.0713 1.2674 -3.9005 S2.1385 -3.8834 2.5855 -3.5587 S2.9932 -2.8576 3.318 -2.4107 S4.0127 -1.8847 4.1835 -1.3593 S4.1013 -0.5525 4.1013 0"
-              stroke-width="0"
-              transform="rotate(19)"
-            >
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                dur="10s"
-                repeatCount="indefinite"
-                values="0;36"
-              ></animateTransform>
-            </path>
-          </g>
-          <g transform="translate(704,-56) scale(100)" opacity="0.9">
-            <path
-              d="M4.9215 0 C4.9215 0.663 5.225 1.0006 5.0202 1.6311 S4.3713 2.3564 3.9816 2.8928 S3.639 3.8807 3.1026 4.2704 S2.1514 4.4757 1.5208 4.6806 S0.663 5.2785 0 5.2785 S-0.8903 4.8855 -1.5208 4.6806 S-2.5662 4.6601 -3.1026 4.2704 S-3.5919 3.4292 -3.9816 2.8928 S-4.8153 2.2617 -5.0202 1.6311 S-4.9215 0.663 -4.9215 0 S-5.225 -1.0006 -5.0202 -1.6311 S-4.3713 -2.3564 -3.9816 -2.8928 S-3.639 -3.8807 -3.1026 -4.2704 S-2.1514 -4.4757 -1.5208 -4.6806 S-0.663 -5.2785 0 -5.2785 S0.8903 -4.8855 1.5208 -4.6806 S2.5662 -4.6601 3.1026 -4.2704 S3.5919 -3.4292 3.9816 -2.8928 S4.8153 -2.2617 5.0202 -1.6311 S4.9215 -0.663 4.9215 0"
-              stroke-width="0"
-              transform="rotate(2.04427)"
-            >
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                dur="6s"
-                repeatCount="indefinite"
-                values="0;36"
-              ></animateTransform>
-            </path>
-          </g>
-        </g>
+      <svg class="cl-svg cl-svg__bg">
+        <use xlink:href="#icon-bg" />
       </svg>
     </div>
 
@@ -130,46 +120,45 @@ const form = reactive({
 
 // 登录
 async function toLogin() {
-	if (!form.username) {
-		return ElMessage.error("用户名不能为空");
-	}
+  if (!form.username) {
+    return ElMessage.error("用户名不能为空");
+  }
 
-	if (!form.password) {
-		return ElMessage.error("密码不能为空");
-	}
+  if (!form.password) {
+    return ElMessage.error("密码不能为空");
+  }
 
-	if (!form.verifyCode) {
-		return ElMessage.error("图片验证码不能为空");
-	}
+  if (!form.verifyCode) {
+    return ElMessage.error("图片验证码不能为空");
+  }
 
-	saving.value = true;
+  saving.value = true;
 
-	try {
-		// 登录
-		await service.base.open.login(form).then(user.setToken);
+  try {
+    // 登录
+    await service.base.open.login(form).then(user.setToken);
 
-		// token 事件
-		await Promise.all(app.events.hasToken.map((e) => e()));
+    // token 事件
+    await Promise.all(app.events.hasToken.map((e) => e()));
 
-		// 设置缓存
-		storage.set("username", form.username);
+    // 设置缓存
+    storage.set("username", form.username);
 
-		// 跳转首页
-		router.push("/homepage");
-	} catch (err: any) {
-		// 刷新验证码
-		refs.picCaptcha.refresh();
+    // 跳转首页
+    router.push("/homepage");
+  } catch (err: any) {
+    // 刷新验证码
+    refs.picCaptcha.refresh();
 
-		// 提示错误
-		ElMessage.error(err.message);
-	}
+    // 提示错误
+    ElMessage.error(err.message);
+  }
 
-	saving.value = false;
+  saving.value = false;
 }
 </script>
 
 <style lang="less" scoped>
-
 .page-login {
   display: flex;
   justify-content: center;

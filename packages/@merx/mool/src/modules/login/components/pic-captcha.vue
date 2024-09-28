@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { Loading, WarningFilled } from "@element-plus/icons-vue";
-// import { useCool } from "/@/cool";
+import { useMool } from "@/mool";
 
 const emit = defineEmits(["update:modelValue", "change"]);
 

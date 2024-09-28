@@ -1,0 +1,66 @@
+{
+  "pageInfo": {
+    "name": "page",
+    "schema": {
+      "ref": {
+        "formData": {
+          "strategyId": "",
+          "strategyName": "",
+          "crownCode": "",
+          "catOneCode": "",
+          "catTwoCode": "",
+          "catThreeCode": "",
+          "benefitCode": "",
+          "createUser": "",
+          "taskId": "",
+          "contentId": "",
+          "title": "",
+          "caption": "",
+          "testConf": "",
+          "status": ""
+        },
+        "searchParams": {
+          "type": "SearchParams",
+          "value": [
+            {
+              "url": "/v1/task/list",
+              "method": "POST",
+              "headers": {
+                "content-type": "application/json"
+              },
+              "data": {}
+            }
+          ]
+        },
+        "datetimerange0": {
+          "type": "ComputedRef",
+          "value": ""
+        }
+      },
+      "lifeCycles": {
+        "onMounted": {
+          "type": "JSFunction",
+          "value": "getOption();\r\ngetOption1();\r\ngetOption2();\r\nonSearch()\r\n"
+        }
+      },
+      "state": {
+        "": {
+          "type": "JSExpression",
+          "value": ""
+        }
+      },
+      "methods": {},
+      "componentName": "Page",
+      "props": {
+        "style": {
+          "marginBottom": "18px",
+          "backgroundColor": "#fff"
+        }
+      },
+      "children": [],
+      "id": "fpdzmm86",
+      "css": "\n    .table_title::before {\n        content: \"\";\n        display: inline-block;\n        width: 2px;\n        height: 12px;\n        margin-right: 5px;\n        background-color: #51aedb;\n    }\n\n"
+    }
+  },
+  "blocksData": []
+}

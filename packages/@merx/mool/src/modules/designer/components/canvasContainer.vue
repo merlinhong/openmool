@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { h, type PropType, computed, resolveComponent, shallowRef, VNode } from "vue";
 import type { ComponentType, Render, Col, RowScope } from "@/mool/types/BasicForm";
-import { dragUtil,omit } from "@/mool/utils";
+import { omit } from "@/mool/utils";
 
 defineOptions({
   inheritAttrs: false,
@@ -15,12 +15,15 @@ const props = defineProps({
   },
 
   currAEl: {
-    type: Object as PropType<{ id: null | string; clickId: null | string; overId: string | null }>,
+    type: Object as PropType<{ clickId: null | string; hoverId: string | null }>,
     default: () => ({
       clickId: null,
-      id: null,
-      overId: null,
+      hoverId: null,
     }),
+  },
+  componentMap: {
+    type: Object as PropType<InstanceType<MapConstructor>>,
+    default: () => ({}),
   },
 });
 
@@ -354,14 +357,13 @@ const renderForm: {
   },
   ElTags: {
     render(data, col) {
-      
       return (
         <div>
           <el-tabs
             type="card"
             modelValue={col?.active}
             onTabChange={(n: number) => {
-              dragUtil.componentMap.set(col?.id, { ...col, active: n });
+              props.componentMap.set(col?.id, { ...col, active: n });
             }}
           >
             {col?.props.tabItems?.map((item: any) => (
@@ -383,7 +385,7 @@ const renderForm: {
       return (
         <div>
           <el-breadcrumb separator-icon={<i-ep-arrowRight />}>
-            {col?.option?.map((opt) => {
+            {col?.props.option?.map((opt) => {
               return <el-breadcrumb-item>{opt.label}</el-breadcrumb-item>;
             })}
           </el-breadcrumb>
@@ -498,11 +500,11 @@ const CanvasComp: (col: Col) => VNode = (col) => {
       class: [
         "canvascomp",
         {
-          hover_child: currAEl.value.overId == col?.id,
+          hover_child: currAEl.value.hoverId == col?.id,
           box: col?.children !== undefined,
-          dragover: currAEl.value.id == col?.id,
+          dragover: currAEl.value.overId == col?.id,
           nonEmpty: !!col?.children?.length,
-          enter_page: currAEl.value.overId == col?.id,
+          enter_page: currAEl.value.hoverId == col?.id,
         },
       ],
       id: currAEl.value.clickId == col?.id ? "active" : "",
@@ -513,7 +515,11 @@ const CanvasComp: (col: Col) => VNode = (col) => {
       },
       onMouseover: (e: MouseEvent) => {
         e.stopPropagation();
-        currAEl.value.overId = col?.id as string;
+        currAEl.value.hoverId = col?.id as string;
+      },
+      onMouseleave: (e: MouseEvent) => {
+         e.stopPropagation();
+        currAEl.value.hoverId = null;
       },
       onDragstart(el) {
         emit("start", el);
@@ -563,9 +569,9 @@ const CanvasComp: (col: Col) => VNode = (col) => {
 };
 const emit = defineEmits(["delete", "copy", "start", "enter", "leave", "over", "end", "current"]);
 const currAEl = defineModel<{
-  id: null | string;
   clickId: null | string;
-  overId: null | string;
+  hoverId: null | string;
+  overId:null|string;
   insertTopId: string | null;
   insertBottomId: string | null;
 }>("currAEl", {
@@ -669,7 +675,7 @@ const schema = computed<Col>(() => {
 .dragover {
   position: relative;
   border: 1px dashed #32adf7;
-  background-color: rgb(233, 250, 250);
+  background-color: rgb(233, 250, 250) !important;
 
   &::before {
     display: block;

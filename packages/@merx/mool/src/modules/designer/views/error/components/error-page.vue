@@ -64,7 +64,7 @@ function home() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .error-page {
 	background-color: #fff;
 	position: relative;

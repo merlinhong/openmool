@@ -19,6 +19,9 @@ declare namespace JSX {
   }
 }
 
+
+
+
 declare global {
   function $t(key: string): string;
 }
