@@ -72,7 +72,7 @@ export class DragUtil {
   private lastIsTop: null | boolean = null; // 上一个 isInCenter 的值
 
   /** 初始化组件映射 */
-  public initializeComponentMap(list: Page | (Col & { parentId: string })) {
+  public initializeComponentMap = (list: Page | (Col & { parentId: string }))=> {
     this.componentMap.set(list.id, list);
     if (list.children) {
       for (const child of list.children) {

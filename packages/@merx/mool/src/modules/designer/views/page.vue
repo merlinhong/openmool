@@ -19,6 +19,8 @@ import ConfigPlane from "$/designer/components/settings.vue";
 
 import RobotMainVue from "$/robot/views/Main.vue";
 
+const emit = defineEmits(['closeTableConfig'])
+
 type CurrAEl = {
   /**
    * 当前点击的元素id
@@ -69,7 +71,7 @@ const {
     startEle: [".page .canvascomp"],
     endEle: ".overlay",
   },
-},(AEl)=>Object.assign(currAEl.value, AEl));
+}, (AEl) => Object.assign(currAEl.value, AEl));
 
 const pageConfig: Ref<Page> = ref({
   ref: {},
@@ -116,6 +118,7 @@ const setVarRef = ref(false);
 const openAiRef = ref(false);
 
 const addType = ref("");
+
 
 const labelTypeList: Record<string, string> = {
   添加变量: "变量名",
@@ -539,6 +542,7 @@ const getCurrent = (conf: Col) => {
   currAEl.value.clickId = conf.id as string;
 
   isShowConfig.value = true;
+  emit('closeTableConfig',false)
 };
 
 const statuIcon = ref<"info" | "success" | "warning" | "error">("info");
@@ -547,7 +551,10 @@ const statuTitle = ref("正在出码，请稍等....");
 
 const generateCoding = ref(false);
 
-const preview = () => {};
+const previewRef = ref(false);
+const preview = () => { 
+  previewRef.value = true
+};
 
 const genCode = async () => {
   try {
@@ -697,7 +704,7 @@ const openRobot = () => {
 // 获取AI返回的结果进行schema赋值
 const updateConf = (schema?: Col) => {
   let ruleProps: string[] = [];
-  if (currentConf.value?.componentName == "Box") {
+  if (currentConf.value?.componentName == "div") {
     function collectValues(obj: Record<string, any>) {
       const stack = [obj]; // 初始化栈，第一个元素是根对象和空路径
       const result = [];
@@ -795,8 +802,7 @@ onMounted(() => {
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header
-        style="
+      <el-header style="
           display: flex;
 
           justify-content: space-between;
@@ -804,18 +810,15 @@ onMounted(() => {
           align-items: center;
 
           background-color: #fff;
-        "
-      >
+        ">
         <div style="width: 100px; text-align: center">{{ "< 未命名表单" }}</div>
 
-        <div>表单设计</div>
+            <div>网页设计</div>
 
-        <div style="width: 300px; text-align: center">登录</div>
+            <div style="width: 300px; text-align: center">登录</div>
       </el-header>
 
-      <div
-        class="toolbar"
-        style="
+      <div class="toolbar" style="
           display: flex;
 
           justify-content: space-between;
@@ -833,8 +836,7 @@ onMounted(() => {
           shadow-color: #eee;
 
           box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.1);
-        "
-      >
+        ">
         <span style="font-size: 12px; color: #0b9142">查看新手引导</span>
 
         <div>
@@ -851,9 +853,18 @@ onMounted(() => {
           <!-- <input type="file" webkitdirectory @change="handleFolderSelect" ref="fileInput" style="display:none" /> -->
         </div>
       </div>
-
-      <el-result
-        style="
+      <el-drawer
+    v-model="previewRef"
+    size="98%"
+    direction="btt"
+    :with-header="false"
+  >
+     
+        <BasicPage :isPreview="previewRef" v-for="(box, ind) in pageConfig.children" :key="ind" :schema="box" v-model:currAEl="currAEl"
+          :componentMap="componentMap" @delete="del" @copy="copy" @current="getCurrent" @start="start" @enter="enter"
+          @leave="leave" @over="over" @end="end" />
+      </el-drawer>
+      <el-result style="
           width: 20rem;
 
           position: absolute;
@@ -867,23 +878,14 @@ onMounted(() => {
           z-index: 9999;
 
           border: 1px solid #e2e2e2;
-        "
-        v-if="generateCoding"
-        :icon="statuIcon"
-        :title="statuTitle"
-      >
+        " v-if="generateCoding" :icon="statuIcon" :title="statuTitle">
         <template #extra v-if="statuIcon == 'success'">
-          <el-button type="primary" @click="generateCoding = false"
-            >好的</el-button
-          >
+          <el-button type="primary" @click="generateCoding = false">好的</el-button>
         </template>
       </el-result>
 
       <el-container form-design-container style="height: calc(100vh - 120px)">
-        <el-aside
-          class="page-design-component"
-          width="30px"
-          style="
+        <el-aside class="page-design-component" width="30px" style="
             background-color: #fff;
             padding: 0 5px;
             box-sizing: content-box;
@@ -894,11 +896,9 @@ onMounted(() => {
             justify-content: space-between;
 
             border-right: 1px solid #c9c8c8;
-          "
-        >
+          ">
           <div>
-            <div
-              style="
+            <div style="
                 margin-top: 20px;
 
                 height: 15px;
@@ -916,28 +916,19 @@ onMounted(() => {
                 cursor: pointer;
 
                 border-radius: 5px;
-              "
-              @click="openMaterial"
-            >
+              " @click="openMaterial">
               +
             </div>
 
-            <div
-              style="font-weight: bold; margin-top: 10px; cursor: pointer"
-              @click="openJs"
-            >
+            <div style="font-weight: bold; margin-top: 10px; cursor: pointer" @click="openJs">
               JS
             </div>
 
-            <div
-              style="font-weight: bold; margin-top: 10px; cursor: pointer"
-              @click="openRef"
-            >
+            <div style="font-weight: bold; margin-top: 10px; cursor: pointer" @click="openRef">
               ref
             </div>
 
-            <div
-              style="
+            <div style="
                 margin-top: 10px;
 
                 height: 15px;
@@ -955,81 +946,57 @@ onMounted(() => {
                 cursor: pointer;
 
                 border-radius: 5px;
-              "
-              @click="openVar"
-            >
+              " @click="openVar">
               var
             </div>
           </div>
 
           <div style="margin-bottom:20px;cursor: pointer;">
-            <svg
-                @click="openRobot"
-                xmlns="http://www.w3.org/2000/svg"
-                style="width: 22px; height: 22px;"
-                width="128" height="128"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fell="currentColor"
-                  d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
-                />
-              </svg>
-            <svg @click="openEditor" style="width: 22px; height: 22px;margin-top: 15px" xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 14 14"><g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x=".5" y=".5" rx="1"/><path d="M.5 4h13m-9 3L3 8.5L4.5 10M10 7l1.5 1.5L10 10m-3.5.5L8 6"/></g></svg>
+            <svg @click="openRobot" xmlns="http://www.w3.org/2000/svg" style="width: 22px; height: 22px;" width="128"
+              height="128" viewBox="0 0 24 24">
+              <path fell="currentColor"
+                d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3" />
+            </svg>
+            <svg @click="openEditor" style="width: 22px; height: 22px;margin-top: 15px" xmlns="http://www.w3.org/2000/svg"
+              width="128" height="128" viewBox="0 0 14 14">
+              <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="13" height="13" x=".5" y=".5" rx="1" />
+                <path d="M.5 4h13m-9 3L3 8.5L4.5 10M10 7l1.5 1.5L10 10m-3.5.5L8 6" />
+              </g>
+            </svg>
 
           </div>
         </el-aside>
 
-        <div
-          style="
+        <div style="
             width: 230px;
 
             background-color: #fff;
 
             border-right: 1px solid #e2e2e2;
-          "
-          v-if="drawer"
-        >
-          <el-tabs
-            type="card"
-            v-model="activeName"
-            style="height: 100%; display: flex; flex-direction: column"
-          >
+          " v-if="drawer">
+          <el-tabs type="card" v-model="activeName" style="height: 100%; display: flex;">
             <el-tab-pane label="组件" name="0">
               <div style="margin-top: 15px">
                 <span style="padding: 15px"> 基础</span>
 
                 <ul class="base_component">
-                  <li
-                    :data-type="item.dataType"
-                    class="component_item"
-                    v-for="item in baseComponentList"
-                  >
-                    <iEpDocument
-                      width="15px"
-                      style="vertical-align: text-top; margin-right: 4px"
-                    />{{ item.text }}
+                  <li :data-type="item.dataType" class="component_item" v-for="item in baseComponentList">
+                    <iEpDocument width="15px" style="vertical-align: text-top; margin-right: 4px" />{{ item.text }}
                   </li>
                 </ul>
 
                 <span style="padding: 15px"> 高级</span>
 
                 <ul class="base_component">
-                  <li
-                    :data-type="item.dataType"
-                    class="component_item"
-                    v-for="item in seniorComponentList"
-                  >
-                    <iEpDocument
-                      width="15px"
-                      style="vertical-align: text-top; margin-right: 4px"
-                    />{{ item.text }}
+                  <li :data-type="item.dataType" class="component_item" v-for="item in seniorComponentList">
+                    <iEpDocument width="15px" style="vertical-align: text-top; margin-right: 4px" />{{ item.text }}
                   </li>
                 </ul>
               </div>
             </el-tab-pane>
 
-            <el-tab-pane label="区块" name="1">
+            <el-tab-pane label="模板" name="1">
               <div style="margin-top: 15px">
                 <ul class="block_component" draggable></ul>
               </div>
@@ -1037,8 +1004,7 @@ onMounted(() => {
           </el-tabs>
         </div>
 
-        <div
-          style="
+        <div style="
             width: 260px;
 
             position: absolute;
@@ -1052,20 +1018,12 @@ onMounted(() => {
             left: 2.3rem;
 
             z-index: 999;
-          "
-          v-if="showVar"
-        >
+          " v-if="showVar">
           <div style="display: flex; padding: 20px; box-sizing: border-box">
             <el-radio-group v-model="addType" @change="setVar">
-              <el-radio-button
-                value="添加变量"
-                label="添加变量"
-              ></el-radio-button>
+              <el-radio-button value="添加变量" label="添加变量"></el-radio-button>
 
-              <el-radio-button
-                value="添加生命周期"
-                label="添加生命周期"
-              ></el-radio-button>
+              <el-radio-button value="添加生命周期" label="添加生命周期"></el-radio-button>
             </el-radio-group>
           </div>
 
@@ -1076,8 +1034,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div
-          style="
+        <div style="
             width: 400px;
 
             position: absolute;
@@ -1091,13 +1048,10 @@ onMounted(() => {
             left: 18.6rem;
 
             z-index: 999;
-          "
-          v-if="setVarRef"
-        >
+          " v-if="setVarRef">
           <div style="display: flex; justify-content: end; padding: 10px">
-            <el-button type="primary" plain size="small" @click="saveEditor"
-              >保存<span style="color: red" v-if="isChange">*</span></el-button
-            >
+            <el-button type="primary" plain size="small" @click="saveEditor">保存<span style="color: red"
+                v-if="isChange">*</span></el-button>
           </div>
 
           <el-divider style="margin-top: 0px"></el-divider>
@@ -1109,16 +1063,11 @@ onMounted(() => {
 
             <span style="font-size: 14px">初始值</span>
 
-            <div
-              id="var_editor_container"
-              style="width: 100%; height: 200px; border: 1px solid #c9c8c8"
-            ></div>
+            <div id="var_editor_container" style="width: 100%; height: 200px; border: 1px solid #c9c8c8"></div>
           </div>
         </div>
 
-        <div
-          v-if="showJS"
-          style="
+        <div v-if="showJS" style="
             width: 600px;
 
             position: absolute;
@@ -1132,10 +1081,8 @@ onMounted(() => {
             left: 2.4rem;
 
             z-index: 999;
-          "
-        >
-          <div
-            style="
+          ">
+          <div style="
               display: flex;
 
               justify-content: space-between;
@@ -1143,30 +1090,21 @@ onMounted(() => {
               align-items: center;
 
               padding: 2px 5px;
-            "
-          >
+            ">
             <h4 style="padding: 0 20px">页面JS</h4>
 
             <div>
-              <el-button type="primary" plain @click="saveEditor"
-                >保存<span style="color: red" v-if="isChange"
-                  >*</span
-                ></el-button
-              >
+              <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+                  v-if="isChange">*</span></el-button>
 
               <i-ep-delete></i-ep-delete>
             </div>
           </div>
 
-          <div
-            id="JS_editor_container"
-            style="width: 560px; height: 90%; border: 1px solid #c9c8c8"
-          ></div>
+          <div id="JS_editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
         </div>
 
-        <div
-          v-if="showRef"
-          style="
+        <div v-if="showRef" style="
             width: 600px;
 
             position: absolute;
@@ -1180,10 +1118,8 @@ onMounted(() => {
             left: 2.4rem;
 
             z-index: 999;
-          "
-        >
-          <div
-            style="
+          ">
+          <div style="
               display: flex;
 
               justify-content: space-between;
@@ -1191,28 +1127,19 @@ onMounted(() => {
               align-items: center;
 
               padding: 2px 5px;
-            "
-          >
+            ">
             <h4 style="padding: 0 20px">页面Ref</h4>
 
             <div>
-              <el-button type="primary" plain @click="saveEditor"
-                >保存<span style="color: red" v-if="isChange"
-                  >*</span
-                ></el-button
-              >
+              <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+                  v-if="isChange">*</span></el-button>
             </div>
           </div>
 
-          <div
-            id="Ref_editor_container"
-            style="width: 560px; height: 90%; border: 1px solid #c9c8c8"
-          ></div>
+          <div id="Ref_editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
         </div>
 
-        <div
-          v-if="showSchema"
-          style="
+        <div v-if="showSchema" style="
             width: 600px;
 
             position: absolute;
@@ -1226,10 +1153,8 @@ onMounted(() => {
             left: 2.4rem;
 
             z-index: 999;
-          "
-        >
-          <div
-            style="
+          ">
+          <div style="
               display: flex;
 
               justify-content: space-between;
@@ -1237,34 +1162,23 @@ onMounted(() => {
               align-items: center;
 
               padding: 2px 5px;
-            "
-          >
+            ">
             <h4 style="padding: 0 20px">页面schema</h4>
 
             <div>
-              <el-button type="primary" plain @click="saveEditor"
-                >保存<span style="color: red" v-if="isChange"
-                  >*</span
-                ></el-button
-              >
+              <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+                  v-if="isChange">*</span></el-button>
 
-              <el-button type="primary" text @click="showSchema = false"
-                >关闭</el-button
-              >
+              <el-button type="primary" text @click="showSchema = false">关闭</el-button>
             </div>
           </div>
 
-          <div
-            id="editor_container"
-            style="width: 560px; height: 90%; border: 1px solid #c9c8c8"
-          ></div>
+          <div id="editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
         </div>
 
         <el-container>
           <el-main style="padding: 0; background-color: #eef0f5">
-            <div
-              :class="['page-design-content']"
-              style="
+            <div :class="['page-design-content']" style="
                 width: calc(100vw - 620px);
 
                 height: calc(100vh - 160px);
@@ -1274,23 +1188,18 @@ onMounted(() => {
                 background-color: #e5e5e5;
 
                 box-sizing: border-box;
-              "
-            >
+              ">
               <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
 
-              <div
-                :class="[
-                  'page-design-placeholder',
+              <div :class="[
+                'page-design-placeholder',
 
-                  {
-                    hover: !currAEl.clickId,
+                {
+                  hover: !currAEl.clickId,
 
-                    enter_page: currAEl.overId == pageConfig.id,
-                  },
-                ]"
-                :id="currAEl.clickId == pageConfig.id ? 'active' : ''"
-                v-if="!pageConfig.children?.length"
-                style="
+                  enter_page: currAEl.overId == pageConfig.id,
+                },
+              ]" :id="currAEl.clickId == pageConfig.id ? 'active' : ''" v-if="!pageConfig.children?.length" style="
                   height: 100%;
 
                   text-align: center;
@@ -1304,85 +1213,46 @@ onMounted(() => {
                   flex-direction: column;
 
                   box-sizing: border-box;
-                "
-              >
-                <span style="font-size: 14px; color: #999"
-                  >从左侧拖拽来添加表单</span
-                >
+                ">
+                <span style="font-size: 14px; color: #999">从左侧拖拽来添加表单</span>
               </div>
 
-              <div
-                v-else
-                :style="{
-                  width: '100%',
+              <div v-else :style="{
+                width: '100%',
 
-                  height: '100%',
+                height: '100%',
 
-                  boxSizing: 'border-box',
+                boxSizing: 'border-box',
 
-                  ...pageConfig.props.style,
-                }"
-                :class="[
-                  'page',
+                ...pageConfig.props.style,
+              }" :class="[
+  'page',
 
-                  {
-                    hover_child: currAEl.hoverId == pageConfig.id,
+  {
+    hover_child: currAEl.hoverId == pageConfig.id,
 
-                    enter_page: currAEl.hoverId == pageConfig.id,
-                  },
-                ]"
-                :data-tag="pageConfig.componentName"
-                :data-id="pageConfig.id"
-                @click="activeCurrent"
-                :id="currAEl.clickId == pageConfig.id ? 'active' : ''"
-                @mouseover="currAEl.hoverId = pageConfig.id"
-                @mouseleave="currAEl.hoverId = null"
-
-              >
-                <BasicPage
-                  v-for="(box, ind) in pageConfig.children"
-                  :key="ind"
-                  :schema="box"
-                  v-model:currAEl="currAEl"
-                  :componentMap="componentMap"
-                  @delete="del"
-                  @copy="copy"
-                  @current="getCurrent"
-                  @start="start"
-                  @enter="enter"
-                  @leave="leave"
-                  @over="over"
-                  @end="end"
-                />
+    enter_page: currAEl.hoverId == pageConfig.id,
+  },
+]" :data-tag="pageConfig.componentName" :data-id="pageConfig.id" @click="activeCurrent"
+                :id="currAEl.clickId == pageConfig.id ? 'active' : ''" @mouseover="currAEl.hoverId = pageConfig.id"
+                @mouseleave="currAEl.hoverId = null">
+                <BasicPage v-for="(box, ind) in pageConfig.children" :key="ind" :schema="box" v-model:currAEl="currAEl"
+                  :componentMap="componentMap" @delete="del" @copy="copy" @current="getCurrent" @start="start"
+                  @enter="enter" @leave="leave" @over="over" @end="end" />
               </div>
             </div>
           </el-main>
 
-          <el-aside
-            class="page-design-config"
-            width="280px"
-            style="background-color: #fff"
-          >
-            <config-plane
-              :is-show-config="isShowConfig"
-              v-model:current="currentConf"
-              v-model:pageConfig="pageConfig"
-              @save="saveEditor"
-              @openJs="openJs"
-              @openRef="openRef"
-            />
+          <el-aside class="page-design-config" width="280px" style="background-color: #fff">
+            <config-plane :is-show-config="isShowConfig" v-model:current="currentConf" v-model:pageConfig="pageConfig"
+              @save="saveEditor" @openJs="openJs" @openRef="openRef" />
           </el-aside>
         </el-container>
       </el-container>
     </el-container>
 
-    <RobotMainVue
-      v-if="openAiRef"
-      :schema="currentConf"
-      @update:schema="updateConf"
-      :foundationModel="foundationModel"
-      style="z-index: 999; position: absolute; bottom: 50px; right: 320px"
-    />
+    <RobotMainVue v-if="openAiRef" :schema="currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
+      style="z-index: 999; position: absolute; bottom: 50px; right: 320px" />
   </div>
 </template>
 

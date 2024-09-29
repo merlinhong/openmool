@@ -1,4 +1,4 @@
-import { ComponentType,Col } from "@/mool/types/BasicForm";
+import { ComponentType, Col } from "@/mool/types/BasicForm";
 
 export const baseComponentList = [
   { text: "纯文本", dataType: "Text" },
@@ -19,7 +19,7 @@ export const baseComponentList = [
 ];
 
 export const seniorComponentList = [
-  { text: "盒子", dataType: "Box" },
+  { text: "盒子", dataType: "div" },
 
   { text: "Form", dataType: "ElForm" },
 
@@ -44,13 +44,18 @@ export const seniorComponentList = [
   { text: "进度条", dataType: "ElSteps" },
 
   { text: "卡片", dataType: "ElCard" },
+  { text: '走马灯', dataType: 'ElCarousel' },
+
+  { text: "导航栏", dataType: "ElPageHeader" },
+  { text: "菜单", dataType: "ElMenu" },
+
 ];
 
 export const JsonSchema: {
   [K in ComponentType]: Col;
 } = {
-  Box: {
-    componentName: "Box",
+  div: {
+    componentName: "div",
 
     props: {
       style: {
@@ -320,13 +325,11 @@ export const JsonSchema: {
       columns: [
         {
           title: "姓名",
-
           dataIndex: "name",
-
           render: {
             type: "JSFunction",
-
             value: "function r(){return `<div>123</div>`}",
+            
           },
         },
 
@@ -340,14 +343,14 @@ export const JsonSchema: {
   ElTags: {
 
     key: "",
-    active:1,
-    props:{
-      style:{height:'450px',background:'#fff'},
-      tabItems:[{label:'标签1',name:1,children:[]},{label:'标签2',name:2,children:[]},{label:'标签3',name:3,children:[]}]
+    active: 1,
+    props: {
+      style: { height: '450px', background: '#fff' },
+      tabItems: [{ label: '标签1', name: 1, children: [] }, { label: '标签2', name: 2, children: [] }, { label: '标签3', name: 3, children: [] }]
     },
 
     componentName: "ElTags",
-    children:[]
+    children: []
   },
 
   ElBreadCrumb: {
@@ -379,9 +382,8 @@ export const JsonSchema: {
 
     props: {
       style: {
-        width: "320px",
-
-        height: "320px",
+        width: "200px",
+        height: "200px",
       },
     },
   },
@@ -400,7 +402,7 @@ export const JsonSchema: {
 
   ElSteps: {
     label: "步骤条",
-    props:{},
+    props: {},
     componentName: "ElSteps",
   },
 
@@ -439,4 +441,57 @@ export const JsonSchema: {
 
     id: "",
   },
+  ElPageHeader: {
+    label: "",
+
+    key: "",
+
+    componentName: "ElPageHeader",
+
+    props: {
+      style: { width: "100%" },
+      title: 'MlDesigner',
+      content: '',
+      icon: '',
+    },
+
+  },
+  ElMenu: {
+    label: "",
+
+    key: "",
+
+    componentName: "ElMenu",
+
+    props: {
+      style: { width: "fit-content" },
+      textColor: '#fff',
+      backgroundColor: '#333',
+      ellipsis: false,
+      mode: 'horizontal',
+      menuItems: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2'}, { title: '菜单3', index: '3',}]
+    }
+
+  },
+  ElCarousel: {
+    label: "",
+
+    key: "",
+
+    componentName: "ElCarousel",
+    props: {
+      style: { width: "100%" },
+      height: '300px',
+      arrow: 'never',
+      autoplay: true,
+      interval: 3000,
+      indicatorPosition: 'outside',
+      loop: true,
+      trigger: 'click',
+      type: 'card',
+      direction: 'horizontal',
+      option: [1, 2, 3, 4],
+      motionBlur: true
+    }
+  }
 };

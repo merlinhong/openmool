@@ -376,7 +376,7 @@ type ComponentPropsMap = {
   ElTags: OtherProps;
   ElDivider: OtherProps;
   ElCard: OtherProps;
-  Box: OtherProps;
+  div: OtherProps;
   ElDatePicker: OtherProps;
   Text: OtherProps;
 };
@@ -463,7 +463,7 @@ export interface Pagination extends CreateMutable<PaginationProps> {
 }
 
 export type ComponentType =
-  | "Box"
+  | "div"
   | "ElInput"
   | "Text"
   | "ElDatePicker"

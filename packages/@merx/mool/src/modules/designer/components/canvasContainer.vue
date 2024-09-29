@@ -25,6 +25,10 @@ const props = defineProps({
     type: Object as PropType<InstanceType<MapConstructor>>,
     default: () => ({}),
   },
+  isPreview:{
+    type:Boolean,
+    default:()=>false
+  }
 });
 
 type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
@@ -35,6 +39,8 @@ const parseComponentString = (
   // 使用正则表达式解析组件字符串，支持自闭合标签和嵌套标签
   const tagMatch =
     componentString.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || componentString.match(/<(\w+(-\w+)*)([^>]*)\/>/);
+    console.log(tagMatch);
+    
   if (tagMatch) {
     const tagName = tagMatch[1] || tagMatch[5];
     const propsString = tagMatch[3] || tagMatch[7];
@@ -69,6 +75,8 @@ const parseNestedContent = (content: string): any[] => {
   while (remainingContent) {
     const nestedTagMatch =
       remainingContent.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || remainingContent.match(/<(\w+(-\w+)*)([^>]*)\/>/);
+      console.log(remainingContent);
+      
     if (nestedTagMatch) {
       const nestedTagName = nestedTagMatch[1] || nestedTagMatch[5];
       const nestedPropsString = nestedTagMatch[3] || nestedTagMatch[7];
@@ -83,7 +91,8 @@ const parseNestedContent = (content: string): any[] => {
           nestedProps[key] = value.replace(/["']/g, "");
         });
       }
-
+      console.log('nestedContent:',nestedContent);
+      
       // 递归解析嵌套内容
       const nestedParsedContent = nestedContent ? parseNestedContent(nestedContent) : [];
 
@@ -98,6 +107,8 @@ const parseNestedContent = (content: string): any[] => {
       break;
     }
   }
+  console.log(result);
+  
 
   return result;
 };
@@ -106,10 +117,55 @@ const renderForm: {
     [K in KeyType]: Render;
   }>;
 } = {
-  Box: {
+  div: {
     render: (data, col, child) => {
-      return <div></div>;
+      return <div>
+        
+      </div>;
     },
+  },
+  ElMenu:{
+    render: (data, col, child) => { 
+      return <div>
+        <el-menu style={{borderBottom:'none !important' }}>
+          {
+            col?.props.menuItems?.map(item=>{
+              if(item.subMenu){
+                return <el-sub-menu index={item.index}
+                v-slots={{
+                  title:()=>item.title
+                }}
+                >
+                  {
+                    item.subMenu.map(subItem=>{
+                      return <el-menu-item index={subItem.index}>{subItem.title}</el-menu-item>
+                    })
+                  }
+                </el-sub-menu>
+              }else{
+                return <el-menu-item index={item.index}>{item.title}</el-menu-item>
+              }
+            })
+          }
+        </el-menu>
+      </div>;
+    },
+  },
+ 
+  ElCarousel:{
+    render:(dta,col,child)=>{
+      return (
+        <div>
+          <el-carousel >
+            {
+              col?.props?.option?.map((item) => {
+                return <el-carousel-item>{resolveComponent()}</el-carousel-item>;
+              })
+            }
+          </el-carousel>
+        </div>
+      )
+    }
   },
   ElForm: {
     render: (data, col, child) => {
@@ -304,8 +360,19 @@ const renderForm: {
                     render: resolveComponent(tagName) as () => VNode,
                   };
                 }
+                console.log(componentOption.value)
               }
 
+              const GenerateComp = (children?:any[])=>{
+                return children?.map((item) => {
+                  if (!item.render){
+                      return item.content;
+                  }else{
+
+                     return <item.render {...item.props}>{GenerateComp(item.children)}</item.render>
+                  }
+                })
+              }
               return (
                 <el-table-column
                   label={item.title}
@@ -317,10 +384,7 @@ const renderForm: {
                         if (componentOption.value?.render) {
                           return (
                             <componentOption.value.render {...componentOption.value.props}>
-                              {componentOption.value.children?.map((item) => {
-                                if (!item.render) return item.content;
-                                return <item.render {...item.props}>{item.content}</item.render>;
-                              })}
+                              {GenerateComp(componentOption.value.children)}
                             </componentOption.value.render>
                           );
                         } else {
@@ -348,7 +412,7 @@ const renderForm: {
     render(data, col) {
       return (
         <div>
-          <el-card shadow="hover" {...col?.props}>
+          <el-card shadow="hover" style={{width:'calc(100% - 2px)',height:'calc(100% - 2px)'}}>
             Hover
           </el-card>
         </div>
@@ -421,6 +485,37 @@ const renderForm: {
       return <el-row></el-row>;
     },
   },
+  ElPageHeader:{
+    render(data, col) {
+      return (
+        <div>
+          <el-page-header 
+          style={{background:'#333',color:'#fff',padding:'5px'}}
+        v-slots={{
+        title:()=>{
+          return <div style={{fontSize:'20px'}}>{'MlDesigner'}</div>
+        },
+        extra: () => { 
+          return <el-button>登录</el-button>
+        },
+        content:()=>{
+          return <div> <el-dropdown style={{color:'#fff'}}>
+          <span class="el-dropdown-link">
+            Dropdown List
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
+          </span>
+   
+          </el-dropdown>
+        </div>
+        }
+      }}
+      />
+        </div>
+      )
+    },
+  }
 };
 const FooterBar = function () {
   return (
@@ -489,6 +584,35 @@ const CanvasComp: (col: Col) => VNode = (col) => {
 
   
   const Component = renderForm[col?.componentName as ComponentType]?.render?.(col?.label, col) || <div></div>;
+  if(props.isPreview){
+    return  h(
+    Component,
+    {
+      ...col?.props,
+      style: { ...col?.props.style, boxSizing: "border-box" },
+      "data-tag": col?.componentName,
+      "data-id": col?.id,
+      draggable: true,
+      class: [
+        "canvascomp",
+        
+      ],
+      
+    },
+    {
+      default: () => [
+        Array.isArray(Component.children)
+          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
+          : Component.children,
+        col?.children && col?.componentName != "ElTags"
+          ? col?.children.length
+            ? col?.children.map((child) => CanvasComp(child))
+            : "请将元素拖放到此"
+          : null,
+      ],
+    },
+  );
+  }
   return h(
     Component,
     {
@@ -762,13 +886,30 @@ const schema = computed<Col>(() => {
   align-items: start;
 }
 
-.demo-tabs > .el-tabs__content {
+.demo-tabs>.el-tabs__content {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;
   height: 88%;
 }
-:deep(.el-tabs__content){
+
+:deep(.el-tabs__content) {
   padding: 22px;
+}
+
+.el-carousel__item h3 {
+  color: #475669;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+  text-align: center;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
 }
 </style>

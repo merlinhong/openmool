@@ -265,6 +265,15 @@
     </el-tabs>
     <div v-else style="margin: 0 auto; color: #777">点击组件进行属性设置</div>
   </div>
+  <div  class="" style="text-align:right;height:67%;width: 270px;background:#fff;position: absolute;right: 15%;bottom: 100px;border: 1px solid #cac9c9;z-index: 9999;padding: 10px;" v-if="setTableVisible" >
+    <svg @click="setTableVisible = false" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 56 56"><path fill="#333333" d="M28 51.906c13.055 0 23.906-10.828 23.906-23.906c0-13.055-10.875-23.906-23.93-23.906C14.899 4.094 4.095 14.945 4.095 28c0 13.078 10.828 23.906 23.906 23.906m0-3.984C16.937 47.922 8.1 39.062 8.1 28c0-11.04 8.813-19.922 19.876-19.922c11.039 0 19.921 8.883 19.945 19.922c.023 11.063-8.883 19.922-19.922 19.922m-8.016-9.984c.516 0 .985-.211 1.336-.586l6.657-6.68l6.656 6.68c.351.351.82.586 1.36.586c1.03 0 1.874-.868 1.874-1.899c0-.539-.21-.984-.562-1.336l-6.657-6.656l6.68-6.703c.375-.399.563-.797.563-1.313a1.865 1.865 0 0 0-1.875-1.875c-.493 0-.915.164-1.313.563l-6.727 6.703l-6.703-6.68c-.351-.375-.773-.539-1.289-.539c-1.054 0-1.875.797-1.875 1.852c0 .515.188.96.563 1.312l6.656 6.68l-6.656 6.68c-.375.328-.563.796-.563 1.312c0 1.031.82 1.898 1.875 1.898"/></svg>
+    <BasicForm
+      class="form-design-config"
+      :config="tableConfig"
+      v-model:data="Current.props.columns[currColIndex]"
+      v-if="Current.props?.columns && currColIndex !== null"
+    />
+  </div>
   <el-dialog v-model="styleDialogVisible" :title="dialogTitle" width="800">
     <div id="cssEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div>
     <template #footer>
@@ -283,7 +292,7 @@
       </div>
     </template>
   </el-dialog>
-  <el-dialog v-model="renderDialogVisible" title="列内容渲染" width="800">
+  <el-dialog v-model="renderDialogVisible" title="列内容渲染" width="800" :close-on-click-modal="false" :modal="false" append-to="">
     <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div>
     <template #footer>
       <div>
@@ -302,7 +311,7 @@
       }}</el-radio-button>
     </el-radio-group>
   </el-drawer>
-  <el-drawer
+  <!-- <el-drawer
     v-model="setTableVisible"
     title="设置表格"
     direction="rtl"
@@ -310,22 +319,9 @@
     :modal="false"
     :z-index="1000"
     style="margin-right: 15%"
+    :lock-scroll="false"
   >
-    <BasicForm
-      class="form-design-config"
-      :config="tableConfig"
-      v-model:data="Current.props.columns[currColIndex]"
-      v-if="Current.props?.columns && currColIndex !== null"
-    />
-    <!-- <el-form-item label="外边距">
-              <el-input v-model="marginValue" @input="changeMargin"></el-input>
-          </el-form-item>
-          <el-radio-group v-model="marginValue" @change="changeMargin">
-              <el-radio-button v-for="item in ['auto', 0, 10, 20, 40, 60, 100, 140, 200]" :label="item">{{
-                  item
-              }}</el-radio-button>
-          </el-radio-group> -->
-  </el-drawer>
+  </el-drawer> -->
   <!-- 数据请求设置 -->
   <el-dialog v-model="fetchDataDialogVisible" title="fetch请求设置" width="800">
     <el-form style="width: 100%">
@@ -719,7 +715,7 @@ const BindVar = defineComponent({
       required: false,
     },
     // config: {
-    //   type: Object as Box,
+    //   type: Object as div,
     //   required: true,
     // },
   },

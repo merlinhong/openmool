@@ -1,5 +1,7 @@
 <template>
+
   <div class="page-login">
+
     <div class="box">
       <!-- <div class="logo">
 				<img src="/logo.png" alt="Logo" />
@@ -7,65 +9,40 @@
 					<span v-for="text in app.info.name" :key="text">{{ text }}</span>
 				</div>
 			</div> -->
-      <div >
+
+      <div>
         <svg>
-        <use xlink:href="#icon-website" />
-      </svg>
+          <use xlink:href="#icon-website" />
+        </svg>
       </div>
-      <p
-        class="desc"
-        style="font-size: 28px; font-weight: bold; letter-spacing: 5px;margin-top:20px"
-      >
+      <p class="desc" style="font-size: 28px; font-weight: bold; letter-spacing: 5px;margin-top:20px">
         MlDesigner低代码官网CMS
       </p>
 
       <div class="form">
         <el-form label-position="top" class="form" :disabled="saving">
           <el-form-item label="用户名">
-            <input
-              v-model="form.username"
-              placeholder="请输入用户名"
-              maxlength="20"
-              type="text"
-              :readonly="readonly"
-              autocomplete="off"
-              @focus="readonly = false"
-            />
+            <input v-model="form.username" placeholder="请输入用户名" maxlength="20" type="text" :readonly="readonly"
+              autocomplete="off" @focus="readonly = false" />
           </el-form-item>
 
           <el-form-item label="密码">
-            <input
-              v-model="form.password"
-              type="password"
-              placeholder="请输入密码"
-              maxlength="20"
-              autocomplete="off"
-            />
+            <input v-model="form.password" type="password" placeholder="请输入密码" maxlength="20" autocomplete="off" />
           </el-form-item>
 
           <el-form-item label="验证码">
             <div class="row">
-              <input
-                v-model="form.verifyCode"
-                placeholder="图片验证码"
-                maxlength="4"
-              />
+              <input v-model="form.verifyCode" placeholder="图片验证码" maxlength="4" />
 
-              <pic-captcha
-                v-model="form.captchaId"
-                @change="
-                  () => {
-                    form.verifyCode = '';
-                  }
-                "
-              />
+              <pic-captcha v-model="form.captchaId" @change="() => {
+                  form.verifyCode = '';
+                }
+                " />
             </div>
           </el-form-item>
 
           <div class="op">
-            <el-button type="primary" :loading="saving" @click="toLogin"
-              >登录</el-button
-            >
+            <el-button type="primary" :loading="saving" @click="toLogin">登录</el-button>
           </div>
         </el-form>
       </div>

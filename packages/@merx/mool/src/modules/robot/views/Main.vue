@@ -249,7 +249,7 @@ export default defineComponent({
 
           typed: false,
         });
-      if (props.schema.componentName == "Box" && input.includes("表单")) {
+      if (props.schema.componentName == "div" && input.includes("表单")) {
         const msg = {
           role: "system",
           content: "请选择是否需要行列布局组件包裹?",

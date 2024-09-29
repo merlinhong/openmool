@@ -3,7 +3,7 @@
   "private": true,
   "version": "8.1.2",
   "scripts": {
-    "start": " node ./service/index.js && vite",
+    "start": " node ./service/index.js && vite --mode dev",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build --mode production",
     "build:test": "vue-tsc --noEmit && vite build --mode dev",

@@ -159,6 +159,7 @@ const handleLiteralBinding = ({
       return (
         component != "el-table" &&
         component != "el-select" &&
+        component != "el-menu" &&
         attrsArr.push(`:${key}="state.${valueKey}"`)
       );
     }
@@ -412,6 +413,23 @@ function generateTemplate(schema, state, description, isRootNode = false) {
           );
 
           break;
+          case "el-menu":
+           
+            props.menuItems?.forEach((item, index) => {
+              if(item.subMenu){
+                result.push(`<el-sub-menu index="${item.index}">
+                <template #title>${item.title}</template>
+                ${item.subMenu.map((subItem) => {
+                  return `<el-menu-item index="${subItem.index}">${subItem.title}</el-menu-item>`
+                }).join('')
+                }
+                </el-sub-menu>`
+              )
+              }else{
+                result.push(`<el-menu-item index="${item.index}">${item.title}</el-menu-item>`)
+              }
+            })
+            break;
 
         default:
           break;
