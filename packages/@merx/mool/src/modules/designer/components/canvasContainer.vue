@@ -25,93 +25,14 @@ const props = defineProps({
     type: Object as PropType<InstanceType<MapConstructor>>,
     default: () => ({}),
   },
-  isPreview:{
-    type:Boolean,
-    default:()=>false
-  }
+  isPreview: {
+    type: Boolean,
+    default: () => false,
+  },
 });
 
 type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
 
-const parseComponentString = (
-  componentString: string,
-): { tagName: string; content: any[]; props?: Record<string, string> } | null => {
-  // 使用正则表达式解析组件字符串，支持自闭合标签和嵌套标签
-  const tagMatch =
-    componentString.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || componentString.match(/<(\w+(-\w+)*)([^>]*)\/>/);
-    console.log(tagMatch);
-    
-  if (tagMatch) {
-    const tagName = tagMatch[1] || tagMatch[5];
-    const propsString = tagMatch[3] || tagMatch[7];
-    const content = tagMatch[4] || "";
-
-    // 解析属性
-    const props: Record<string, string> = {};
-    const propsMatch = (propsString ?? "").match(/(\w+)=["']([^"']+)["']/g);
-    if (propsMatch) {
-      propsMatch.forEach((prop) => {
-        const [key, value] = prop.split("=");
-        props[key] = value.replace(/["']/g, "");
-      });
-    }
-
-    // 递归解析嵌套内容
-    const nestedContent = content ? parseNestedContent(content) : [];
-
-    // 返回解析结果
-    return { tagName, content: nestedContent, props };
-  }
-
-  // 如果没有匹配到任何标签，返回 null
-  return null;
-};
-
-const parseNestedContent = (content: string): any[] => {
-  // 递归解析嵌套内容
-  const result: any[] = [];
-  let remainingContent = content;
-
-  while (remainingContent) {
-    const nestedTagMatch =
-      remainingContent.match(/<(\w+(-\w+)*)([^>]*)>(.*?)<\/\1>/s) || remainingContent.match(/<(\w+(-\w+)*)([^>]*)\/>/);
-      console.log(remainingContent);
-      
-    if (nestedTagMatch) {
-      const nestedTagName = nestedTagMatch[1] || nestedTagMatch[5];
-      const nestedPropsString = nestedTagMatch[3] || nestedTagMatch[7];
-      const nestedContent = nestedTagMatch[4] || "";
-
-      // 解析属性
-      const nestedProps: Record<string, string> = {};
-      const nestedPropsMatch = (nestedPropsString ?? "").match(/(\w+)=["']([^"']+)["']/g);
-      if (nestedPropsMatch) {
-        nestedPropsMatch.forEach((prop) => {
-          const [key, value] = prop.split("=");
-          nestedProps[key] = value.replace(/["']/g, "");
-        });
-      }
-      console.log('nestedContent:',nestedContent);
-      
-      // 递归解析嵌套内容
-      const nestedParsedContent = nestedContent ? parseNestedContent(nestedContent) : [];
-
-      // 构建嵌套标签对象
-      const nestedTagObject = { tagName: nestedTagName, content: nestedParsedContent, props: nestedProps };
-      result.push(nestedTagObject);
-
-      // 更新剩余内容
-      remainingContent = remainingContent.slice(nestedTagMatch[0].length);
-    } else {
-      result.push(remainingContent);
-      break;
-    }
-  }
-  console.log(result);
-  
-
-  return result;
-};
 const renderForm: {
   [K in ComponentType]: Partial<{
     [K in KeyType]: Render;
@@ -119,53 +40,50 @@ const renderForm: {
 } = {
   div: {
     render: (data, col, child) => {
-      return <div>
-        
-      </div>;
+      return <div></div>;
     },
   },
-  ElMenu:{
-    render: (data, col, child) => { 
-      return <div>
-        <el-menu style={{borderBottom:'none !important' }}>
-          {
-            col?.props.menuItems?.map(item=>{
-              if(item.subMenu){
-                return <el-sub-menu index={item.index}
-                v-slots={{
-                  title:()=>item.title
-                }}
-                >
-                  {
-                    item.subMenu.map(subItem=>{
-                      return <el-menu-item index={subItem.index}>{subItem.title}</el-menu-item>
-                    })
-                  }
-                </el-sub-menu>
-              }else{
-                return <el-menu-item index={item.index}>{item.title}</el-menu-item>
-              }
-            })
-          }
-        </el-menu>
-      </div>;
-    },
-  },
- 
-  ElCarousel:{
-    render:(dta,col,child)=>{
+  ElMenu: {
+    render: (data, col, child) => {
       return (
         <div>
-          <el-carousel >
-            {
-              col?.props?.option?.map((item) => {
-                return <el-carousel-item>{resolveComponent()}</el-carousel-item>;
-              })
-            }
+          <el-menu style={{ borderBottom: "none !important" }}>
+            {col?.props.menuItems?.map((item) => {
+              if (item.subMenu) {
+                return (
+                  <el-sub-menu
+                    index={item.index}
+                    v-slots={{
+                      title: () => item.title,
+                    }}
+                  >
+                    {item.subMenu.map((subItem) => {
+                      return <el-menu-item index={subItem.index}>{subItem.title}</el-menu-item>;
+                    })}
+                  </el-sub-menu>
+                );
+              } else {
+                return <el-menu-item index={item.index}>{item.title}</el-menu-item>;
+              }
+            })}
+          </el-menu>
+        </div>
+      );
+    },
+  },
+
+  ElCarousel: {
+    render: (dta, col, child) => {
+      return (
+        <div>
+          <el-carousel>
+            {col?.props?.option?.map((item) => {
+              return <el-carousel-item>{resolveComponent()}</el-carousel-item>;
+            })}
           </el-carousel>
         </div>
-      )
-    }
+      );
+    },
   },
   ElForm: {
     render: (data, col, child) => {
@@ -316,63 +234,10 @@ const renderForm: {
   },
   ElTable: {
     render(data, col) {
-      const componentOption = shallowRef<
-        ReturnType<typeof parseComponentString> & { render?: () => VNode; children?: any[] }
-      >();
-
       return (
         <div>
           <el-table>
             {col?.props?.columns?.map((item: any, index: number) => {
-              let result = "";
-              if (item.render) {
-                const renderFunction = new Function(`return ${item.render?.value || ""}`)();
-                const renderComp = (
-                  res: ReturnType<typeof parseComponentString>[],
-                ): (typeof componentOption.value)[] => {
-                  return res.map((ctx) => {
-                    if (typeof ctx == "string") {
-                      return {
-                        tagName: "",
-                        content: ctx,
-                      };
-                    }
-                    const { content, tagName, props } = ctx!;
-                    return {
-                      content,
-                      tagName,
-                      props,
-                      render: resolveComponent(tagName) as () => VNode,
-                      children: Array.isArray(content) ? renderComp(content) : undefined,
-                    };
-                  });
-                };
-                result = renderFunction() as string;
-
-                //判断是否是html字符串标签
-                if (result.startsWith("<")) {
-                  const { content, tagName, props } = parseComponentString(result)!;
-                  componentOption.value = {
-                    tagName,
-                    content,
-                    props,
-                    children: Array.isArray(content) ? renderComp(content) : undefined,
-                    render: resolveComponent(tagName) as () => VNode,
-                  };
-                }
-                console.log(componentOption.value)
-              }
-
-              const GenerateComp = (children?:any[])=>{
-                return children?.map((item) => {
-                  if (!item.render){
-                      return item.content;
-                  }else{
-
-                     return <item.render {...item.props}>{GenerateComp(item.children)}</item.render>
-                  }
-                })
-              }
               return (
                 <el-table-column
                   label={item.title}
@@ -380,18 +245,10 @@ const renderForm: {
                   {...item}
                   v-slots={{
                     default: (scope: RowScope) => {
-                      if (item.render) {
-                        if (componentOption.value?.render) {
-                          return (
-                            <componentOption.value.render {...componentOption.value.props}>
-                              {GenerateComp(componentOption.value.children)}
-                            </componentOption.value.render>
-                          );
-                        } else {
-                          return result;
-                        }
+                      if (!!item.render?.schema?.children) {
+                        return CanvasComp(item.render.schema, true);
                       } else {
-                        scope.row.data;
+                        return scope.row.data;
                       }
                     },
                   }}
@@ -412,7 +269,7 @@ const renderForm: {
     render(data, col) {
       return (
         <div>
-          <el-card shadow="hover" style={{width:'calc(100% - 2px)',height:'calc(100% - 2px)'}}>
+          <el-card shadow="hover" style={{ width: "calc(100% - 2px)", height: "calc(100% - 2px)" }}>
             Hover
           </el-card>
         </div>
@@ -432,11 +289,13 @@ const renderForm: {
           >
             {col?.props.tabItems?.map((item: any) => (
               <el-tab-pane label={item.label} name={item.name}>
-                {item?.children.length
-                  ? item.children.map((_col: Col) => {
-                      return CanvasComp(_col);
-                    })
-                  : <p style={{margin:'auto'}}>{"请将元素拖放到此"}</p>}
+                {item?.children.length ? (
+                  item.children.map((_col: Col) => {
+                    return CanvasComp(_col);
+                  })
+                ) : (
+                  <p style={{ margin: "auto" }}>{"请将元素拖放到此"}</p>
+                )}
               </el-tab-pane>
             ))}
           </el-tabs>
@@ -485,37 +344,40 @@ const renderForm: {
       return <el-row></el-row>;
     },
   },
-  ElPageHeader:{
+  ElPageHeader: {
     render(data, col) {
       return (
         <div>
-          <el-page-header 
-          style={{background:'#333',color:'#fff',padding:'5px'}}
-        v-slots={{
-        title:()=>{
-          return <div style={{fontSize:'20px'}}>{'MlDesigner'}</div>
-        },
-        extra: () => { 
-          return <el-button>登录</el-button>
-        },
-        content:()=>{
-          return <div> <el-dropdown style={{color:'#fff'}}>
-          <span class="el-dropdown-link">
-            Dropdown List
-            <el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
-          </span>
-   
-          </el-dropdown>
+          <el-page-header
+            style={{ background: "#333", color: "#fff", padding: "5px" }}
+            v-slots={{
+              title: () => {
+                return <div style={{ fontSize: "20px" }}>{"MlDesigner"}</div>;
+              },
+              extra: () => {
+                return <el-button>登录</el-button>;
+              },
+              content: () => {
+                return (
+                  <div>
+                    {" "}
+                    <el-dropdown style={{ color: "#fff" }}>
+                      <span class="el-dropdown-link">
+                        Dropdown List
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                    </el-dropdown>
+                  </div>
+                );
+              },
+            }}
+          />
         </div>
-        }
-      }}
-      />
-        </div>
-      )
+      );
     },
-  }
+  },
 };
 const FooterBar = function () {
   return (
@@ -579,39 +441,31 @@ const HeaderBar = function (props: { name?: string }) {
     </div>
   );
 };
-const CanvasComp: (col: Col) => VNode = (col) => {
-  console.log(44);
-
-  
+const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRenderColumn = false) => {
   const Component = renderForm[col?.componentName as ComponentType]?.render?.(col?.label, col) || <div></div>;
-  if(props.isPreview){
-    return  h(
-    Component,
-    {
-      ...col?.props,
-      style: { ...col?.props.style, boxSizing: "border-box" },
-      "data-tag": col?.componentName,
-      "data-id": col?.id,
-      draggable: true,
-      class: [
-        "canvascomp",
-        
-      ],
-      
-    },
-    {
-      default: () => [
-        Array.isArray(Component.children)
-          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
-          : Component.children,
-        col?.children && col?.componentName != "ElTags"
-          ? col?.children.length
-            ? col?.children.map((child) => CanvasComp(child))
-            : "请将元素拖放到此"
-          : null,
-      ],
-    },
-  );
+  if (props.isPreview || isRenderColumn) {
+    return h(
+      Component,
+      {
+        ...col?.props,
+        style: { ...col?.props.style, boxSizing: "border-box" },
+        "data-tag": col?.componentName,
+        "data-id": col?.id,
+        class: ["canvascomp"],
+      },
+      {
+        default: () => [
+          Array.isArray(Component.children)
+            ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
+            : Component.children,
+          col?.children && col?.componentName != "ElTags"
+            ? col?.children.length
+              ? col?.children.map((child) => CanvasComp(child,isRenderColumn))
+              : "请将元素拖放到此"
+            : null,
+        ],
+      },
+    );
   }
   return h(
     Component,
@@ -642,7 +496,7 @@ const CanvasComp: (col: Col) => VNode = (col) => {
         currAEl.value.hoverId = col?.id as string;
       },
       onMouseleave: (e: MouseEvent) => {
-         e.stopPropagation();
+        e.stopPropagation();
         currAEl.value.hoverId = null;
       },
       onDragstart(el) {
@@ -683,7 +537,7 @@ const CanvasComp: (col: Col) => VNode = (col) => {
           : Component.children,
         col?.children && col?.componentName != "ElTags"
           ? col?.children.length
-            ? col?.children.map((child) => CanvasComp(child))
+            ? col?.children.map((child) => CanvasComp(child,isRenderColumn))
             : "请将元素拖放到此"
           : null,
         currAEl.value.clickId == col?.id ? <FooterBar /> : null,
@@ -695,7 +549,7 @@ const emit = defineEmits(["delete", "copy", "start", "enter", "leave", "over", "
 const currAEl = defineModel<{
   clickId: null | string;
   hoverId: null | string;
-  overId:null|string;
+  overId: null | string;
   insertTopId: string | null;
   insertBottomId: string | null;
 }>("currAEl", {
@@ -886,7 +740,7 @@ const schema = computed<Col>(() => {
   align-items: start;
 }
 
-.demo-tabs>.el-tabs__content {
+.demo-tabs > .el-tabs__content {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;

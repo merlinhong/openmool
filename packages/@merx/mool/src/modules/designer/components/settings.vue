@@ -1,6 +1,6 @@
 <template>
   <div class="propSetting">
-    <el-tabs v-if="isShowConfig" type="card" v-model="activeName" style="height: 100%">
+    <el-tabs v-if="Current" type="card" v-model="activeName" style="height: 100%">
       <el-tab-pane label="属性" name="0">
         <el-collapse v-model="activeNames">
           <el-collapse-item name="1" style="padding: 0 10px">
@@ -265,15 +265,6 @@
     </el-tabs>
     <div v-else style="margin: 0 auto; color: #777">点击组件进行属性设置</div>
   </div>
-  <div  class="" style="text-align:right;height:67%;width: 270px;background:#fff;position: absolute;right: 15%;bottom: 100px;border: 1px solid #cac9c9;z-index: 9999;padding: 10px;" v-if="setTableVisible" >
-    <svg @click="setTableVisible = false" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 56 56"><path fill="#333333" d="M28 51.906c13.055 0 23.906-10.828 23.906-23.906c0-13.055-10.875-23.906-23.93-23.906C14.899 4.094 4.095 14.945 4.095 28c0 13.078 10.828 23.906 23.906 23.906m0-3.984C16.937 47.922 8.1 39.062 8.1 28c0-11.04 8.813-19.922 19.876-19.922c11.039 0 19.921 8.883 19.945 19.922c.023 11.063-8.883 19.922-19.922 19.922m-8.016-9.984c.516 0 .985-.211 1.336-.586l6.657-6.68l6.656 6.68c.351.351.82.586 1.36.586c1.03 0 1.874-.868 1.874-1.899c0-.539-.21-.984-.562-1.336l-6.657-6.656l6.68-6.703c.375-.399.563-.797.563-1.313a1.865 1.865 0 0 0-1.875-1.875c-.493 0-.915.164-1.313.563l-6.727 6.703l-6.703-6.68c-.351-.375-.773-.539-1.289-.539c-1.054 0-1.875.797-1.875 1.852c0 .515.188.96.563 1.312l6.656 6.68l-6.656 6.68c-.375.328-.563.796-.563 1.312c0 1.031.82 1.898 1.875 1.898"/></svg>
-    <BasicForm
-      class="form-design-config"
-      :config="tableConfig"
-      v-model:data="Current.props.columns[currColIndex]"
-      v-if="Current.props?.columns && currColIndex !== null"
-    />
-  </div>
   <el-dialog v-model="styleDialogVisible" :title="dialogTitle" width="800">
     <div id="cssEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div>
     <template #footer>
@@ -292,8 +283,15 @@
       </div>
     </template>
   </el-dialog>
-  <el-dialog v-model="renderDialogVisible" title="列内容渲染" width="800" :close-on-click-modal="false" :modal="false" append-to="">
-    <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div>
+  <el-dialog
+    destroy-on-close
+    v-model="renderDialogVisible"
+    title="列内容组件拖拽渲染"
+    width="1000"
+    :close-on-click-modal="false"
+  >
+    <!-- <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div> -->
+    <BasicCanvas v-model:pageConfig="renderColumnSchema" :drag-comp-li="renderColumnCompLi" />
     <template #footer>
       <div>
         <el-button type="primary" @click="saveRender">保存</el-button>
@@ -311,7 +309,7 @@
       }}</el-radio-button>
     </el-radio-group>
   </el-drawer>
-  <!-- <el-drawer
+  <el-drawer
     v-model="setTableVisible"
     title="设置表格"
     direction="rtl"
@@ -321,7 +319,13 @@
     style="margin-right: 15%"
     :lock-scroll="false"
   >
-  </el-drawer> -->
+    <BasicForm
+      class="form-design-config"
+      :config="tableConfig"
+      v-model:data="Current.props.columns[currColIndex]"
+      v-if="Current.props?.columns && currColIndex !== null"
+    />
+  </el-drawer>
   <!-- 数据请求设置 -->
   <el-dialog v-model="fetchDataDialogVisible" title="fetch请求设置" width="800">
     <el-form style="width: 100%">
@@ -369,13 +373,34 @@
 <script setup lang="tsx">
 import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref } from "vue";
 import { BasicFormConfig, Col, Page } from "@/mool";
-import { initEditor, type MonacoEditor } from "@/mool/utils";
-import {useDrag} from "@/mool/hooks";
+import { initEditor, renderColumnCompLi, uuid, hyphenate, type MonacoEditor } from "@/mool/utils";
+import { useDrag } from "@/mool/hooks";
 import { computed } from "vue";
 import { defineComponent } from "vue";
 import { Pagination } from "@/mool/types/BasicForm";
 import BasicForm from "./BasicForm.vue";
 import { AxiosRequestConfig } from "axios";
+import BasicCanvas from "./BasicCanvas.vue";
+import * as _ from "lodash-es";
+// 渲染列模板的schema
+const renderColumnSchema = ref<Page>({
+  ref: {},
+  lifeCycles: {},
+  state: {},
+  methods: {},
+  componentName: "div",
+  props: {
+    style: {
+      marginBottom: "18px",
+      backgroundColor: "#fff",
+    },
+  },
+  children: [],
+  id: uuid(),
+  css: "",
+});
+const renderDialogVisible = ref(false);
+
 // 动态加载 prettier 和 parser-babel
 const marginValue = ref();
 const marginType = ref("left");
@@ -394,8 +419,7 @@ const cssText = ref<string | null>("");
 const editTitleRef = ref<string>("option");
 // 设置表格drawer变量
 const setTableVisible = ref(false);
-// 渲染表格列内容的弹窗ref
-const renderDialogVisible = ref(false);
+
 // 布局ref变量
 const flexDirection = ref("row");
 const flexWrap = ref("");
@@ -675,9 +699,8 @@ const props = defineProps({
   },
 
   current: {
-    type: Object as PropType<Col>,
-    default: () => [],
-
+    type: Object as PropType<Col|null>,
+    default: () =>null,
     required: true,
   },
   pageConfig: {
@@ -688,6 +711,10 @@ const props = defineProps({
   isShowConfig: {
     type: Boolean,
     default: false,
+  },
+  isBasic: {
+    type: Boolean,
+    default: () => false,
   },
 });
 
@@ -1046,15 +1073,62 @@ const saveOption = () => {
   }
   optionDialogVisible.value = false;
 };
-const saveRender = () => {
-  const config = pageSchema.value;
-  console.log(config);
-  const columns = Current.value.props?.columns ?? [];
-  columns[currColIndex.value ?? 0].render = {
-    type: "JSFunction",
-    value: config,
-  };
 
+// jsontohtml
+
+const jsonToHtml = (json: Page | Col) => {
+  let html = "";
+
+  // 处理组件名
+  if (json.componentName) {
+    // 开始标签
+    html += `<${json.componentName}`;
+
+    // 处理属性
+    if (json.props) {
+      // 处理样式
+      if (json.props.style) {
+        const styleString = Object.entries(json.props.style)
+          .map(([key, value]) => `${hyphenate(key)}: '${value}';`)
+          .join(" ");
+        html += ` style="${styleString}"`;
+      }
+
+      // 处理其他属性
+      for (const [key, value] of Object.entries(json.props)) {
+        if (key !== "style") {
+          // 避免重复处理样式
+          html += ` ${key}="${value}"`;
+        }
+      }
+    }
+
+    html += ">";
+
+    // 处理子元素
+    if (Array.isArray(json.children)) {
+      json.children.forEach((child) => {
+        html += jsonToHtml(child); // 递归处理子元素
+      });
+    }
+
+    html += `</${json.componentName}>`;
+  }
+
+  return html;
+};
+const saveRender = () => {
+  const schema = _.cloneDeep(renderColumnSchema.value);
+  const columns = Current.value.props?.columns ?? [];
+  if (schema?.children.length) {
+    columns[currColIndex.value ?? 0].render = {
+      type: "JSFunction",
+      value: `function r(){return '${jsonToHtml(schema)}'}`,
+      schema,
+    };
+  }else{
+    delete columns[currColIndex.value ?? 0].render
+  }
   renderDialogVisible.value = false;
 };
 let current: HTMLElement | null = null;
@@ -1192,18 +1266,8 @@ const tableConfig = ref<BasicFormConfig>({
             <el-button
               onClick={() => {
                 renderDialogVisible.value = true;
-                pageSchema.value = "";
-                initEditor({
-                  code: data?.value,
-                  id: "renderEditor_container",
-                  lang: "javascript",
-                  update: (val) => {
-                    pageSchema.value = val;
-                  },
-                  callback(ins) {
-                    optionEditor.value = ins;
-                  },
-                });
+                const columns = Current.value.props?.columns ?? [];
+                renderColumnSchema.value.children = (columns[currColIndex.value??0].render?.schema as Page).children
               }}
             >
               {" "}
@@ -2931,11 +2995,14 @@ const seniorConfig: Ref<BasicFormConfig> = ref({
 });
 </script>
 
-<style>
+<style lang="less">
 .propSetting {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
+}
+.el-tabs__content {
+  overflow: scroll !important;
 }
 </style>

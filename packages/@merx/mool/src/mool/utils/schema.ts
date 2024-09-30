@@ -1,5 +1,21 @@
 import { ComponentType, Col } from "@/mool/types/BasicForm";
 
+export const renderColumnCompLi = [
+  { text: "盒子", dataType: "div" },
+
+  { text: "纯文本", dataType: "Text" },
+
+  { text: "单行文本", dataType: "ElInput" },
+
+  { text: '开关', dataType: 'ElSwitch' },
+
+  { text: "单选框", dataType: "ElRadio" },
+
+  { text: "日期/时间", dataType: "ElDatePicker" },
+
+  { text: "按钮", dataType: "ElButton" },
+]
+
 export const baseComponentList = [
   { text: "纯文本", dataType: "Text" },
 
@@ -15,11 +31,12 @@ export const baseComponentList = [
 
   { text: "日期/时间", dataType: "ElDatePicker" },
 
-  { text: "按钮组", dataType: "ElButton" },
+  { text: "按钮", dataType: "ElButton" },
+
+  { text: "图片上传", dataType: "upload" },
 ];
 
 export const seniorComponentList = [
-  { text: "盒子", dataType: "div" },
 
   { text: "Form", dataType: "ElForm" },
 
@@ -44,6 +61,7 @@ export const seniorComponentList = [
   { text: "进度条", dataType: "ElSteps" },
 
   { text: "卡片", dataType: "ElCard" },
+
   { text: '走马灯', dataType: 'ElCarousel' },
 
   { text: "导航栏", dataType: "ElPageHeader" },
@@ -328,8 +346,8 @@ export const JsonSchema: {
           dataIndex: "name",
           render: {
             type: "JSFunction",
-            value: "function r(){return `<div>123</div>`}",
-            
+            value: "function r(){return '<div>123</div>'}",
+
           },
         },
 
@@ -469,15 +487,13 @@ export const JsonSchema: {
       backgroundColor: '#333',
       ellipsis: false,
       mode: 'horizontal',
-      menuItems: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2'}, { title: '菜单3', index: '3',}]
+      menuItems: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2' }, { title: '菜单3', index: '3', }]
     }
 
   },
   ElCarousel: {
     label: "",
-
     key: "",
-
     componentName: "ElCarousel",
     props: {
       style: { width: "100%" },
@@ -491,7 +507,7 @@ export const JsonSchema: {
       type: 'card',
       direction: 'horizontal',
       option: [1, 2, 3, 4],
-      motionBlur: true
+      motionBlur: false
     }
   }
 };

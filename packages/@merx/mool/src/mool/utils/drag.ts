@@ -110,7 +110,7 @@ export class DragUtil {
    */
   public dragCompToCanvas = (
     pageConfig: Ref<Page>,
-    callback: (arg: Col) => void
+    callback?: (arg: Col) => void
   ) => {
     this.initializeComponentMap(pageConfig.value);
     const { drag, canvasDrag } = this.targetEle;
@@ -120,11 +120,8 @@ export class DragUtil {
       },
 
       enter: (el, sort, insertIndex) => {
-        this.rect = +getComputedStyle(el.target as HTMLElement).height;
-        // this.currAEl.overId = pageConfig.value.id;
         this.compId = (el.target as HTMLElement).dataset.id as string;
         this.currAEl.hoverId = this.compId;
-        const component = this.componentMap.get(this.compId);
       },
       over() {},
       leave: (el) => {
@@ -136,11 +133,14 @@ export class DragUtil {
         const target = el.target as HTMLElement;
         const id = uuid();
         const config = JsonSchema[data as ComponentType];
-
+        console.log(config);
+        
         // 编辑组件样式必须的配置,防止AI生成组件时没有生成style
         if (!config.props.style) {
           config.props.style = {};
         }
+        console.log(target.classList);
+        
         if (!target.classList.contains(canvasDrag.endEle.replace(".", ""))) {
           const comp = cloneDeep({ ...config, id });
           pageConfig.value.children?.push(comp);

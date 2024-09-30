@@ -1,4 +1,5 @@
 import { isArray, isNumber, isString, orderBy } from "lodash-es";
+import { hyphenate } from '@vue/shared';
 import { resolveComponent } from "vue";
 import storage from "./storage";
 
@@ -374,7 +375,7 @@ export const deepClone = (obj: any) => {
   return newobj;
 };
 export { storage };
-
+export {hyphenate};
 export * from "./loading";
 export * from "./request";
 export * from "./storage";

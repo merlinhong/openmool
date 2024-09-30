@@ -77,7 +77,7 @@ router.onError((err: Error) => {
 
     // 动态加载组件错误，刷新页面
     if (err.message?.includes("Failed to fetch dynamically imported module")) {
-      window.location.reload();
+      // window.location.reload();
     }
 
     setTimeout(() => {
