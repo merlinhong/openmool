@@ -1,11 +1,13 @@
 <script setup lang="tsx">
 import { onMounted, ref, nextTick } from "vue";
-import { Page,Col } from "@/mool/types";
+import { Page, Col } from "@/mool/types";
 import { uuid } from "@/mool/utils";
 import TopBar from "../components/TopBar.vue";
 import SideBar from "../components/SideBar .vue";
 import BasicCanvas from "../components/BasicCanvas.vue";
-import ConfigPlane from '../components/settings.vue';
+import ConfigPlane from "../components/Settings.vue";
+
+const canvasRef = ref<InstanceType<typeof BasicCanvas>>();
 const pageConfig = ref<Page>({
   ref: {},
   lifeCycles: {},
@@ -24,11 +26,11 @@ const pageConfig = ref<Page>({
 
   css: "",
 });
-const currentConf = ref<Col|null>(null);
+const currentConf = ref<Col | null>(null);
 const activeCurrent = (val) => {
   console.log(val);
-  
-  currentConf.value = val
+
+  currentConf.value = val;
 };
 const containerStyle = ref({ backgroundColor: " #e0dfdf" });
 const hasActive = ref(false);
@@ -58,8 +60,7 @@ onMounted(() => {
         styleEle.innerHTML = pageConfig.value.css;
 
         document.head.appendChild(styleEle);
-
-        initializeComponentMap(pageConfig.value);
+        canvasRef.value?.init(pageConfig.value);
       });
     });
 });
@@ -68,15 +69,30 @@ onMounted(() => {
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header style="display: flex; justify-content: space-between; align-items: center; background-color: #fff">
-        <div style="width: 100px; text-align: center">{{ "< 未命名表单" }}</div>
-        <div>网页设计</div>
-        <div style="width: 300px; text-align: center">登录</div>
+      <div class="px-[20px] bg-red-500 hover:bg-blue-500 object-cover">
+        Hello world!
+      </div>
+      <el-header style="display: flex; align-items: center; background: #fff">
+        <el-page-header style="flex:1" content="网页设计">
+          <template #title>
+            <div>
+              {{ "未命名表单" }}
+            </div>
+          </template>
+          <template #content>
+            <div style="display: flex; align-items: center;justify-content: end;width:45vw">
+              <span class="text-large font-600 mr-3"> 网页设计 </span>
+            </div>
+          </template>
+          <template #extra>
+            <div style="width: 300px; text-align: right">登录</div>
+          </template>
+        </el-page-header>
       </el-header>
       <TopBar v-model:pageConfig="pageConfig" />
-      <el-container :style="containerStyle">
+      <el-container :style="{ height: 'calc(100vh - 120px)', ...containerStyle }">
         <SideBar v-model:pageConfig="pageConfig" @change="openBar" />
-        <BasicCanvas v-model:pageConfig="pageConfig" :hasActive="hasActive" @active="activeCurrent"/>
+        <BasicCanvas ref="canvasRef" v-model:pageConfig="pageConfig" :hasActive="hasActive" @active="activeCurrent" />
         <el-aside class="page-design-config" style="background-color: #fff">
           <config-plane :is-show-config="true" v-model:current="currentConf" v-model:pageConfig="pageConfig" />
         </el-aside>

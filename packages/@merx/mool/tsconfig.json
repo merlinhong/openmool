@@ -19,6 +19,6 @@
     },
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/types/global.d.ts","auto-imports.d.ts", "components.d.ts","src/utils/type.js", "src/pages/lowcode/setting.svue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/types/global.d.ts","auto-imports.d.ts", "components.d.ts","src/utils/type.js"],
 }
 

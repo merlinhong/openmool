@@ -2,7 +2,7 @@ import { useDrag } from "@/mool/hooks";
 import { JsonSchema } from "./schema";
 import { Ref, ref, nextTick, watchEffect } from "vue";
 import { Page, ComponentType, Col } from "@/mool/types/BasicForm";
-import cloneDeep from "lodash/cloneDeep";
+import {cloneDeep} from "lodash-es";
 import { uuid } from "./index";
 
 export type RemoveDrag = ReturnType<typeof useDrag> | null;

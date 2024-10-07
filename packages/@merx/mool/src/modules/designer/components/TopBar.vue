@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="toolbar"
-    style="
+  <div class="toolbar" style="
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -11,8 +9,7 @@
       border-bottom: 1px solid #eee;
       shadow-color: #eee;
       box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.1);
-    "
-  >
+    ">
     <span style="font-size: 12px; color: #0b9142">查看新手引导</span>
     <div>
       <el-button type="warning" plain>撤销</el-button>
@@ -23,11 +20,10 @@
       <!-- <input type="file" webkitdirectory @change="handleFolderSelect" ref="fileInput" style="display:none" /> -->
     </div>
   </div>
-  <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false">
+  <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
     <BasicPage :isPreview="previewRef" v-for="(box, ind) in PageSchema.children" :key="ind" :schema="box" />
   </el-drawer>
-  <el-result
-    style="
+  <el-result style="
       width: 20rem;
 
       position: absolute;
@@ -41,11 +37,7 @@
       z-index: 9999;
 
       border: 1px solid #e2e2e2;
-    "
-    v-if="generateCoding"
-    :icon="statuIcon"
-    :title="statuTitle"
-  >
+    " v-if="generateCoding" :icon="statuIcon" :title="statuTitle">
     <template #extra v-if="statuIcon == 'success'">
       <el-button type="primary" @click="generateCoding = false">好的</el-button>
     </template>
@@ -53,11 +45,14 @@
 </template>
 
 <script setup lang="tsx">
-import { ref,Ref,PropType } from "vue";
+import { ref, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
+import BasicPage from "$/designer/components/canvasContainer.vue";
+
+
 defineProps({
   pageConfig: {
-    type: Object as PropType<Ref<Page>>,
+    type: Object as PropType<Page>,
     required: true,
   },
 });
@@ -65,7 +60,7 @@ const PageSchema = defineModel<Page>("pageConfig", { required: true });
 const statuIcon = ref<"info" | "success" | "warning" | "error">("info");
 
 const statuTitle = ref("正在出码，请稍等....");
- const generateCoding = ref(false);
+const generateCoding = ref(false);
 
 const previewRef = ref(false);
 const preview = () => {

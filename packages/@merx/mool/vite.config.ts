@@ -124,6 +124,7 @@ export default ({ mode }) => {
           javascriptEnabled: true,
         },
       },
+     
     },
   });
 };

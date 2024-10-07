@@ -267,7 +267,9 @@
               "background": "#fff",
               "height": "500px",
               "display": "flex",
-              "padding": "15px"
+              "padding": "15px",
+              "alignItems": "center",
+              "justifyContent": "space-around"
             }
           },
           "children": [
@@ -300,62 +302,53 @@
               "id": "mey22ijs"
             },
             {
-              "componentName": "div",
+              "label": "",
+              "key": "",
+              "componentName": "ElTable",
               "props": {
-                "style": {
+                "headerCellStyle": {
                   "background": "#fff"
-                }
-              },
-              "children": [
-                {
-                  "label": "",
-                  "key": "",
-                  "componentName": "ElTable",
-                  "props": {
-                    "headerCellStyle": {
-                      "background": "#fff"
-                    },
-                    "style": {},
-                    "data": [
-                      {
-                        "name": "张三",
-                        "age": 18,
-                        "sex": "男"
-                      },
-                      {
-                        "name": "李四",
-                        "age": 23,
-                        "sex": "女"
-                      },
-                      {
-                        "name": "王五",
-                        "age": 56,
-                        "sex": "男"
-                      }
-                    ],
-                    "columns": [
-                      {
-                        "title": "姓名",
-                        "dataIndex": "name",
-                        "render": {
-                          "type": "JSFunction",
-                          "value": "function r(){return `<div>123</div>`}"
-                        }
-                      },
-                      {
-                        "title": "年龄",
-                        "dataIndex": "age"
-                      },
-                      {
-                        "title": "性别",
-                        "dataIndex": "sex"
-                      }
-                    ]
+                },
+                "style": {
+                  "height": "auto"
+                },
+                "data": [
+                  {
+                    "name": "张三",
+                    "age": 18,
+                    "sex": "男"
                   },
-                  "id": "add2mfnw"
-                }
-              ],
-              "id": "3cij6rch"
+                  {
+                    "name": "李四",
+                    "age": 23,
+                    "sex": "女"
+                  },
+                  {
+                    "name": "王五",
+                    "age": 56,
+                    "sex": "男"
+                  }
+                ],
+                "columns": [
+                  {
+                    "title": "姓名",
+                    "dataIndex": "name",
+                    "render": {
+                      "type": "JSFunction",
+                      "value": "function r(){return '<div>123</div>'}"
+                    }
+                  },
+                  {
+                    "title": "年龄",
+                    "dataIndex": "age"
+                  },
+                  {
+                    "title": "性别",
+                    "dataIndex": "sex"
+                  }
+                ]
+              },
+              "id": "jajentyn"
             }
           ],
           "id": "sphhpkhc"
@@ -363,9 +356,7 @@
         {
           "componentName": "div",
           "props": {
-            "style": {
-              "background": "#333"
-            }
+            "style": {}
           },
           "children": [
             {

@@ -40,17 +40,17 @@ for (const i in files) {
 	if (action == "config.ts") {
 		d.value = v;
 	}
-	// 服务
-	else if (action == "service") {
-		const s = new (v as any)();
+	// // 服务
+	// else if (action == "service") {
+	// 	const s = new (v as any)();
 
-		if (s) {
-			d.services?.push({
-				path: s.namespace,
-				value: s
-			});
-		}
-	}
+	// 	if (s) {
+	// 		d.services?.push({
+	// 			path: s.namespace,
+	// 			value: s
+	// 		});
+	// 	}
+	// }
 	// 指令
 	else if (action == "directives") {
 		d.directives?.push({ name: n, value: v as Directive });
@@ -77,6 +77,8 @@ export function createModule(app: App) {
 	});
 
 	const list = orderBy(module.list, "order", "desc").map((e) => {
+		console.log('e',e);
+		
 		// 初始化
 		e.install?.(app, e.options);
 
@@ -85,7 +87,8 @@ export function createModule(app: App) {
 			// @ts-ignore
 			const v = await (isFunction(c) ? c() : c);
 			const n = v.default || v;
-
+			console.log('n',n);
+			
 			if (n.name) {
 				app.component(n.name, n);
 			}

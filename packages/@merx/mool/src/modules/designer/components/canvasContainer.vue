@@ -19,7 +19,7 @@ const props = defineProps({
     default: () => ({
       clickId: null,
       hoverId: null,
-    }),
+    })
   },
   componentMap: {
     type: Object as PropType<InstanceType<MapConstructor>>,
@@ -481,8 +481,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
           hover_child: currAEl.value.hoverId == col?.id,
           box: col?.children !== undefined,
           dragover: currAEl.value.overId == col?.id,
-          nonEmpty: !!col?.children?.length,
-          enter_page: currAEl.value.hoverId == col?.id,
+          nonEmpty: !!col?.children?.length
         },
       ],
       id: currAEl.value.clickId == col?.id ? "active" : "",
@@ -553,7 +552,7 @@ const currAEl = defineModel<{
   insertTopId: string | null;
   insertBottomId: string | null;
 }>("currAEl", {
-  required: true,
+  required: false,
 });
 const schema = computed<Col>(() => {
   return props.schema;
@@ -623,10 +622,6 @@ const schema = computed<Col>(() => {
 
 .insertBottom {
   border-bottom: 3px solid #32adf7 !important;
-}
-
-.enter_page {
-  border: 1px dashed #32adf7;
 }
 
 .hover_child {

@@ -1,83 +1,77 @@
 <template>
   <div
+    :class="['page-design-content']"
     :style="{
-      height: 'calc(100vh - 10px)',
+      width:'100%',
+      ...$props.customStyle,
       backgroundColor: '#f5f6f7 !important ',
-      width: '100%',
-      margin: '20px var(--ml,180px)',
+      margin: `${$props.customStyle?.margin||'20px var(--ml,180px)'}`,
+      overflow: 'scroll',
+      scrollbarWidth: 'none',
+      boxSizing: 'border-box',
+      flex: 1,
+      background: '#f5f6f7',
     }"
   >
-    <div
-      :class="['page-design-content']"
-      :style="{
-        overflow: 'scroll',
-        scrollbarWidth: 'none',
-        height: $props.height,
-        boxSizing: 'border-box',
-        flex: 1,
-        background: '#f5f6f7',
-      }"
-    >
-      <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
+    <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
 
-      <div
-        :class="[
-          'page-design-placeholder',
-          {
-            hover: !currAEl.clickId,
-            enter_page: currAEl.overId == PageSchema?.id,
-          },
-        ]"
-        :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
-        v-if="!PageSchema?.children?.length"
-        style="
-          height: 100%;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          box-sizing: border-box;
-        "
-      >
-        <span style="font-size: 14px; color: #999">从左侧拖拽来添加组件</span>
-      </div>
-      <div
-        v-else
-        :style="{
-          width: '100%',
-          height: '100%',
-          boxSizing: 'border-box',
-          background: '#f1f1f1 !important',
-        }"
-        :class="[
-          'page',
-          {
-            hover_child: currAEl.hoverId == PageSchema?.id,
-            enter_page: currAEl.hoverId == PageSchema?.id,
-          },
-        ]"
-        :data-tag="PageSchema?.componentName"
-        :data-id="PageSchema?.id"
-        :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
-        @mouseover="currAEl.hoverId = PageSchema?.id ?? null"
-        @mouseleave="currAEl.hoverId = null"
-      >
-        <BasicPage
-          v-for="(box, ind) in PageSchema?.children"
-          :key="ind"
-          :schema="box"
-          v-model:currAEl="currAEl"
-          @delete="del"
-          @copy="copy"
-          @current="getCurrent"
-          @start="start"
-          @enter="enter"
-          @leave="leave"
-          @over="over"
-          @end="end"
-        />
-      </div>
+    <div
+      :class="[
+        'page-design-placeholder',
+        {
+          hover: !currAEl.clickId,
+          enter_page: currAEl.overId == PageSchema?.id,
+        },
+      ]"
+      :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
+      v-if="!PageSchema?.children?.length"
+      style="
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        box-sizing: border-box;
+      "
+    >
+      <span style="font-size: 14px; color: #999">从左侧拖拽来添加组件</span>
+    </div>
+    <div
+      v-else
+      :style="{
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+        background: '#f1f1f1 !important',
+      }"
+      :class="[
+        'page',
+        {
+          hover_child: currAEl.hoverId == PageSchema?.id,
+          enter_page: currAEl.hoverId == PageSchema?.id,
+        },
+      ]"
+      :data-tag="PageSchema?.componentName"
+      :data-id="PageSchema?.id"
+      :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
+      @mouseover="currAEl.hoverId = PageSchema?.id ?? null"
+      @mouseleave="currAEl.hoverId = null"
+    >
+      <BasicPage
+        v-for="(box, ind) in PageSchema?.children"
+        :key="ind"
+        :schema="box"
+        v-model:currAEl="currAEl"
+        @delete="del"
+        @copy="copy"
+        @current="getCurrent"
+        @start="start"
+        @enter="enter"
+        @leave="leave"
+        @over="over"
+        @end="end"
+      />
     </div>
   </div>
 </template>
@@ -89,18 +83,20 @@ import { DragUtil, type RemoveDrag } from "@/mool/utils";
 import BasicPage from "$/designer/components/canvasContainer.vue";
 const props = defineProps({
   pageConfig: {
-    type: Object as PropType<Ref<Page>>,
+    type: Object as PropType<Page>,
     required: true,
   },
-  height: {
-    type: String,
-    default: "100%",
-  },
+
   hasActive: {
     type: Boolean,
     default: () => true,
   },
+  customStyle: {
+    type: Object,
+    default: () => ({width: "100%"}),
+  },
 });
+
 type CurrAEl = {
   /**
    * 当前点击的元素id
@@ -134,7 +130,7 @@ const currAEl = ref<CurrAEl>({
 });
 
 let removeDrag: RemoveDrag = null;
-const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem } = new DragUtil(
+const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem,initializeComponentMap } = new DragUtil(
   {
     drag: {
       startEle: [".base_component li"],
@@ -148,10 +144,10 @@ const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem }
   (AEl) => Object.assign(currAEl.value, AEl),
 );
 
-const emit = defineEmits(['active'])
+const emit = defineEmits(["active"]);
 const del = (id: string) => {
   deleteItem(id);
-  emit('active',null)
+  emit("active", null);
 };
 
 const copy = (id: string) => {
@@ -164,10 +160,9 @@ const activeCurrent = (e: Event) => {
 };
 
 const getCurrent = (conf: Col) => {
-  emit('active',conf)
-    
-  currAEl.value.clickId = conf.id as string;
+  emit("active", conf);
 
+  currAEl.value.clickId = conf.id as string;
 };
 watch(
   () => props.hasActive,
@@ -186,7 +181,6 @@ watch(
 onMounted(() => {
   if (props.hasActive) {
     const [remove] = dragCompToCanvas(PageSchema, (conf) => {
-      console.log(PageSchema.value);
       getCurrent(conf);
     });
     removeDrag = remove;
@@ -195,6 +189,9 @@ onMounted(() => {
 onUnmounted(() => {
   removeDrag?.();
 });
+defineExpose({
+  init:initializeComponentMap
+})
 </script>
 
 <style lang="less" scoped></style>

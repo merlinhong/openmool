@@ -181,9 +181,7 @@ export default defineComponent({
   components: {
     TypedMessage,
   },
-
-  name: "ChatBox",
-
+  name: "RobotMainVue",
   props: {
     foundationModel: {
       type: String,

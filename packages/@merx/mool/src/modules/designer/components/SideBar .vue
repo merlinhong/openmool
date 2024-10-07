@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: 'calc(100vh - 120px)', display: 'flex' }">
+  <div :style="{ height: '100%', display: 'flex' }">
     <div
       class="page-design-component"
       width="100%"
@@ -322,11 +322,10 @@
 import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
-import { de } from "element-plus/es/locale";
 
 defineProps({
   pageConfig: {
-    type: Object as PropType<Ref<Page>>,
+    type: Object as PropType<Page>,
     required: true,
   },
   width: {
