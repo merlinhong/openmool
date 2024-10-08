@@ -200,8 +200,44 @@ router.register = async function (path: string) {
 
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
-	next();
-	return;
+  // 数据缓存
+  const { user } = useStore();
+
+  // 预先注册路由
+  const { isReg, route } = await router.register(to.path);
+
+  // 组件不存在、路由不存在
+  if (!route?.components) {
+    next(user.token ? "/404" : "/login");
+  } else {
+    if (!isReg) {
+      next(to.fullPath);
+    } else {
+      // 登录成功
+      // if (user.token) {
+      //   // 在登录页
+      //   if (to.path.includes("/login")) {
+      //     // Token 未过期
+      //     if (!storage.isExpired("token")) {
+      //       // 回到首页
+      //       return next("/");
+      //     }
+      //   } else {
+      //     // 添加路由进程
+      //     // process.add(to);
+      //   }
+      // } else {
+      //   // 忽略部分 Token 验证
+      //   if (!config.ignore.token.find((e) => to.path == e)) {
+      //     return next("/login");
+      //   }
+      // }
+
+      next();
+    }
+  }
+  // next();
+  return;
 });
 // 针对SEO的关键词优化
 router.afterEach((to) => {

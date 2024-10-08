@@ -69,9 +69,6 @@ onMounted(() => {
 <template>
   <div class="common-layout">
     <el-container>
-      <div class="px-[20px] bg-red-500 hover:bg-blue-500 object-cover">
-        Hello world!
-      </div>
       <el-header style="display: flex; align-items: center; background: #fff">
         <el-page-header style="flex:1" content="网页设计">
           <template #title>

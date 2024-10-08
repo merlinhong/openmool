@@ -3,9 +3,9 @@
     :class="['page-design-content']"
     :style="{
       width:'100%',
-      ...$props.customStyle,
+      ...props.customStyle,
       backgroundColor: '#f5f6f7 !important ',
-      margin: `${$props.customStyle?.margin||'20px var(--ml,180px)'}`,
+      margin: `${props.customStyle?.margin||'20px var(--ml,180px)'}`,
       overflow: 'scroll',
       scrollbarWidth: 'none',
       boxSizing: 'border-box',

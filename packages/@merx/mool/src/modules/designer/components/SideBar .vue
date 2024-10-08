@@ -1,121 +1,62 @@
 <template>
-  <div :style="{ height: '100%', display: 'flex' }">
-    <div
-      class="page-design-component"
-      width="100%"
-      style="
-        background-color: #fff;
-        padding: 0 5px;
-        box-sizing: content-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-right: 1px solid #c9c8c8;
-      "
-    >
-      <div>
-        <div
-          style="
-            margin-top: 20px;
-            height: 15px;
-            width: 15px;
-            border: 2px solid #333;
-            font-size: 20px;
-            text-align: center;
-            line-height: 12px;
-            cursor: pointer;
-            border-radius: 5px;
-          "
-          @click="openMaterial"
-        >
-          +
-        </div>
-
-        <div style="font-weight: bold; margin-top: 10px; cursor: pointer" @click="openJs">JS</div>
-        <div style="font-weight: bold; margin-top: 10px; cursor: pointer" @click="openRef">ref</div>
-        <div
-          style="
-            margin-top: 10px;
-            height: 15px;
-            width: 15px;
-            border: 2px solid #333;
-            font-size: 10px;
-            text-align: center;
-            line-height: 12px;
-            cursor: pointer;
-            border-radius: 5px;
-          "
-          @click="openVar"
-        >
-          var
-        </div>
+  <div class="sidebar-container">
+    <nav class="sidebar-nav">
+      <div class="top-buttons">
+        <button class="add-button" @click="openMaterial">+</button>
+        <button class="nav-button" @click="openJs">JS</button>
+        <button class="nav-button" @click="openRef">ref</button>
+        <button class="var-button" @click="openVar">var</button>
       </div>
 
-      <div style="margin-bottom: 20px; cursor: pointer; display: flex; flex-direction: column">
-        <svg
-          @click="openRobot"
-          xmlns="http://www.w3.org/2000/svg"
-          style="width: 22px; height: 22px"
-          width="128"
-          height="128"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fell="currentColor"
-            d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
-          />
-        </svg>
-        <svg
-          @click="openEditor"
-          style="width: 22px; height: 22px; margin-top: 15px"
-          xmlns="http://www.w3.org/2000/svg"
-          width="128"
-          height="128"
-          viewBox="0 0 14 14"
-        >
-          <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="13" height="13" x=".5" y=".5" rx="1" />
-            <path d="M.5 4h13m-9 3L3 8.5L4.5 10M10 7l1.5 1.5L10 10m-3.5.5L8 6" />
-          </g>
-        </svg>
+      <div class="bottom-buttons">
+        <button class="icon-button" @click="openRobot">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path fell="currentColor"
+              d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3" />
+          </svg>
+        </button>
+        <button class="icon-button" @click="openEditor">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
+            <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="13" height="13" x=".5" y=".5" rx="1" />
+              <path d="M.5 4h13m-9 3L3 8.5L4.5 10M10 7l1.5 1.5L10 10m-3.5.5L8 6" />
+            </g>
+          </svg>
+        </button>
       </div>
-    </div>
+    </nav>
 
-    <div
-      style="width: 240px; background-color: #e0dfdf; background-color: #fff; border-right: 1px solid #e2e2e2"
-      v-if="drawer"
-    >
-      <el-tabs type="card" v-model="activeName" style="height: 100%; display: flex">
+    <aside v-if="drawer" class="component-drawer">
+      <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="组件" name="0">
-          <div style="margin-top: 15px">
-            <span style="padding: 15px"> 基础</span>
-
-            <ul class="base_component">
-              <li :data-type="item.dataType" class="component_item" v-for="item in baseComponentList">
-                <iEpDocument width="15px" style="vertical-align: text-top; margin-right: 4px" />{{ item.text }}
+          <div class="component-list">
+            <h3>基础</h3>
+            <ul class="base-component">
+              <li v-for="item in baseComponentList" :key="item.dataType" :data-type="item.dataType"
+                class="component-item">
+                <iEpDocument width="15px" />
+                <span>{{ item.text }}</span>
               </li>
             </ul>
 
-            <span style="padding: 15px"> 高级</span>
-
-            <ul class="base_component">
-              <li :data-type="item.dataType" class="component_item" v-for="item in seniorComponentList">
-                <iEpDocument width="15px" style="vertical-align: text-top; margin-right: 4px" />{{ item.text }}
+            <h3>高级</h3>
+            <ul class="base-component">
+              <li v-for="item in seniorComponentList" :key="item.dataType" :data-type="item.dataType"
+                class="component-item">
+                <iEpDocument width="15px" />
+                <span>{{ item.text }}</span>
               </li>
             </ul>
           </div>
         </el-tab-pane>
 
         <el-tab-pane label="模板" name="1">
-          <div style="margin-top: 15px">
-            <ul class="block_component" draggable></ul>
-          </div>
+          <ul class="block-component" draggable></ul>
         </el-tab-pane>
       </el-tabs>
-    </div>
+    </aside>
 
-    <div
-      style="
+    <div style="
         width: 260px;
 
         position: absolute;
@@ -129,9 +70,7 @@
         left: 2.3rem;
 
         z-index: 999;
-      "
-      v-if="showVar"
-    >
+      " v-if="showVar">
       <div style="display: flex; padding: 20px; box-sizing: border-box">
         <el-radio-group v-model="addType" @change="setVar">
           <el-radio-button value="添加变量" label="添加变量"></el-radio-button>
@@ -147,8 +86,7 @@
       </div>
     </div>
 
-    <div
-      style="
+    <div style="
         width: 400px;
 
         position: absolute;
@@ -162,13 +100,10 @@
         left: 18.6rem;
 
         z-index: 999;
-      "
-      v-if="setVarRef"
-    >
+      " v-if="setVarRef">
       <div style="display: flex; justify-content: end; padding: 10px">
-        <el-button type="primary" plain size="small" @click="saveEditor"
-          >保存<span style="color: red" v-if="isChange">*</span></el-button
-        >
+        <el-button type="primary" plain size="small" @click="saveEditor">保存<span style="color: red"
+            v-if="isChange">*</span></el-button>
       </div>
 
       <el-divider style="margin-top: 0px"></el-divider>
@@ -184,9 +119,7 @@
       </div>
     </div>
 
-    <div
-      v-if="showJS"
-      style="
+    <div v-if="showJS" style="
         width: 600px;
 
         position: absolute;
@@ -200,10 +133,8 @@
         left: 2.4rem;
 
         z-index: 999;
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
 
           justify-content: space-between;
@@ -211,14 +142,12 @@
           align-items: center;
 
           padding: 2px 5px;
-        "
-      >
+        ">
         <h4 style="padding: 0 20px">页面JS</h4>
 
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span style="color: red" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+              v-if="isChange">*</span></el-button>
 
           <i-ep-delete></i-ep-delete>
         </div>
@@ -227,9 +156,7 @@
       <div id="JS_editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
     </div>
 
-    <div
-      v-if="showRef"
-      style="
+    <div v-if="showRef" style="
         width: 600px;
 
         position: absolute;
@@ -243,10 +170,8 @@
         left: 2.4rem;
 
         z-index: 999;
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
 
           justify-content: space-between;
@@ -254,23 +179,19 @@
           align-items: center;
 
           padding: 2px 5px;
-        "
-      >
+        ">
         <h4 style="padding: 0 20px">页面Ref</h4>
 
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span style="color: red" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+              v-if="isChange">*</span></el-button>
         </div>
       </div>
 
       <div id="Ref_editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
     </div>
 
-    <div
-      v-if="showSchema"
-      style="
+    <div v-if="showSchema" style="
         width: 600px;
 
         position: absolute;
@@ -284,10 +205,8 @@
         left: 2.4rem;
 
         z-index: 999;
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
 
           justify-content: space-between;
@@ -295,13 +214,11 @@
           align-items: center;
 
           padding: 2px 5px;
-        "
-      >
+        ">
         <h4 style="padding: 0 20px">页面schema</h4>
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span style="color: red" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span style="color: red"
+              v-if="isChange">*</span></el-button>
           <el-button type="primary" text @click="showSchema = false">关闭</el-button>
         </div>
       </div>
@@ -309,13 +226,8 @@
       <div id="editor_container" style="width: 560px; height: 90%; border: 1px solid #c9c8c8"></div>
     </div>
   </div>
-  <RobotMainVue
-    v-if="openAiRef"
-    :schema="currentConf"
-    @update:schema="updateConf"
-    :foundationModel="foundationModel"
-    style="z-index: 999; position: absolute; bottom: 50px; right: 320px"
-  />
+  <RobotMainVue v-if="openAiRef" :schema="currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
+    class="robot-main" />
 </template>
 
 <script setup lang="ts">
@@ -343,29 +255,157 @@ const labelTypeList: Record<string, string> = {
   添加生命周期: "函数名",
 };
 
+const drawer = ref(false);
+const showSchema = ref(false);
+const showJS = ref(false);
+const showRef = ref(false);
+const showVar = ref(false);
+const setVarRef = ref(false);
 const isChange = ref(false);
+const jscode = ref<string[]>([]);
 
-const typeName = ref("");
+const closeAllPanels = () => {
+  drawer.value = false;
+  showSchema.value = false;
+  showJS.value = false;
+  showRef.value = false;
+  showVar.value = false;
+  setVarRef.value = false;
+};
+
+const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar") => {
+  switch (panel) {
+    case "drawer":
+      drawer.value = !drawer.value;
+      break;
+    case "schema":
+      showSchema.value = !showSchema.value;
+      if (showSchema.value) {
+        nextTick(() => {
+          initEditorWithCommonOptions({
+            id: "editor_container",
+            code: JSON.stringify(PageSchema.value, null, 2),
+          });
+        });
+      }
+      break;
+    case "js":
+      showJS.value = !showJS.value;
+      if (showJS.value) {
+        nextTick(() => {
+          jscode.value = Object.values(PageSchema.value.methods).map((item) => item.value);
+          initEditorWithCommonOptions({
+            id: "JS_editor_container",
+            code: jscode.value.join("\n"),
+            lang: "typescript",
+          });
+        });
+      }
+      break;
+    case "ref":
+      showRef.value = !showRef.value;
+      if (showRef.value) {
+        nextTick(() => {
+          initEditorWithCommonOptions({
+            id: "Ref_editor_container",
+            code: generateRefCode(),
+            lang: "typescript",
+          });
+        });
+      }
+      break;
+    case "var":
+      showVar.value = !showVar.value;
+      break;
+    case "setVar":
+      setVarRef.value = !setVarRef.value;
+      if (setVarRef.value) {
+        nextTick(() => {
+          initEditorWithCommonOptions({
+            id: "var_editor_container",
+            code: "",
+            lang: "javascript",
+            callback(ins) {
+              editor.value = ins;
+            },
+          });
+        });
+      }
+      break;
+  }
+};
+
+const generateRefCode = () => {
+  return Object.entries(PageSchema.value.ref)
+    .map(([key, item]) => {
+      if (!item.type) {
+        return `//页面表单绑定数据\nconst ${key} = vue.ref(${JSON.stringify(item, null, 2)})`;
+      } else {
+        if (item.type == "ComputedRef") {
+          return `//选择日期时间范围的计算属性\nconst ${key}:${item.type} = vue.computed({
+            get(){
+              return ${item.value}
+            },
+            set(){
+            }
+          })`;
+        }
+        return `${/onSearch/.test(key) ? "//查询表格入参\n" : ""}const ${key} = vue.ref<${item.type}>(${JSON.stringify(item.value, null, 2)})`;
+      }
+    })
+    .join("\n\n");
+};
+
+const initEditorWithCommonOptions = (options: {
+  id?: string;
+  code: string;
+  lang?: string;
+  callback?: (ins: MonacoEditor) => void;
+}) => {
+  initEditor({
+    ...options,
+    update: (val) => {
+      pageSchema.value = val;
+    },
+    change() {
+      isChange.value = true;
+    },
+  });
+};
+
+const openJs = () => {
+  openPanel("js");
+};
+
+const openRef = () => {
+  openPanel("ref");
+};
+
+const openVar = () => {
+  openPanel("var");
+  addType.value = "";
+};
+
+const setVar = () => {
+  openPanel("setVar");
+};
+
+const openEditor = () => {
+  openPanel("schema");
+};
+
+const openMaterial = () => {
+  openPanel("drawer");
+};
 
 const pageSchema = ref<string>("");
 
 const editor = ref<MonacoEditor>(null);
 
-const drawer = ref(false);
-
-const showSchema = ref(false);
-
-const showJS = ref(false);
-
-const showRef = ref(false);
-
-const showVar = ref(false);
-
 const addList = ref<string[]>([]);
 
-const setVarRef = ref(false);
+const typeName = ref("");
 
-const jscode = ref<string[]>([]);
 watch(
   () => drawer.value,
   (n, o) => {
@@ -454,182 +494,6 @@ const updateConf = (schema?: Col) => {
   };
   setProp(currentConf.value as Col);
 };
-const openJs = () => {
-  setVarRef.value = false;
-  showJS.value = !showJS.value;
-  showRef.value = false;
-  showVar.value = false;
-  drawer.value = false;
-  showSchema.value = false;
-  jscode.value = Object.values(PageSchema.value.methods).map((item) => item.value);
-  if (showJS.value) {
-    initEditor({
-      id: "JS_editor_container",
-
-      code: jscode.value.join("\n"),
-
-      update: (val) => {
-        pageSchema.value = val;
-      },
-
-      lang: "typescript",
-
-      change() {
-        isChange.value = true;
-      },
-    });
-  }
-};
-
-const openRef = () => {
-  setVarRef.value = false;
-
-  showVar.value = false;
-
-  showJS.value = false;
-
-  showRef.value = !showRef.value;
-
-  drawer.value = false;
-
-  showSchema.value = false;
-
-  jscode.value = Object.entries(PageSchema.value.ref).map(([key, item]) => {
-    if (!item.type) {
-      return `//页面表单绑定数据\nconst ${key} = vue.ref(${JSON.stringify(item, null, 2)})`;
-    } else {
-      if (item.type == "ComputedRef") {
-        return `//选择日期时间范围的计算属性\nconst ${key}:${item.type} = vue.computed({
-
-get(){
-
-return ${item.value}
-
-},
-
-set(){
-
-}
-
-})`;
-      }
-
-      return `${/onSearch/.test(key) ? "//查询表格入参\n" : ""}const ${key} = vue.ref<${item.type}>(${JSON.stringify(item.value, null, 2)})`;
-    }
-  });
-
-  if (showRef.value) {
-    initEditor({
-      id: "Ref_editor_container",
-
-      code: jscode.value.join("\n"),
-
-      update: (val) => {
-        pageSchema.value = val;
-      },
-
-      lang: "typescript",
-
-      change() {
-        isChange.value = true;
-      },
-    });
-  }
-};
-
-const openVar = () => {
-  showJS.value = false;
-
-  showRef.value = false;
-
-  showVar.value = !showVar.value;
-
-  drawer.value = false;
-
-  showSchema.value = false;
-
-  setVarRef.value = false;
-
-  addType.value = "";
-
-  // if (showVar.value) {
-
-  // initEditor({
-
-  // id: 'var_editor_container',
-
-  // code: jscode.value.join('\n'),
-
-  // update: (val) => {
-
-  // pageSchema.value = val;
-
-  // },
-
-  // lang: 'javascript',
-
-  // change() {
-
-  // isChange.value = true
-
-  // }
-
-  // });
-
-  // };
-};
-
-const setVar = () => {
-  setVarRef.value = true;
-
-  toRaw(editor.value)?.dispose();
-
-  initEditor({
-    id: "var_editor_container",
-
-    code: "",
-
-    update: (val) => {
-      pageSchema.value = val;
-    },
-
-    lang: "javascript",
-
-    change() {
-      isChange.value = true;
-    },
-
-    callback(ins) {
-      editor.value = ins;
-    },
-  });
-};
-const openEditor = () => {
-  showSchema.value = !showSchema.value;
-  drawer.value = false;
-
-  showJS.value = false;
-
-  showVar.value = false;
-
-  showRef.value = false;
-
-  setVarRef.value = false;
-
-  if (showSchema.value) {
-    initEditor({
-      code: JSON.stringify(PageSchema.value, null, 2),
-
-      update: (val) => {
-        pageSchema.value = val;
-      },
-
-      change() {
-        isChange.value = true;
-      },
-    });
-  }
-};
 
 const saveEditor = () => {
   if (showJS.value) {
@@ -687,7 +551,7 @@ const saveEditor = () => {
 
     isBracePairBalanced(config, results);
 
-    // 遍历匹配结果设置到schema的方法中
+    // 遍匹配结果设置到schema的方法中
 
     results.forEach((res) => {
       PageSchema.value.methods[res.functionName] = {
@@ -778,69 +642,128 @@ const saveEditor = () => {
     findFetchData(PageSchema.value as Page);
   }
 
-  showSchema.value = false;
-
-  setVarRef.value = false;
-
-  isChange.value = false;
-
-  showJS.value = false;
-
-  showRef.value = false;
+  closeAllPanels();
 };
 const emit = defineEmits(["change"]);
-const openMaterial = () => {
-  setVarRef.value = false;
-
-  drawer.value = !drawer.value;
-
-  showSchema.value = false;
-
-  showJS.value = false;
-
-  showVar.value = false;
-
-  showRef.value = false;
-};
 </script>
 
 <style lang="less" scoped>
-.base_component,
-.block_component {
-  list-style: none;
-
+.sidebar-container {
+  height: 100%;
   display: flex;
+}
+.sidebar-nav {
+  background-color: #fff;
+  padding: 10px 5px;
+  box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #c9c8c8;
+}
+.top-buttons,
+.bottom-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  flex-wrap: wrap;
+.add-button,
+.var-button,
+.nav-button,
+.icon-button {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.add-button,
+.var-button {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  border: 2px solid #333;
+}
+
+.var-button {
+  font-size: 10px;
+}
+
+.nav-button {
+  font-weight: bold;
+  background: none;
+  border: none;
   padding: 5px;
+}
 
+.bottom-buttons {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-button {
+  width: 22px;
+  height: 22px;
+  margin-top: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.component-drawer {
+  width: 240px;
+  background-color: #fff;
+  border-right: 1px solid #e2e2e2;
+}
+
+.component-list {
+  margin-top: 15px;
+}
+
+.base-component, .block-component {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
   margin: 0;
 
   li {
-    width: 80px;
-
+    display: flex;
+    align-items: center;
+    width: 90px;
     line-height: 25px;
-
     text-align: left;
-
     height: 25px;
-
     padding: 4px 5px;
-
     margin: 10px 5px;
-
     font-size: 13px;
-
     cursor: move;
-
     border: 1px solid #dfdfdf;
-
     border-radius: 5px;
 
     &:hover {
       border: 1px dashed @success-color !important;
     }
   }
+}
+
+.robot-main {
+  z-index: 999;
+  position: absolute;
+  bottom: 50px;
+  right: 320px;
 }
 </style>
