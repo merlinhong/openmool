@@ -133,7 +133,7 @@ let removeDrag: RemoveDrag = null;
 const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem,initializeComponentMap } = new DragUtil(
   {
     drag: {
-      startEle: [".base_component li"],
+      startEle: [".base-component li"],
       endEle: ".page-design-content",
     },
     canvasDrag: {
@@ -168,6 +168,8 @@ watch(
   () => props.hasActive,
   (n, o) => {
     if (n) {
+      console.log('n',n);
+      
       const [remove] = dragCompToCanvas(PageSchema, (conf) => {
         console.log(PageSchema.value);
         getCurrent(conf);

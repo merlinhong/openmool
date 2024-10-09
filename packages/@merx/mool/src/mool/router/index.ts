@@ -149,6 +149,8 @@ router.find = function (path: string) {
 
 // 注册
 router.register = async function (path: string) {
+  console.log(router.find(path));
+  
   // 当前路由是否注册
   const isReg = Boolean(router.find(path));
 
@@ -171,6 +173,7 @@ router.register = async function (path: string) {
 
     // 本地模块数据
     module.list.forEach((e) => {
+      
       if (e.views) {
         list.push(...e.views);
       }
@@ -189,7 +192,7 @@ router.register = async function (path: string) {
 
     // 需要注册的路由
     const r = list.find((e) => e.path == path);
-
+    
     if (r) {
       router.append(r);
     }
@@ -202,7 +205,8 @@ router.register = async function (path: string) {
 router.beforeEach(async (to, from, next) => {
   // 数据缓存
   const { user } = useStore();
-
+  console.log(module.list);
+  
   // 预先注册路由
   const { isReg, route } = await router.register(to.path);
 

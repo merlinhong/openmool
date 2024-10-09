@@ -19,7 +19,7 @@ const props = defineProps({
     default: () => ({
       clickId: null,
       hoverId: null,
-    })
+    }),
   },
   componentMap: {
     type: Object as PropType<InstanceType<MapConstructor>>,
@@ -40,15 +40,18 @@ const renderForm: {
 } = {
   div: {
     render: (data, col, child) => {
-      return <div></div>;
+      return (
+        <div >
+        </div>
+      )
     },
   },
   ElMenu: {
     render: (data, col, child) => {
       return (
         <div>
-          <el-menu style={{ borderBottom: "none !important" }}>
-            {col?.props.menuItems?.map((item) => {
+          <el-menu style={{ ...col?.props.style }}>
+            {col?.props.option?.map((item) => {
               if (item.subMenu) {
                 return (
                   <el-sub-menu
@@ -414,23 +417,7 @@ const FooterBar = function () {
 };
 const HeaderBar = function (props: { name?: string }) {
   return (
-    <div
-      class="mllowcode_footerBar"
-      style={{
-        position: "absolute",
-        top: "-30px",
-        left: "-2px",
-        padding: "2px 5px",
-        width: "fit-content",
-        height: "25px",
-        backgroundColor: "#32adf7",
-        borderTop: "1px solid #f1f1f1",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 999,
-      }}
-    >
+    <div class="mllowcode_footerBar absolute -top-[30px] -left-[2px] px-[5px] py-[2px] w-fit h-[25px] bg-[#32adf7] border-t border-[#f1f1f1] flex justify-center items-center z-[999]">
       <span style={{ color: "#fff", fontSize: "16px" }}>{props.name}</span>
       <i-ep-setting
         style={{ color: "#fff", fontSize: "0.8rem", cursor: "pointer" }}
@@ -451,7 +438,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
         style: { ...col?.props.style, boxSizing: "border-box" },
         "data-tag": col?.componentName,
         "data-id": col?.id,
-        class: ["canvascomp"],
+        class: ["canvascomp",...typeof col?.props.class=="string"?[col?.props.class]:[]],
       },
       {
         default: () => [
@@ -460,18 +447,19 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
             : Component.children,
           col?.children && col?.componentName != "ElTags"
             ? col?.children.length
-              ? col?.children.map((child) => CanvasComp(child,isRenderColumn))
-              : "请将元素拖放到此"
+              ? col?.children.map((child) => CanvasComp(child, isRenderColumn))
+              : null
             : null,
         ],
       },
     );
   }
+  
   return h(
     Component,
     {
       ...col?.props,
-      style: { ...col?.props.style, boxSizing: "border-box" },
+      style: { ...col?.props.style, boxSizing: "border-box", position: "relative" },
       "data-tag": col?.componentName,
       "data-id": col?.id,
       draggable: true,
@@ -479,12 +467,13 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
         "canvascomp",
         {
           hover_child: currAEl.value.hoverId == col?.id,
-          box: col?.children !== undefined,
+          box: col?.children && !col?.children?.length,
           dragover: currAEl.value.overId == col?.id,
-          nonEmpty: !!col?.children?.length
+          nonEmpty: !!col?.children?.length,
+          active: currAEl.value.clickId == col?.id,
         },
+        ...typeof col?.props.class=="string"?[col?.props.class]:[],
       ],
-      id: currAEl.value.clickId == col?.id ? "active" : "",
       onClick: (e) => {
         e.stopPropagation();
         currAEl.value.clickId = col?.id as string;
@@ -536,7 +525,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
           : Component.children,
         col?.children && col?.componentName != "ElTags"
           ? col?.children.length
-            ? col?.children.map((child) => CanvasComp(child,isRenderColumn))
+            ? col?.children.map((child) => CanvasComp(child, isRenderColumn))
             : "请将元素拖放到此"
           : null,
         currAEl.value.clickId == col?.id ? <FooterBar /> : null,
@@ -552,7 +541,7 @@ const currAEl = defineModel<{
   insertTopId: string | null;
   insertBottomId: string | null;
 }>("currAEl", {
-  required: false,
+  required: true,
 });
 const schema = computed<Col>(() => {
   return props.schema;
@@ -579,11 +568,6 @@ const schema = computed<Col>(() => {
   position: static;
 }
 
-#active {
-  position: relative;
-  border: 2px solid #32adf7 !important;
-}
-
 .box {
   width: 100%;
   box-sizing: border-box;
@@ -593,17 +577,21 @@ const schema = computed<Col>(() => {
   font-size: 13px;
   background-color: #f1f1f1;
   color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nonEmpty {
   height: fit-content;
-  background-color: #fff !important;
-  color: #000 !important;
+  // background-color: #fff ;
+  color: #000 ;
 }
 
 .canvascomp {
   position: relative;
   cursor: move;
+  box-sizing: border-box;
 }
 
 .overlay {
@@ -625,30 +613,78 @@ const schema = computed<Col>(() => {
 }
 
 .hover_child {
-  position: relative;
-  // padding: 0 5px 5px 0;
-  box-sizing: border-box;
-
-  &:hover {
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border: 1px dashed #32adf7;
+    pointer-events: none;
+  }
 
-    &::before {
-      display: block;
-      content: attr(data-tag);
-      position: absolute;
-      top: -20px;
-      left: 0;
-      width: fit-content;
-      color: #32adf7;
-      z-index: 999;
+  &::before {
+    display: block;
+    content: attr(data-tag);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: fit-content;
+    color: #32adf7;
+    z-index: 999;
+  }
+
+  // 新增：为表格组件添加特殊处理
+  &[data-tag="ElTable"] {
+    &::after {
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      pointer-events: none;
+    }
+  }
+}
+
+.active {
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #32adf7;
+    pointer-events: none;
+  }
+
+  // 新增：为表格组件添加特殊处理
+  &[data-tag="ElTable"] {
+    &::after {
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      pointer-events: none;
     }
   }
 }
 
 .dragover {
   position: relative;
-  border: 1px dashed #32adf7;
   background-color: rgb(233, 250, 250) !important;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px dashed #32adf7;
+    pointer-events: none;
+  }
 
   &::before {
     display: block;

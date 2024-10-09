@@ -9,6 +9,7 @@ const files = import.meta.glob("/src/modules/*/{config.ts/**,directives/**}", {
 	eager: true,
 	import: "default"
 });
+console.log(files);
 
 // 模块列表
 module.list = hmr.getData("modules", []);

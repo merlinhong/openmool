@@ -1,43 +1,26 @@
 <template>
-  <div class="toolbar" style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #fff;
-      padding: 10px 20px;
-      border-top: 1px solid #eee;
-      border-bottom: 1px solid #eee;
-      shadow-color: #eee;
-      box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.1);
-    ">
-    <span style="font-size: 12px; color: #0b9142">查看新手引导</span>
+  <div
+    class="toolbar shadow-xl flex justify-between items-center bg-white py-2.5 px-5 border-t border-b border-gray-200"
+  >
+    <span class="text-xs text-green-600">查看新手引导</span>
     <div>
       <el-button type="warning" plain>撤销</el-button>
       <el-button type="primary">重做</el-button>
       <el-button type="primary" plain @click="preview">预览</el-button>
       <el-button type="success" @click="saveSchema">保存</el-button>
       <el-button type="primary" @click="genCode">出码</el-button>
-      <!-- <input type="file" webkitdirectory @change="handleFolderSelect" ref="fileInput" style="display:none" /> -->
+      <!-- <input type="file" webkitdirectory @change="handleFolderSelect" ref="fileInput" class="hidden" /> -->
     </div>
   </div>
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
     <BasicPage :isPreview="previewRef" v-for="(box, ind) in PageSchema.children" :key="ind" :schema="box" />
   </el-drawer>
-  <el-result style="
-      width: 20rem;
-
-      position: absolute;
-
-      background: #fff;
-
-      left: 45%;
-
-      top: 40%;
-
-      z-index: 9999;
-
-      border: 1px solid #e2e2e2;
-    " v-if="generateCoding" :icon="statuIcon" :title="statuTitle">
+  <el-result
+    class="w-80 absolute bg-white left-1/2 top-2/5 -translate-x-1/2 z-50 border border-gray-200"
+    v-if="generateCoding"
+    :icon="statuIcon"
+    :title="statuTitle"
+  >
     <template #extra v-if="statuIcon == 'success'">
       <el-button type="primary" @click="generateCoding = false">好的</el-button>
     </template>
@@ -48,7 +31,6 @@
 import { ref, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
 import BasicPage from "$/designer/components/canvasContainer.vue";
-
 
 defineProps({
   pageConfig: {

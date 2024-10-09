@@ -3,9 +3,9 @@ import { onMounted, ref, nextTick } from "vue";
 import { Page, Col } from "@/mool/types";
 import { uuid } from "@/mool/utils";
 import TopBar from "../components/TopBar.vue";
-import SideBar from "../components/SideBar .vue";
+import SideBar from "../components/SideBar.vue";
 import BasicCanvas from "../components/BasicCanvas.vue";
-import ConfigPlane from "../components/Settings.vue";
+import ConfigPlane from "../components/settings.vue";
 
 const canvasRef = ref<InstanceType<typeof BasicCanvas>>();
 const pageConfig = ref<Page>({
@@ -27,14 +27,14 @@ const pageConfig = ref<Page>({
   css: "",
 });
 const currentConf = ref<Col | null>(null);
-const activeCurrent = (val) => {
+const activeCurrent = (val: Col) => {
   console.log(val);
 
   currentConf.value = val;
 };
 const containerStyle = ref({ backgroundColor: " #e0dfdf" });
 const hasActive = ref(false);
-const openBar = (arr) => {
+const openBar = (arr: [boolean, Record<string, string>]) => {
   if (arr[1]) {
     hasActive.value = true;
     Object.assign(containerStyle.value, arr[1]);
@@ -82,14 +82,26 @@ onMounted(() => {
             </div>
           </template>
           <template #extra>
-            <div style="width: 300px; text-align: right">登录</div>
+            <div style="width: 300px; text-align: right;" >登录</div>
           </template>
         </el-page-header>
       </el-header>
+      <!-- 顶部栏组件，用于显示和编辑页面配置 -->
+      <!-- v-model:pageConfig 用于双向绑定页面配置 -->
       <TopBar v-model:pageConfig="pageConfig" />
       <el-container :style="{ height: 'calc(100vh - 120px)', ...containerStyle }">
+        <!-- 侧边栏组件，用于显示和编辑页面配置 -->
+        <!-- v-model:pageConfig 用于双向绑定页面配置 -->
+        <!-- @change 事件用于监听侧边栏的打开或关闭 -->
         <SideBar v-model:pageConfig="pageConfig" @change="openBar" />
+        <!-- 画布组件，用于显示和编辑页面内容 -->
+        <!-- v-model:pageConfig 用于双向绑定页面配置 -->
+        <!-- :hasActive 用于控制画布的激活状态 -->
+        <!-- @active 事件用于监听画布的激活状态 -->
         <BasicCanvas ref="canvasRef" v-model:pageConfig="pageConfig" :hasActive="hasActive" @active="activeCurrent" />
+        <!-- 侧边栏组件，用于显示和编辑页面配置 -->
+        <!-- v-model:current 用于双向绑定当前配置项 -->
+        <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <el-aside class="page-design-config" style="background-color: #fff">
           <config-plane :is-show-config="true" v-model:current="currentConf" v-model:pageConfig="pageConfig" />
         </el-aside>
@@ -113,65 +125,7 @@ onMounted(() => {
   border: 1px dashed #32adf7;
 }
 
-.hover_child {
-  position: relative;
 
-  box-sizing: border-box;
-
-  &:hover {
-    border: 1px dashed #32adf7;
-
-    &::before {
-      display: block;
-
-      content: attr(data-tag);
-
-      position: absolute;
-
-      top: -20px;
-
-      left: 0;
-
-      width: fit-content;
-
-      color: #32adf7;
-    }
-  }
-}
-
-#active {
-  position: relative;
-
-  border: 2px solid #32adf7 !important;
-
-  // &::before {
-
-  // display: block;
-
-  // content: attr(data-tag);
-
-  // position: absolute;
-
-  // left: -2px;
-
-  // bottom: -20px;
-
-  // width: fit-content;
-
-  // padding: 0 5px;
-
-  // height: 20px;
-
-  // background-color: #1cd88a;
-
-  // color: #fff;
-
-  // line-height: 20px;
-
-  // text-align: center;
-
-  // }
-}
 
 :deep(.dragging) {
   background-color: #fff;
@@ -203,9 +157,4 @@ onMounted(() => {
   }
 }
 
-.hover {
-  &:hover {
-    border: 1px dashed #32adf7;
-  }
-}
 </style>

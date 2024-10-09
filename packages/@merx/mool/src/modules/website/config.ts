@@ -1,8 +1,8 @@
 export default {
   pages: [
     {
-      path: "/hotel",
-      component: () => import("$/website/hotel/HotelHomePage.vue"),
+      path: "/lowcode",
+      component: () => import("./lowcode/LowCodePlatformHomePage.vue"),
     },
   ],
 };

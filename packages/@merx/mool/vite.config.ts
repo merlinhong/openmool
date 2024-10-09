@@ -14,7 +14,8 @@ import seoPrerender from "vite-plugin-seo-prerender";
 import ElementPlus from "unplugin-element-plus/vite";
 
 import { mool } from "./src/mool/vite-plugin/src/index";
-
+// import tailwindcss from 'tailwindcss'
+// import autoprefixer from 'autoprefixer'
 function toPath(dir: string) {
   return fileURLToPath(new URL(dir, import.meta.url));
 }
@@ -124,7 +125,12 @@ export default ({ mode }) => {
           javascriptEnabled: true,
         },
       },
-     
+      // postcss: {
+      //   plugins: [
+      //     tailwindcss,
+      //     autoprefixer,
+      //   ],
+      // },
     },
   });
 };

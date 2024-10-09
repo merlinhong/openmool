@@ -67,7 +67,8 @@
               "display": "flex",
               "alignItems": "center",
               "justifyContent": "space-between"
-            }
+            },
+            "class": "bg-white"
           },
           "children": [
             {
@@ -90,13 +91,15 @@
               "componentName": "ElMenu",
               "props": {
                 "style": {
-                  "width": "fit-content"
+                  "width": "fit-content",
+                  "borderBottom": "none !important",
+                  "borderRight": "none !important"
                 },
                 "textColor": "#fff",
                 "backgroundColor": "#333",
                 "ellipsis": false,
                 "mode": "horizontal",
-                "menuItems": [
+                "option": [
                   {
                     "title": "菜单1",
                     "index": "1",
@@ -121,23 +124,7 @@
                   }
                 ]
               },
-              "id": "hxh2i3be",
-              "parentId": "bmrr5exp"
-            },
-            {
-              "label": "",
-              "key": "",
-              "componentName": "ElMenu",
-              "props": {
-                "style": {
-                  "width": "fit-content"
-                },
-                "textColor": "#fff",
-                "backgroundColor": "#333",
-                "ellipsis": false,
-                "mode": "horizontal"
-              },
-              "id": "pdzjchs6"
+              "id": "c5cjtce5"
             },
             {
               "label": "登录",
@@ -310,7 +297,8 @@
                   "background": "#fff"
                 },
                 "style": {
-                  "height": "auto"
+                  "height": "auto",
+                  "marginLeft": "0px"
                 },
                 "data": [
                   {
@@ -356,7 +344,8 @@
         {
           "componentName": "div",
           "props": {
-            "style": {}
+            "style": {},
+            "class": ""
           },
           "children": [
             {

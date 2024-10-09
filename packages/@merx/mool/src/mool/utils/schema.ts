@@ -17,6 +17,7 @@ export const renderColumnCompLi = [
 ]
 
 export const baseComponentList = [
+  { text: "盒子", dataType: "div" },
   { text: "纯文本", dataType: "Text" },
 
   { text: "单行文本", dataType: "ElInput" },
@@ -77,7 +78,6 @@ export const JsonSchema: {
 
     props: {
       style: {
-        background: "#fff",
       },
     },
 
@@ -482,12 +482,12 @@ export const JsonSchema: {
     componentName: "ElMenu",
 
     props: {
-      style: { width: "fit-content" },
+      style: { width: "fit-content",borderBottom:'none !important',borderRight:'none !important' },
       textColor: '#fff',
       backgroundColor: '#333',
       ellipsis: false,
       mode: 'horizontal',
-      menuItems: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2' }, { title: '菜单3', index: '3', }]
+      option: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2' }, { title: '菜单3', index: '3', }]
     }
 
   },

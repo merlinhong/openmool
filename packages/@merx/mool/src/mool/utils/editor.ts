@@ -63,7 +63,7 @@ export const initEditor: Editor = ({ code, id = "editor_container", lang = "json
           // },
         ]);
       });
-    }, 40);
+    }, 120);
 
     editor.value = monaco.editor.create(
       document.getElementById(id)!,
