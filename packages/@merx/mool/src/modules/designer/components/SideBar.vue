@@ -126,7 +126,7 @@
       <div id="editor_container" class="w-[560px] h-[90%] border border-[#c9c8c8]"></div>
     </div>
   </div>
-  <RobotMainVue v-if="openAiRef" :schema="currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
+  <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
     class="robot-main" />
 </template>
 
@@ -135,7 +135,7 @@ import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 
-defineProps({
+const props = defineProps({
   pageConfig: {
     type: Object as PropType<Page>,
     required: true,
@@ -143,6 +143,10 @@ defineProps({
   width: {
     type: String,
     default: "100%",
+  },
+  currentConf: {
+    type: Object as PropType<Col>,
+    required: true,
   },
 });
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
@@ -310,7 +314,6 @@ watch(
 // ai
 const foundationModel = ref("gpt-4o-mini");
 const openAiRef = ref(false);
-const currentConf = ref<Col>();
 const openRobot = () => {
   openAiRef.value = !openAiRef.value;
 };
@@ -318,7 +321,7 @@ const openRobot = () => {
 // 获取AI返回的结果进行schema赋值
 const updateConf = (schema?: Col) => {
   let ruleProps: string[] = [];
-  if (currentConf.value?.componentName == "div") {
+  if (props.currentConf?.componentName == "div") {
     function collectValues(obj: Record<string, any>) {
       const stack = [obj]; // 初始化栈，第一个元素是根对象和空路径
       const result = [];
@@ -341,7 +344,7 @@ const updateConf = (schema?: Col) => {
       return result;
     }
     ruleProps = collectValues(schema as Col);
-    currentConf.value.children?.push(schema as Col);
+    props.currentConf.children?.push(schema as Col);
   } else {
     function updateObject(target: Record<string, any>, source: Record<string, any>) {
       for (const key in source) {
@@ -365,7 +368,7 @@ const updateConf = (schema?: Col) => {
         }
       }
     }
-    updateObject(currentConf.value as Col, schema as Col);
+    updateObject(props.currentConf, schema as Col);
   }
 
   const setProp = (conf: Col) => {
@@ -381,7 +384,7 @@ const updateConf = (schema?: Col) => {
       }
     });
   };
-  setProp(currentConf.value as Col);
+  setProp(props.currentConf);
 };
 
 const saveEditor = () => {

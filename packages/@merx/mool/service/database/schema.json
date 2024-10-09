@@ -344,25 +344,140 @@
         {
           "componentName": "div",
           "props": {
-            "style": {},
-            "class": ""
+            "style": {}
           },
           "children": [
             {
-              "label": "文本",
+              "componentName": "ElContainer",
               "props": {
-                "style": {
-                  "width": "fit-content",
-                  "color": "#000",
-                  "fontSize": "16px"
-                }
+                "style": {}
               },
-              "key": "text",
-              "componentName": "Text",
-              "id": "x8i5bfk6"
+              "children": [
+                {
+                  "componentName": "ElHeader",
+                  "props": {
+                    "style": {
+                      "backgroundColor": "#f8f9fa",
+                      "padding": "10px"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "ElMenu",
+                      "props": {
+                        "option": [
+                          {
+                            "title": "首页",
+                            "index": "home",
+                            "subMenu": []
+                          },
+                          {
+                            "title": "关于我们",
+                            "index": "about",
+                            "subMenu": []
+                          },
+                          {
+                            "title": "房间",
+                            "index": "rooms",
+                            "subMenu": []
+                          },
+                          {
+                            "title": "服务",
+                            "index": "services",
+                            "subMenu": []
+                          },
+                          {
+                            "title": "联系我们",
+                            "index": "contact",
+                            "subMenu": []
+                          }
+                        ],
+                        "mode": "horizontal",
+                        "backgroundColor": "#ffffff",
+                        "textColor": "#333333",
+                        "activeTextColor": "#42b983",
+                        "router": true,
+                        "style": {}
+                      },
+                      "id": "menu1"
+                    }
+                  ],
+                  "id": "header1"
+                },
+                {
+                  "componentName": "ElMain",
+                  "props": {
+                    "style": {
+                      "padding": "20px"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "value": "欢迎来到我们的酒店官网！",
+                        "style": {}
+                      },
+                      "id": "welcomeText"
+                    },
+                    {
+                      "componentName": "ElCarousel",
+                      "props": {
+                        "autoplay": true,
+                        "interval": 5000,
+                        "indicatorPosition": "outside",
+                        "loop": true,
+                        "trigger": "click",
+                        "type": "default",
+                        "direction": "horizontal",
+                        "option": [
+                          {
+                            "image": "image1.jpg",
+                            "alt": "酒店外观"
+                          },
+                          {
+                            "image": "image2.jpg",
+                            "alt": "豪华房间"
+                          },
+                          {
+                            "image": "image3.jpg",
+                            "alt": "酒店餐厅"
+                          }
+                        ],
+                        "motionBlur": false,
+                        "style": {}
+                      },
+                      "id": "carousel1"
+                    }
+                  ],
+                  "id": "main1"
+                },
+                {
+                  "componentName": "ElFooter",
+                  "props": {
+                    "style": {
+                      "backgroundColor": "#f8f9fa",
+                      "padding": "10px",
+                      "textAlign": "center"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "value": "© 2023 酒店官网. 保留所有权利.",
+                        "style": {}
+                      },
+                      "id": "footerText"
+                    }
+                  ],
+                  "id": "footer1"
+                }
+              ],
+              "id": "hotelHomepage"
             }
           ],
-          "id": "m8smr883"
+          "id": "nmn8rdpm"
         }
       ],
       "id": "fpdzmm86",

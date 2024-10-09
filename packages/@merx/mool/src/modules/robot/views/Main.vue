@@ -238,8 +238,7 @@ export default defineComponent({
       isTyped.value = true;
 
       userInput.value = "";
-
-      if (!Object.keys(props.schema).length)
+      if (!props.schema)
         return messages.value.push({
           role: "system",
 

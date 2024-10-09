@@ -308,8 +308,12 @@ type ValueProps = {
     prop: string;
   };
 };
+type MenuOption = {
+  title: string;
+  index: string;
+  subMenu: MenuOption[];
+};
 type OtherProps = {
-  value?: ValueProps; // 绑定表单变量(表单控件的v-model属性绑定的变量)
   // 每一个子组件schema必须要生成的样式属性，用来编辑组件样式,可以为空对象，CSSProperties类型，比如{color: 'red'}，组件名采用小驼峰命名
 
   style?: Record<string, string>;
@@ -379,14 +383,37 @@ type ComponentPropsMap = {
   div: OtherProps;
   ElDatePicker: OtherProps;
   Text: OtherProps;
+  ElCarousel: {
+    autoplay: boolean;
+    interval: number;
+    indicatorPosition: "outside" | "none";
+    loop: boolean;
+    trigger: "click" | "hover";
+    type: "card" | "default";
+    direction: "horizontal" | "vertical";
+    option: any[];
+    motionBlur: boolean;
+  } & OtherProps;
+  ElFooter: OtherProps;
+  ElHeader: OtherProps;
+  ElMain: OtherProps;
+  ElAside: OtherProps;
+  ElContainer: OtherProps;
+  ElMenu: {
+    option: MenuOption[];
+    mode: "horizontal" | "vertical";
+    backgroundColor: string;
+    textColor: string;
+    activeTextColor: string;
+    router: boolean;
+  } & OtherProps;
 };
-
+type Children = Col[];
 // 生成表单时，必须在ElFormItem中的children里面生成表单控件
 export type Col = {
   //组件名称
   componentName: ComponentType;
   props: ComponentPropsMap[ComponentType] & Partial<Record<string, any>>; // 动态生成的 props
-  append?: any[];
   parentId?: string;
 
   // 生成schema时必生成组件的id，它是组件的唯一标识，8位数随机字符，只包括英文字母大小写和数字,不要和现有的重复
@@ -424,7 +451,8 @@ export type Col = {
   labelWidth?: string;
 
   // 当前组件的子元素，属性与当前组件相同，生成表单时，包含表单控件
-
+  /**只有div、ElForm、ElFormItem、ElRow、ElCol、ElMenu、ElFooter、ElHeader、ElMain、ElAside、ElContainer组件有这个属性 */
+  // 不是所有组件都有 children 属性
   children?: Col[];
 
   // 控制当前组件是否显示
@@ -480,7 +508,14 @@ export type ComponentType =
   | "ElDivider"
   | "ElSteps"
   | "ElCol"
-  | "ElRow";
+  | "ElRow"
+  | "ElCarousel"
+  | "ElFooter"
+  | "ElHeader"
+  | "ElMain"
+  | "ElAside"
+  | "ElContainer"
+  |"ElMenu";
 
 export interface SearchData<T = Record<string, any>[], K = any> {
   data?: Record<string, any> | T;

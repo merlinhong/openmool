@@ -4,7 +4,8 @@
     <el-header class="bg-gray-800 text-white h-fit">
       <div class="container mx-auto flex justify-between items-center h-full px-4">
         <div class="text-2xl font-bold">摄影妆造工作室</div>
-        <el-menu mode="horizontal" background-color="#1F2937" text-color="#FFFFFF" active-text-color="#60A5FA" :ellipsis="false" class="!border-b-0">
+        <el-menu mode="horizontal" background-color="#1F2937" text-color="#FFFFFF" active-text-color="#60A5FA"
+          :ellipsis="false" class="!border-b-0">
           <el-menu-item index="1">首页</el-menu-item>
           <el-menu-item index="2">服务</el-menu-item>
           <el-menu-item index="3">作品集</el-menu-item>
@@ -13,9 +14,11 @@
         </el-menu>
       </div>
     </el-header>
-  
+
+
     <!-- 英雄区域 -->
-    <section class="hero bg-cover bg-center h-screen flex items-center" style="background-image: url('https://images.unsplash.com/photo-1452587925148-ce544e77e70d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80');">
+    <section class="hero bg-cover bg-center h-screen flex items-center"
+      style="background-image: url('https://images.unsplash.com/photo-1452587925148-ce544e77e70d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80');">
       <div class="container mx-auto text-center text-white">
         <transition appear name="fade-in">
           <h1 class="text-5xl font-bold mb-4">捕捉美好瞬间</h1>
@@ -28,7 +31,7 @@
         </transition>
       </div>
     </section>
-  
+
     <!-- 服务介绍 -->
     <section class="services py-16 bg-gray-100">
       <div class="container mx-auto px-4">
@@ -46,7 +49,7 @@
         </el-row>
       </div>
     </section>
-  
+
     <!-- 作品展示 -->
     <section class="portfolio py-16">
       <div class="container mx-auto px-4">
@@ -55,26 +58,25 @@
           <el-col :span="8" v-for="(image, index) in portfolioImages" :key="index">
             <fade-in-section>
               <div class="image-container" @click="floatImage">
-                <el-image 
-                  :src="image" 
-                  fit="cover"
+                <el-image :src="image" fit="cover"
                   class="w-full h-64 object-cover mb-4 cursor-pointer hover:opacity-80 transition-opacity duration-300"
-                  @click="openGallery(index)"
-                ></el-image>
+                  @click="openGallery(index)"></el-image>
               </div>
             </fade-in-section>
           </el-col>
         </el-row>
       </div>
     </section>
-  
+
     <!-- 关于我们 -->
     <section class="about py-16 bg-gray-100">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12">关于我们</h2>
         <el-row :gutter="20">
           <el-col :span="12">
-            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="关于我们" class="w-full h-auto rounded-lg shadow-lg">
+            <img
+              src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+              alt="关于我们" class="w-full h-auto rounded-lg shadow-lg">
           </el-col>
           <el-col :span="12">
             <p class="text-lg mb-4">我们是一家专业的摄影妆造工作室，拥有多年的行业经验和一支充满激情的团队。</p>
@@ -84,7 +86,7 @@
         </el-row>
       </div>
     </section>
-  
+
     <!-- 联系我们 -->
     <section class="contact py-16">
       <div class="container mx-auto px-4">
@@ -120,7 +122,7 @@
         </el-row>
       </div>
     </section>
-  
+
     <!-- 页脚 -->
     <el-footer class="bg-gray-800 text-white py-8">
       <div class="container mx-auto px-4 text-center">
