@@ -29,27 +29,29 @@
     </nav>
 
     <aside v-if="drawer" class="component-drawer">
-      <el-tabs v-model="activeName" type="card">
+      <el-tabs v-model="activeName" type="card" >
         <el-tab-pane label="组件" name="0">
-          <div class="component-list">
-            <h3>基础</h3>
-            <ul class="base-component">
-              <li v-for="item in baseComponentList" :key="item.dataType" :data-type="item.dataType"
-                class="component-item">
-                <iEpDocument width="15px" />
-                <span>{{ item.text }}</span>
-              </li>
-            </ul>
+          <el-scrollbar height="75vh">
+            <div class="component-list">
+              <h3>基础</h3>
+              <ul class="base-component">
+                <li v-for="item in baseComponentList" :key="item.dataType" :data-type="item.dataType"
+                  class="component-item">
+                  <iEpDocument width="15px" />
+                  <span>{{ item.text }}</span>
+                </li>
+              </ul>
 
-            <h3>高级</h3>
-            <ul class="base-component">
-              <li v-for="item in seniorComponentList" :key="item.dataType" :data-type="item.dataType"
-                class="component-item">
-                <iEpDocument width="15px" />
-                <span>{{ item.text }}</span>
-              </li>
-            </ul>
-          </div>
+              <h3>高级</h3>
+              <ul class="base-component">
+                <li v-for="item in seniorComponentList" :key="item.dataType" :data-type="item.dataType"
+                  class="component-item">
+                  <iEpDocument width="15px" />
+                  <span>{{ item.text }}</span>
+                </li>
+              </ul>
+            </div>
+          </el-scrollbar>
         </el-tab-pane>
 
         <el-tab-pane label="模板" name="1">
@@ -75,7 +77,8 @@
 
     <div class="w-[400px] absolute border-r border-[#e2e2e2] bg-white h-full left-[18.6rem] z-[999]" v-if="setVarRef">
       <div class="flex justify-end p-[10px]">
-        <el-button type="primary" plain size="small" @click="saveEditor">保存<span class="text-red-500" v-if="isChange">*</span></el-button>
+        <el-button type="primary" plain size="small" @click="saveEditor">保存<span class="text-red-500"
+            v-if="isChange">*</span></el-button>
       </div>
 
       <el-divider class="mt-0"></el-divider>
@@ -96,7 +99,8 @@
         <h4 class="px-5">页面JS</h4>
 
         <div>
-          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500" v-if="isChange">*</span></el-button>
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
           <i-ep-delete></i-ep-delete>
         </div>
       </div>
@@ -109,7 +113,8 @@
         <h4 class="px-5">页面Ref</h4>
 
         <div>
-          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500" v-if="isChange">*</span></el-button>
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
         </div>
       </div>
 
@@ -120,7 +125,8 @@
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面schema</h4>
         <div>
-          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500" v-if="isChange">*</span></el-button>
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
           <el-button type="primary" text @click="showSchema = false">关闭</el-button>
         </div>
       </div>
@@ -128,9 +134,9 @@
       <div id="editor_container" class="w-[560px] h-[90%] border border-[#c9c8c8]"></div>
     </div>
   </div>
-  <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
-    class="robot-main" />
-    <PagePanel v-if="showPagePanel" @close="showPagePanel = false" @selectPage="selectPage" />
+  <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf"
+    :foundationModel="foundationModel" class="robot-main" />
+  <PagePanel v-if="showPagePanel" @close="showPagePanel = false" @selectPage="selectPage" />
 </template>
 
 <script setup lang="ts">
@@ -138,8 +144,6 @@ import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 import PagePanel from "./PagePanel.vue";
-import { useStore } from "@/mool/store";
-const {canvas} = useStore();
 
 const props = defineProps({
   pageConfig: {
@@ -151,7 +155,7 @@ const props = defineProps({
     default: "100%",
   },
   currentConf: {
-    type: Object as PropType<Col|null>,
+    type: Object as PropType<Col | null>,
     required: true,
   },
 });
@@ -188,11 +192,11 @@ const openPagePanel = () => {
 };
 const selectPage = (row: { id: string; name: string; schema: any }) => {
   showPagePanel.value = false;
-  emit("editPage",row.id);
+  emit("editPage", row.id);
 };
-const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar"|'page') => {
+const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" | 'page') => {
   // 检查当前点击的面板是否已经打开
-  const isCurrentPanelOpen = 
+  const isCurrentPanelOpen =
     (panel === "drawer" && drawer.value) ||
     (panel === "schema" && showSchema.value) ||
     (panel === "js" && showJS.value) ||
@@ -315,18 +319,15 @@ const addList = ref<string[]>([]);
 
 const typeName = ref("");
 
-const MsizeList = ref<Record<string,string[]>>({
-  pc: ['20px 80px','20px 200px'],
-  mobile: ['20px 440px','20px 560px'],
-});
+
 watch(
   () => drawer.value,
   (n, o) => {
     if (n) {
-      
-      emit("change", [n, MsizeList.value[canvas.canvasType][0]]);
+
+      emit("change", [n, '20px 40px']);
     } else {
-      emit("change", [n, MsizeList.value[canvas.canvasType][1]]);
+      emit("change", [n, '20px 160px']);
     }
   },
 
@@ -557,7 +558,7 @@ const saveEditor = () => {
 
   closeAllPanels();
 };
-const emit = defineEmits(["change",'editPage']);
+const emit = defineEmits(["change", 'editPage']);
 </script>
 
 <style lang="less" scoped>
@@ -565,6 +566,7 @@ const emit = defineEmits(["change",'editPage']);
   height: 100%;
   display: flex;
 }
+
 .sidebar-nav {
   background-color: #fff;
   padding: 10px 5px;
@@ -574,6 +576,7 @@ const emit = defineEmits(["change",'editPage']);
   justify-content: space-between;
   border-right: 1px solid #c9c8c8;
 }
+
 .top-buttons,
 .bottom-buttons {
   display: flex;
@@ -620,11 +623,13 @@ const emit = defineEmits(["change",'editPage']);
   border: none;
   padding: 5px;
 }
+
 .page-button {
   font-weight: bold;
   background: none;
   border: none;
 }
+
 .bottom-buttons {
   margin-bottom: 20px;
   display: flex;
@@ -641,7 +646,7 @@ const emit = defineEmits(["change",'editPage']);
 }
 
 .component-drawer {
-  width: 240px;
+  width: 220px;
   background-color: #fff;
   border-right: 1px solid #e2e2e2;
 }
@@ -650,7 +655,8 @@ const emit = defineEmits(["change",'editPage']);
   margin-top: 15px;
 }
 
-.base-component, .block-component {
+.base-component,
+.block-component {
   list-style: none;
   display: flex;
   flex-wrap: wrap;

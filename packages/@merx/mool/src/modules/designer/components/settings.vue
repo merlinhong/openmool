@@ -23,9 +23,9 @@
         </el-tab-pane>
 
         <el-tab-pane label="样式" name="1">
-          <div style="padding: 9px">
-            <el-button @click="editGlobalStyle">编辑全局样式</el-button>
-            <el-button type="primary" @click="editCurrentStyle">编辑当前样式</el-button>
+          <div style="padding: 9px;" class="flex justify-around">
+            <el-button @click="editGlobalStyle" size="small">编辑全局样式</el-button>
+            <el-button type="primary" @click="editCurrentStyle" size="small" >编辑当前样式</el-button>
           </div>
           <el-collapse v-model="styleActiveName">
             <el-collapse-item name="0" style="padding: 0 10px">
@@ -33,167 +33,75 @@
               <div style="margin-bottom: 10px">
                 <div style="display: flex; justify-content: space-between" @click.capture="setLayout">
                   排布
-                  <svg
-                    :style="{ fill: layout == 'block' ? 'green' : '' }"
-                    t="1723693979367"
-                    class="icon"
-                    viewBox="0 0 1024 1024"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    p-id="6415"
-                    width="25"
-                    height="25"
-                    data-id="block"
-                  >
+                  <svg :style="{ fill: layout == 'block' ? 'green' : '' }" t="1723693979367" class="icon"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6415" width="25"
+                    height="25" data-id="block">
                     <path
                       d="M170.666667 149.333333h682.666666c46.933333 0 85.333333 38.4 85.333334 85.333334v554.666666c0 46.933333-38.4 85.333333-85.333334 85.333334H170.666667c-46.933333 0-85.333333-38.4-85.333334-85.333334V234.666667c0-46.933333 38.4-85.333333 85.333334-85.333334z m0 64c-12.8 0-21.333333 8.533333-21.333334 21.333334v554.666666c0 12.8 8.533333 21.333333 21.333334 21.333334h682.666666c12.8 0 21.333333-8.533333 21.333334-21.333334V234.666667c0-12.8-8.533333-21.333333-21.333334-21.333334H170.666667z m106.666666 85.333334h469.333334c23.466667 0 42.666667 19.2 42.666666 42.666666v341.333334c0 23.466667-19.2 42.666667-42.666666 42.666666H277.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666V341.333333c0-23.466667 19.2-42.666667 42.666666-42.666666z"
-                      p-id="6416"
-                      data-id="block"
-                    ></path>
+                      p-id="6416" data-id="block"></path>
                   </svg>
-                  <svg
-                    :style="{ fill: layout == 'flex' ? 'green' : '' }"
-                    t="1723694026816"
-                    class="icon"
-                    viewBox="0 0 1024 1024"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    p-id="7438"
-                    width="25"
-                    height="25"
-                    data-id="flex"
-                  >
+                  <svg :style="{ fill: layout == 'flex' ? 'green' : '' }" t="1723694026816" class="icon"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7438" width="25"
+                    height="25" data-id="flex">
                     <path
                       d="M170.666667 149.333333h682.666666c46.933333 0 85.333333 38.4 85.333334 85.333334v554.666666c0 46.933333-38.4 85.333333-85.333334 85.333334H170.666667c-46.933333 0-85.333333-38.4-85.333334-85.333334V234.666667c0-46.933333 38.4-85.333333 85.333334-85.333334z m0 64c-12.8 0-21.333333 8.533333-21.333334 21.333334v554.666666c0 12.8 8.533333 21.333333 21.333334 21.333334h682.666666c12.8 0 21.333333-8.533333 21.333334-21.333334V234.666667c0-12.8-8.533333-21.333333-21.333334-21.333334H170.666667z m85.333333 85.333334h85.333333c23.466667 0 42.666667 19.2 42.666667 42.666666v341.333334c0 23.466667-19.2 42.666667-42.666667 42.666666h-85.333333c-23.466667 0-42.666667-19.2-42.666667-42.666666V341.333333c0-23.466667 19.2-42.666667 42.666667-42.666666z m213.333333 0h85.333334c23.466667 0 42.666667 19.2 42.666666 42.666666v341.333334c0 23.466667-19.2 42.666667-42.666666 42.666666h-85.333334c-23.466667 0-42.666667-19.2-42.666666-42.666666V341.333333c0-23.466667 19.2-42.666667 42.666666-42.666666z m213.333334 0h85.333333c23.466667 0 42.666667 19.2 42.666667 42.666666v341.333334c0 23.466667-19.2 42.666667-42.666667 42.666666h-85.333333c-23.466667 0-42.666667-19.2-42.666667-42.666666V341.333333c0-23.466667 19.2-42.666667 42.666667-42.666666z"
-                      p-id="7439"
-                      data-id="flex"
-                    ></path>
+                      p-id="7439" data-id="flex"></path>
                   </svg>
-                  <svg
-                    :style="{ fill: layout == 'inline' ? 'green' : '' }"
-                    t="1723694049381"
-                    class="icon"
-                    viewBox="0 0 1024 1024"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    p-id="8500"
-                    width="20"
-                    height="20"
-                    data-id="inline"
-                  >
+                  <svg :style="{ fill: layout == 'inline' ? 'green' : '' }" t="1723694049381" class="icon"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8500" width="20"
+                    height="20" data-id="inline">
                     <path
                       d="M0 256h1024v512H0V256z m85.333333 85.333333v341.333334h853.333334V341.333333H85.333333zM0 0h1024v85.333333H0V0z m981.333333 42.666667L938.666667 85.333333V0l42.666666 42.666667zM0 938.666667h1024v85.333333H0v-85.333333z m981.333333 42.666666l-42.666666 42.666667v-85.333333l42.666666 42.666666z"
-                      p-id="8501"
-                      data-id="inline"
-                    ></path>
+                      p-id="8501" data-id="inline"></path>
                   </svg>
-                  <svg
-                    :style="{ fill: layout == 'hidden' ? 'green' : '' }"
-                    t="1723694092565"
-                    class="icon"
-                    viewBox="0 0 1024 1024"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    p-id="9482"
-                    width="25"
-                    height="25"
-                    data-id="hidden"
-                  >
+                  <svg :style="{ fill: layout == 'hidden' ? 'green' : '' }" t="1723694092565" class="icon"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9482" width="25"
+                    height="25" data-id="hidden">
                     <path
                       d="M253.6 679.2l109.6-109.6C356 552 352 532.8 352 512c0-88 72-160 160-160 20.8 0 40 4 57.6 11.2l82.4-82.4C607.2 264.8 560 256 512 256c-168 0-329.6 106.4-384 256 24 65.6 68.8 123.2 125.6 167.2z"
-                      p-id="9483"
-                      data-id="hidden"
-                    ></path>
+                      p-id="9483" data-id="hidden"></path>
                     <path
                       d="M416 512v4.8L516.8 416H512c-52.8 0-96 43.2-96 96zM770.4 344.8l163.2-163.2L888 136l-753.6 753.6 45.6 45.6 192.8-192.8A390.4 390.4 0 0 0 512 768c167.2 0 330.4-106.4 384.8-256-24-65.6-69.6-123.2-126.4-167.2zM512 672c-20 0-40-4-57.6-11.2l53.6-53.6h4.8c52.8 0 96-43.2 96-96v-4.8l53.6-53.6C668 472 672 492 672 512c0 88-72 160-160 160z"
-                      p-id="9484"
-                      data-id="hidden"
-                    ></path>
+                      p-id="9484" data-id="hidden"></path>
                   </svg>
                 </div>
               </div>
               <div v-if="setFlex">
-                <el-form-item label="主轴方向"
-                  ><el-select size="small" v-model="flexDirection" @change="changeFlex(1)"
-                    ><el-option
-                      v-for="item in ['row', 'row-reverse', 'column', 'column-reverse']"
-                      :value="item"
-                      :label="item"
-                    ></el-option></el-select
-                ></el-form-item>
-                <el-form-item label="主轴对齐"
-                  ><el-select size="small" v-model="justifyContent" @change="changeFlex(2)"
-                    ><el-option
+                <el-form-item label="主轴方向"><el-select size="small" v-model="flexDirection"
+                    @change="changeFlex(1)"><el-option
+                      v-for="item in ['row', 'row-reverse', 'column', 'column-reverse']" :value="item"
+                      :label="item"></el-option></el-select></el-form-item>
+                <el-form-item label="主轴对齐"><el-select size="small" v-model="justifyContent"
+                    @change="changeFlex(2)"><el-option
                       v-for="item in ['flex-start', 'flex-end', 'center', 'space-between', 'space-around']"
-                      :value="item"
-                      :label="item"
-                    ></el-option></el-select
-                ></el-form-item>
-                <el-form-item label="辅轴对齐"
-                  ><el-select size="small" v-model="alignItems" @change="changeFlex(3)"
-                    ><el-option
-                      v-for="item in ['flex-start', 'flex-end', 'center', 'baseline', 'stretch']"
-                      :value="item"
-                      :label="item"
-                    ></el-option></el-select
-                ></el-form-item>
-                <el-form-item label="换行"
-                  ><el-select size="small" v-model="flexWrap" @change="changeFlex(4)"
-                    ><el-option
-                      v-for="item in ['nowrap', 'wrap', 'wrap-reverse']"
-                      :value="item"
-                      :label="item"
-                    ></el-option></el-select
-                ></el-form-item>
+                      :value="item" :label="item"></el-option></el-select></el-form-item>
+                <el-form-item label="辅轴对齐"><el-select size="small" v-model="alignItems"
+                    @change="changeFlex(3)"><el-option
+                      v-for="item in ['flex-start', 'flex-end', 'center', 'baseline', 'stretch']" :value="item"
+                      :label="item"></el-option></el-select></el-form-item>
+                <el-form-item label="换行"><el-select size="small" v-model="flexWrap" @change="changeFlex(4)"><el-option
+                      v-for="item in ['nowrap', 'wrap', 'wrap-reverse']" :value="item"
+                      :label="item"></el-option></el-select></el-form-item>
               </div>
             </el-collapse-item>
 
             <el-collapse-item name="1" style="padding: 0 10px">
               <template #title> 边距 </template>
               <div style="display: flex; justify-content: space-evenly">
-                <svg
-                  @click="setMargin"
-                  style="cursor: pointer"
-                  t="1723626368440"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="14276"
-                  width="80"
-                  height="80"
-                >
+                <svg @click="setMargin" style="cursor: pointer" t="1723626368440" class="icon" viewBox="0 0 1024 1024"
+                  version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14276" width="80" height="80">
                   <path
                     d="M681.179429 321.682286h-336.457143a14.628571 14.628571 0 0 0-14.628572 14.628571v336.457143c0 8.045714 6.582857 14.628571 14.628572 14.628571h336.457143a14.628571 14.628571 0 0 0 14.628571-14.628571v-336.457143a14.628571 14.628571 0 0 0-14.628571-14.628571z m-22.601143 327.241143h-292.571429v-292.571429h292.571429v292.571429zM156.086857 591.433143a7.314286 7.314286 0 0 0 11.922286-5.778286V550.765714h117.394286a7.314286 7.314286 0 0 0 7.314285-7.314285v-51.2a7.314286 7.314286 0 0 0-7.314285-7.314286H168.009143v-38.619429a7.314286 7.314286 0 0 0-11.922286-5.778285l-80.164571 71.606857a7.314286 7.314286 0 0 0 0 11.483428l80.164571 67.876572zM593.115429 867.913143a7.314286 7.314286 0 0 0-5.778286-11.922286h-34.962286v-117.394286a7.314286 7.314286 0 0 0-7.314286-7.314285h-51.2a7.314286 7.314286 0 0 0-7.314285 7.314285v117.394286h-38.619429a7.314286 7.314286 0 0 0-5.851428 11.922286l71.68 80.164571a7.314286 7.314286 0 0 0 11.483428 0l67.876572-80.164571zM434.468571 151.552a7.314286 7.314286 0 0 0 5.851429 11.922286h34.889143V280.868571a7.314286 7.314286 0 0 0 7.314286 7.314286h51.2a7.314286 7.314286 0 0 0 7.314285-7.314286V163.474286h38.692572a7.314286 7.314286 0 0 0 5.705143-11.922286L513.828571 71.387429a7.314286 7.314286 0 0 0-11.483428 0L434.468571 151.552zM868.059429 440.466286a7.314286 7.314286 0 0 0-11.922286 5.778285v34.889143H738.742857a7.314286 7.314286 0 0 0-7.314286 7.314286v51.2a7.314286 7.314286 0 0 0 7.314286 7.314286h117.394286v38.765714a7.314286 7.314286 0 0 0 11.922286 5.705143l80.091428-71.68a7.314286 7.314286 0 0 0 0-11.483429l-80.091428-67.803428z"
-                    fill="#000000"
-                    fill-opacity=".651"
-                    p-id="14277"
-                  ></path>
+                    fill="#000000" fill-opacity=".651" p-id="14277"></path>
                 </svg>
-                <svg
-                  @click="setPadding"
-                  style="cursor: pointer"
-                  t="1723626415189"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="16479"
-                  width="80"
-                  height="80"
-                >
+                <svg @click="setPadding" style="cursor: pointer" t="1723626415189" class="icon" viewBox="0 0 1024 1024"
+                  version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16479" width="80" height="80">
                   <path
                     d="M882.614857 115.346286H142.409143a32.182857 32.182857 0 0 0-32.182857 32.182857v740.205714c0 17.773714 14.409143 32.182857 32.182857 32.182857h740.205714a32.182857 32.182857 0 0 0 32.182857-32.182857V147.529143a32.182857 32.182857 0 0 0-32.182857-32.182857z m-15.506286 754.102857h-708.022857v-708.022857h708.022857v708.022857z"
-                    fill="#000000"
-                    fill-opacity=".651"
-                    p-id="16480"
-                  ></path>
+                    fill="#000000" fill-opacity=".651" p-id="16480"></path>
                   <path
                     d="M356.059429 440.466286a7.314286 7.314286 0 0 0-11.922286 5.778285v34.889143H226.742857a7.314286 7.314286 0 0 0-7.314286 7.314286v51.2a7.314286 7.314286 0 0 0 7.314286 7.314286h117.394286v38.765714a7.314286 7.314286 0 0 0 11.922286 5.705143l80.091428-71.68a7.314286 7.314286 0 0 0 0-11.483429l-80.091428-67.803428zM442.148571 667.940571a7.314286 7.314286 0 0 0 5.778286 11.922286H482.742857V797.257143a7.314286 7.314286 0 0 0 7.314286 7.314286h51.2a7.314286 7.314286 0 0 0 7.314286-7.314286V679.862857h38.765714a7.314286 7.314286 0 0 0 5.705143-11.922286l-71.68-80.091428a7.314286 7.314286 0 0 0-11.483429 0l-67.803428 80.091428zM585.435429 351.451429a7.314286 7.314286 0 0 0-5.705143-11.849143h-34.962286V222.208a7.314286 7.314286 0 0 0-7.314286-7.314286h-51.2a7.314286 7.314286 0 0 0-7.314285 7.314286v117.394286H440.32a7.314286 7.314286 0 0 0-5.778286 11.849143l71.68 80.164571a7.314286 7.314286 0 0 0 11.483429 0l67.803428-80.164571zM668.086857 591.433143a7.314286 7.314286 0 0 0 11.922286-5.778286V550.765714h117.394286a7.314286 7.314286 0 0 0 7.314285-7.314285v-51.2a7.314286 7.314286 0 0 0-7.314285-7.314286H680.009143v-38.619429a7.314286 7.314286 0 0 0-11.922286-5.778285l-80.164571 71.606857a7.314286 7.314286 0 0 0 0 11.483428l80.164571 67.876572z"
-                    fill="#000000"
-                    fill-opacity=".651"
-                    p-id="16481"
-                  ></path>
+                    fill="#000000" fill-opacity=".651" p-id="16481"></path>
                 </svg>
               </div>
             </el-collapse-item>
@@ -206,12 +114,8 @@
               <template #title> 文本 </template>
               <BasicForm class="form-design-config" :config="textConfig" v-model:data="Current" style="padding: 10px" />
               <el-divider style="margin: 0"></el-divider>
-              <BasicForm
-                class="form-design-config"
-                :config="textExtraConfig"
-                v-model:data="Current"
-                style="padding: 10px"
-              />
+              <BasicForm class="form-design-config" :config="textExtraConfig" v-model:data="Current"
+                style="padding: 10px" />
             </el-collapse-item>
             <el-collapse-item name="4" style="padding: 0 10px">
               <template #title> 背景 </template>
@@ -230,11 +134,8 @@
 
                 <el-tooltip :show-arrow="false" placement="bottom-end" effect="light" raw-content>
                   <template #content>
-                    <div
-                      v-for="item in eventDesc"
-                      style="font-size: 16px; padding: 5px; cursor: pointer"
-                      @click="bindEvent(item.val)"
-                    >
+                    <div v-for="item in eventDesc" style="font-size: 16px; padding: 5px; cursor: pointer"
+                      @click="bindEvent(item.val)">
                       {{ item.val + item.desc }}
                     </div>
                   </template>
@@ -285,13 +186,8 @@
       </div>
     </template>
   </el-dialog>
-  <el-dialog
-    destroy-on-close
-    v-model="renderDialogVisible"
-    title="列内容组件拖拽渲染"
-    width="1000"
-    :close-on-click-modal="false"
-  >
+  <el-dialog destroy-on-close v-model="renderDialogVisible" title="列内容组件拖拽渲染" width="1000"
+    :close-on-click-modal="false">
     <!-- <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div> -->
     <el-container>
       <ul class="base_component">
@@ -299,20 +195,11 @@
           <iEpDocument width="15px" style="vertical-align: text-top; margin-right: 4px" />{{ item.text }}
         </li>
       </ul>
-      <BasicCanvas
-        @active="activeCurrent"
-        v-model:pageConfig="renderColumnSchema"
-        :drag-comp-li="renderColumnCompLi"
-        :customStyle="{ margin: '20px' }"
-      />
+      <BasicCanvas @active="activeCurrent" v-model:pageConfig="renderColumnSchema" :drag-comp-li="renderColumnCompLi"
+        :customStyle="{ margin: '20px' }" />
       <el-aside>
-        <config-plane
-          scrollHeight="40vh"
-          style="height: fit-content"
-          :is-show-config="true"
-          v-model:current="currentConf"
-          v-model:pageConfig="renderColumnSchema"
-        />
+        <config-plane scrollHeight="40vh" style="height: fit-content" :is-show-config="true"
+          v-model:current="currentConf" v-model:pageConfig="renderColumnSchema" />
       </el-aside>
     </el-container>
     <template #footer>
@@ -329,25 +216,13 @@
     <el-radio-group v-model="marginValue" @change="changeMargin">
       <el-radio-button v-for="item in ['auto', 0, 10, 20, 40, 60, 100, 140, 200]" :label="item">{{
         item
-      }}</el-radio-button>
+        }}</el-radio-button>
     </el-radio-group>
   </el-drawer>
-  <el-drawer
-    v-model="setTableVisible"
-    title="设置表格"
-    direction="rtl"
-    :size="250"
-    :modal="false"
-    :z-index="1000"
-    style="margin-right: 15%"
-    :lock-scroll="false"
-  >
-    <BasicForm
-      class="form-design-config"
-      :config="tableConfig"
-      v-model:data="Current.props.columns[currColIndex]"
-      v-if="Current.props?.columns && currColIndex !== null"
-    />
+  <el-drawer v-model="setTableVisible" title="设置表格" direction="rtl" :size="250" :modal="false" :z-index="1000"
+    style="margin-right: 15%" :lock-scroll="false">
+    <BasicForm class="form-design-config" :config="tableConfig" v-model:data="Current.props.columns[currColIndex]"
+      v-if="Current.props?.columns && currColIndex !== null" />
   </el-drawer>
   <!-- 数据请求设置 -->
   <el-dialog v-model="fetchDataDialogVisible" title="fetch请求设置" width="800">
@@ -356,23 +231,16 @@
       <el-row>
         <div id="fetch_editor_container" style="width: 100%; height: 200px"></div>
       </el-row>
-      <el-row
-        ><el-col
-          ><el-form-item label="Content-Type" style="width: 90%; margin-top: 10px">
+      <el-row><el-col><el-form-item label="Content-Type" style="width: 90%; margin-top: 10px">
             <el-select v-model="defaultContentType" placeholder="选择" clearable :multiple="false">
               <el-option v-for="item in contentType" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select> </el-form-item></el-col
-      ></el-row>
+            </el-select> </el-form-item></el-col></el-row>
 
-      <el-row
-        ><el-col
-          ><el-form-item label="请求类型" style="width: 60%">
+      <el-row><el-col><el-form-item label="请求类型" style="width: 60%">
             <el-radio-group v-model="defaultRequestType" clearable :multiple="false">
               <el-radio v-for="item in requesttype" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
             </el-radio-group>
-          </el-form-item></el-col
-        ></el-row
-      >
+          </el-form-item></el-col></el-row>
     </el-form>
     <template #footer>
       <div>
@@ -2519,8 +2387,7 @@ const moreConfig = ref<BasicFormConfig>({
 const sizeConfig = ref<BasicFormConfig>({
   row: {
     style: {
-      flexDirection: "row",
-      display: "flex",
+     
     },
     gutter: 20,
     col: [
@@ -2552,7 +2419,7 @@ const sizeConfig = ref<BasicFormConfig>({
 
         pkey: "props",
         key: "style",
-        span: 12,
+        span: 8,
         props: { style: { display: "flex" } },
 
         render(data, col) {

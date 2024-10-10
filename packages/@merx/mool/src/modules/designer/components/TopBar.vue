@@ -72,8 +72,8 @@ import { Page, Col } from "@/mool/types";
 import BasicPage from "$/designer/components/canvasContainer.vue";
 import { Monitor, Iphone, RefreshLeft, RefreshRight, View, Download, Upload } from "@element-plus/icons-vue";
 
-const PCMSize = "200px";
-const MobileMSize = "560px";
+const PCSize = "100%";
+const MobileSize = "30%";
 
 const emit = defineEmits(["changeSize"]);
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
@@ -247,13 +247,13 @@ const isPC = ref(true);
 const switchToPC = () => {
   isPC.value = true;
   // 这里可以添加切换到PC视图的逻辑
-  emit("changeSize", { Msize: PCMSize, isPC: true });
+  emit("changeSize", { size: PCSize, isPC: true });
 };
 
 const switchToMobile = () => {
   isPC.value = false;
   // 这里可以添加切换到移动端视图的逻辑
-  emit("changeSize", { Msize: MobileMSize, isPC: false });
+  emit("changeSize", { size: MobileSize, isPC: false });
 };
 
 // 监听isPC的变化

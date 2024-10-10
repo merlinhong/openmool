@@ -9,7 +9,7 @@ import { Avatar } from "@element-plus/icons-vue";
 import useLoading from "@/mool/hooks/loading";
 import { useStore } from "@/mool/store";
 const { loading, setLoading } = useLoading(true);
-const {canvas} = useStore();
+const { canvas } = useStore();
 const canvasRef = ref<InstanceType<typeof BasicCanvas>>();
 const pageConfig = ref<Page>({
   ref: {},
@@ -36,11 +36,11 @@ const activeCurrent = (val: Col) => {
 
   currentConf.value = val;
 };
-const containerStyle = ref<{ margin?: string }>({});
+const containerStyle = ref<{ width?: string, margin?: string }>({});
 const hasActive = ref(false);
 
 const openBar = (arr: [boolean, string]) => {
-  
+
   if (arr[1]) {
     hasActive.value = true;
     containerStyle.value.margin = arr[1];
@@ -48,16 +48,57 @@ const openBar = (arr: [boolean, string]) => {
     hasActive.value = false;
     containerStyle.value = {};
   }
-  console.log(containerStyle.value);
 };
-const changeSize = (option: { Msize: string; isPC: boolean }) => {
-  console.log(option);
+const changeSize = (option: { size: string; isPC: boolean }) => {
   canvas.setCanvasType(option.isPC ? 'pc' : 'mobile');
-  console.log(canvas.canvasType);
-  
-  containerStyle.value.margin = `20px ${option.Msize}`;
-  console.log(containerStyle.value);
+  containerStyle.value.width = option.size;
+
+  // 根据画布类型设置组件样式
+  if (option.isPC) {
+    // PC 端样式
+    pageConfig.value.props.style = {
+      ...pageConfig.value.props.style,
+      padding: '20px',
+      maxWidth: '1200px',
+      margin: '0 auto',
+    };
+  } else {
+    // 移动端样式
+    pageConfig.value.props.style = {
+      ...pageConfig.value.props.style,
+      padding: '10px',
+      maxWidth: '100%',
+      margin: '0',
+    };
+  }
+
+  // 更新子组件样式
+  updateChildrenStyles(pageConfig.value.children, option.isPC);
 };
+
+// 递归更新子组件样式
+const updateChildrenStyles = (children: any[], isPC: boolean) => {
+  children.forEach(child => {
+    if (isPC) {
+      child.props.style = {
+        ...child.props.style,
+        width: '100%',
+        marginBottom: '20px',
+      };
+    } else {
+      child.props.style = {
+        ...child.props.style,
+        width: '100%',
+        marginBottom: '10px',
+      };
+    }
+
+    if (child.children && child.children.length > 0) {
+      updateChildrenStyles(child.children, isPC);
+    }
+  });
+};
+
 const querySchema = (id: string = "main") => {
   Object.assign(pageConfig.value, clonePageConfig);
   setLoading(true);
@@ -105,7 +146,9 @@ onMounted(querySchema);
           </template>
           <template #extra>
             <div style="width: 300px; text-align: right">
-              <el-icon class="text-gray-500 text-2xl mx-2 align-top"><Avatar /></el-icon>登录
+              <el-icon class="text-gray-500 text-2xl mx-2 align-top">
+                <Avatar />
+              </el-icon>登录
             </div>
           </template>
         </el-page-header>
@@ -113,33 +156,22 @@ onMounted(querySchema);
       <!-- 顶部栏组件，用于显示和编辑页面配置 -->
       <!-- v-model:pageConfig 用于双向绑定页面配置 -->
       <TopBar v-model:pageConfig="pageConfig" @changeSize="changeSize" />
-      <el-container :style="{ height: 'calc(100vh - 120px)' }" >
+      <el-container :style="{ height: 'calc(100vh - 120px)' }" class="justify-between">
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- @change 事件用于监听侧边栏的打开或关闭 -->
-        <SideBar
-          v-model:pageConfig="pageConfig"
-          @change="openBar"
-          :current-conf="currentConf"
-          @editPage="querySchema"
-        />
+        <SideBar v-model:pageConfig="pageConfig" @change="openBar" :current-conf="currentConf"
+          @editPage="querySchema" />
         <!-- 画布组件，用于显示和编辑页面内容 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- :hasActive 用于控制画布的激活状态 -->
         <!-- @active 事件用于监听画布的激活状态 -->
-        <BasicCanvas
-          ref="canvasRef"
-          v-model:pageConfig="pageConfig"
-          :hasActive="hasActive"
-          @active="activeCurrent"
-          :customStyle="containerStyle"
-          v-loading="loading"
-         
-        />
+        <BasicCanvas ref="canvasRef" v-model:pageConfig="pageConfig" :hasActive="hasActive" @active="activeCurrent"
+          :customStyle="containerStyle" v-loading="loading" />
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:current 用于双向绑定当前配置项 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
-        <el-aside class="page-design-config" style="background-color: #fff">
+        <el-aside class="page-design-config" style="background-color: #fff;width: 260px;">
           <config-plane :is-show-config="true" v-model:current="currentConf" v-model:pageConfig="pageConfig" />
         </el-aside>
       </el-container>

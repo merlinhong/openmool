@@ -141,19 +141,6 @@
               },
               "id": "wszaydbw",
               "parentId": "52hbp2pp"
-            },
-            {
-              "label": "卡片",
-              "componentName": "ElCard",
-              "props": {
-                "style": {
-                  "width": "300px",
-                  "height": "auto"
-                },
-                "class": ""
-              },
-              "id": "pe4diedk",
-              "parentId": "52hbp2pp"
             }
           ],
           "id": "52hbp2pp"

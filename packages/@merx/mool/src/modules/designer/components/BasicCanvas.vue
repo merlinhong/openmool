@@ -5,7 +5,7 @@
       width: '100%',
       ...props.customStyle,
       backgroundColor: '#f5f6f7 !important ',
-      margin: `${props.customStyle?.margin||'20px 200px'}`,
+      margin: `${props.customStyle?.margin||'20px 160px'}`,
       overflow: 'scroll',
       scrollbarWidth: 'none',
       boxSizing: 'border-box',
@@ -100,7 +100,7 @@ const props = defineProps({
   },
   customStyle: {
     type: Object,
-    default: () => ({width: "100%"}),
+    default: () => ({width: "80%"}),
   },
 });
 
