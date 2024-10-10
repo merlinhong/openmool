@@ -37,6 +37,7 @@ export const baseComponentList = [
   { text: "图片上传", dataType: "upload" },
 ];
 
+
 export const seniorComponentList = [
 
   { text: "Form", dataType: "ElForm" },
@@ -75,127 +76,95 @@ export const JsonSchema: {
 } = {
   div: {
     componentName: "div",
-
     props: {
-      style: {
-      },
+      style: {},
+      class: "",
     },
-
     children: [],
-
     id: "",
   },
 
   ElForm: {
     componentName: "ElForm",
-
     props: {
       labelPosition: "right",
-
       labelWidth: "80px",
-
       style: {
         display: "flex",
-
         flexWrap: "wrap",
       },
+      class: "",
     },
-
     children: [],
-
     id: "",
   },
 
   ElFormItem: {
     componentName: "ElFormItem",
-
     props: {
-      label: "区域",
-
+      label: "表单项名称",
       style: {},
+      class: "",
     },
-
     children: [],
-
     id: "",
   },
 
   Text: {
     label: "文本",
-
     props: {
       style: { width: "fit-content", color: "#000", fontSize: "16px" },
+      class: "",
     },
-
     key: "text",
-
     componentName: "Text",
   },
 
   ElInput: {
     label: "",
-
     props: {
       style: { width: "fit-content", fontSize: "16px" },
+      class: "",
     },
-
     key: "single",
-
     componentName: "ElInput",
-
     append: [],
   },
 
   TextArea: {
     label: "",
-
     key: "multiple",
-
     componentName: "TextArea",
-
     props: {
       style: { width: "fit-content", textAlign: "left" },
+      class: "",
     },
   },
 
   ElSelect: {
     label: "",
-
     key: "select",
-
     componentName: "ElSelect",
-
     props: {
       style: { width: "100%" },
-
+      class: "",
       option: [
         {
           id: 0,
-
           order: 0,
-
           label: "选项1",
-
           value: 1,
         },
-
         {
           id: 1,
-
           order: 1,
-
           label: "选项2",
-
           value: 2,
         },
-
         {
           id: 2,
-
           order: 2,
-
           label: "选项3",
-
           value: 3,
         },
       ],
@@ -204,42 +173,28 @@ export const JsonSchema: {
 
   ElRadio: {
     label: "",
-
     key: "radio",
-
     componentName: "ElRadio",
-
     props: {
       style: { width: "fit-content" },
-
+      class: "",
       option: [
         {
           id: 0,
-
           order: 0,
-
           label: "选项1",
-
           value: 1,
         },
-
         {
           id: 1,
-
           order: 1,
-
           label: "选项2",
-
           value: 2,
         },
-
         {
           id: 2,
-
           order: 2,
-
           label: "选项3",
-
           value: 3,
         },
       ],
@@ -248,42 +203,28 @@ export const JsonSchema: {
 
   ElCheckBox: {
     label: "",
-
     key: "checkbox",
-
     componentName: "ElCheckBox",
-
     props: {
       style: { width: "fit-content" },
-
+      class: "",
       option: [
         {
           index: 0,
-
           order: 0,
-
           label: "选项1",
-
           value: "1",
         },
-
         {
           index: 1,
-
           order: 1,
-
           label: "选项2",
-
           value: "2",
         },
-
         {
           index: 2,
-
           order: 2,
-
           label: "选项3",
-
           value: "3",
         },
       ],
@@ -292,54 +233,40 @@ export const JsonSchema: {
 
   ElButton: {
     label: "按钮文本",
-
     key: "",
-
     componentName: "ElButton",
-
     props: {
       style: { display: "flex", flexDirection: "row", width: "fit-content" },
-
+      class: "",
       type: "primary",
-
       text: false,
-
       color: "",
     },
   },
 
   ElDatePicker: {
     label: "",
-
     key: "date",
-
     componentName: "ElDatePicker",
-
     props: {
       style: { width: "fit-content" },
+      class: "w-full",
     },
   },
 
   ElTable: {
     label: "",
-
     key: "",
-
     componentName: "ElTable",
-
     props: {
       headerCellStyle: { background: "#fff" },
-
       style: {},
-
+      class: "",
       data: [
         { name: "张三", age: 18, sex: "男" },
-
         { name: "李四", age: 23, sex: "女" },
-
         { name: "王五", age: 56, sex: "男" },
       ],
-
       columns: [
         {
           title: "姓名",
@@ -400,9 +327,10 @@ export const JsonSchema: {
 
     props: {
       style: {
-        width: "200px",
-        height: "200px",
+        width: "100%",
+        height: "auto",
       },
+      class: "",
     },
   },
 
@@ -435,6 +363,7 @@ export const JsonSchema: {
       span: 24,
 
       style: {},
+      class: "",
     },
 
     children: [],
@@ -453,6 +382,7 @@ export const JsonSchema: {
       gutter: 20,
 
       style: { width: "100%" },
+      class: "",
     },
 
     children: [],
@@ -482,11 +412,12 @@ export const JsonSchema: {
     componentName: "ElMenu",
 
     props: {
-      style: { width: "fit-content",borderBottom:'none !important',borderRight:'none !important' },
+      style: { width: "100%", borderBottom: 'none !important', borderRight: 'none !important' },
       textColor: '#fff',
       backgroundColor: '#333',
       ellipsis: false,
       mode: 'horizontal',
+      class: "",
       option: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2' }, { title: '菜单3', index: '3', }]
     }
 
@@ -506,6 +437,7 @@ export const JsonSchema: {
       trigger: 'click',
       type: 'card',
       direction: 'horizontal',
+      class: "",
       option: [1, 2, 3, 4],
       motionBlur: false
     }

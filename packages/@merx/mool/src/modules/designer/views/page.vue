@@ -1,12 +1,15 @@
 <script setup lang="tsx">
 import { onMounted, ref, nextTick } from "vue";
 import { Page, Col } from "@/mool/types";
-import { uuid } from "@/mool/utils";
 import TopBar from "../components/TopBar.vue";
 import SideBar from "../components/SideBar.vue";
 import BasicCanvas from "../components/BasicCanvas.vue";
 import ConfigPlane from "../components/settings.vue";
-
+import { Avatar } from "@element-plus/icons-vue";
+import useLoading from "@/mool/hooks/loading";
+import { useStore } from "@/mool/store";
+const { loading, setLoading } = useLoading(true);
+const {canvas} = useStore();
 const canvasRef = ref<InstanceType<typeof BasicCanvas>>();
 const pageConfig = ref<Page>({
   ref: {},
@@ -22,83 +25,117 @@ const pageConfig = ref<Page>({
   },
   children: [],
 
-  id: uuid(),
+  id: "main",
 
   css: "",
 });
+const clonePageConfig = { ...pageConfig.value };
 const currentConf = ref<Col | null>(null);
 const activeCurrent = (val: Col) => {
   console.log(val);
 
   currentConf.value = val;
 };
-const containerStyle = ref({ backgroundColor: " #e0dfdf" });
+const containerStyle = ref<{ margin?: string }>({});
 const hasActive = ref(false);
-const openBar = (arr: [boolean, Record<string, string>]) => {
+
+const openBar = (arr: [boolean, string]) => {
+  
   if (arr[1]) {
     hasActive.value = true;
-    Object.assign(containerStyle.value, arr[1]);
+    containerStyle.value.margin = arr[1];
   } else {
     hasActive.value = false;
-    containerStyle.value = { backgroundColor: " #e0dfdf" };
+    containerStyle.value = {};
   }
+  console.log(containerStyle.value);
 };
-onMounted(() => {
-  fetch("/api/query-schema", {
+const changeSize = (option: { Msize: string; isPC: boolean }) => {
+  console.log(option);
+  canvas.setCanvasType(option.isPC ? 'pc' : 'mobile');
+  console.log(canvas.canvasType);
+  
+  containerStyle.value.margin = `20px ${option.Msize}`;
+  console.log(containerStyle.value);
+};
+const querySchema = (id: string = "main") => {
+  Object.assign(pageConfig.value, clonePageConfig);
+  setLoading(true);
+  fetch(`/api/query-schema/${id}`, {
     method: "get", // 或 'GET', 'PUT', 'DELETE', 等
   })
     .then((res) => res.json())
     .then((res) => {
-      pageConfig.value = JSON.parse(res.data).pageInfo.schema;
       nextTick(() => {
-        // 创建 <style> 元素并插入样式
+        setTimeout(() => {
+          // 创建 <style> 元素并插入样式
+          pageConfig.value = res.data.pageInfo.schema;
+          const styleEle = document.createElement("style");
 
-        const styleEle = document.createElement("style");
+          styleEle.dataset.id = pageConfig.value.id;
 
-        styleEle.dataset.id = pageConfig.value.id;
+          styleEle.innerHTML = pageConfig.value.css;
 
-        styleEle.innerHTML = pageConfig.value.css;
+          document.head.appendChild(styleEle);
 
-        document.head.appendChild(styleEle);
-        canvasRef.value?.init(pageConfig.value);
+          canvasRef.value?.init(pageConfig.value);
+
+          setLoading(false);
+        }, 200);
       });
     });
-});
+};
+onMounted(querySchema);
 </script>
 
 <template>
-  <div class="common-layout">
+  <div class="common-layout ">
     <el-container>
       <el-header style="display: flex; align-items: center; background: #fff">
-        <el-page-header style="flex:1" content="网页设计">
+        <el-page-header style="flex: 1" content="网页设计">
           <template #title>
             <div>
               {{ "未命名表单" }}
             </div>
           </template>
           <template #content>
-            <div style="display: flex; align-items: center;justify-content: end;width:45vw">
+            <div style="display: flex; align-items: center; justify-content: end; width: 45vw">
               <span class="text-large font-600 mr-3"> 网页设计 </span>
             </div>
           </template>
           <template #extra>
-            <div style="width: 300px; text-align: right;" >登录</div>
+            <div style="width: 300px; text-align: right">
+              <el-icon class="text-gray-500 text-2xl mx-2 align-top"><Avatar /></el-icon>登录
+            </div>
           </template>
         </el-page-header>
       </el-header>
       <!-- 顶部栏组件，用于显示和编辑页面配置 -->
       <!-- v-model:pageConfig 用于双向绑定页面配置 -->
-      <TopBar v-model:pageConfig="pageConfig" />
-      <el-container :style="{ height: 'calc(100vh - 120px)', ...containerStyle }">
+      <TopBar v-model:pageConfig="pageConfig" @changeSize="changeSize" />
+      <el-container :style="{ height: 'calc(100vh - 120px)' }" >
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- @change 事件用于监听侧边栏的打开或关闭 -->
-        <SideBar v-model:pageConfig="pageConfig" @change="openBar" :current-conf="currentConf" />
+        <SideBar
+          v-model:pageConfig="pageConfig"
+          @change="openBar"
+          :current-conf="currentConf"
+          @editPage="querySchema"
+        />
         <!-- 画布组件，用于显示和编辑页面内容 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- :hasActive 用于控制画布的激活状态 -->
         <!-- @active 事件用于监听画布的激活状态 -->
-        <BasicCanvas ref="canvasRef" v-model:pageConfig="pageConfig" :hasActive="hasActive" @active="activeCurrent" />
+        <BasicCanvas
+          ref="canvasRef"
+          v-model:pageConfig="pageConfig"
+          :hasActive="hasActive"
+          @active="activeCurrent"
+          :customStyle="containerStyle"
+          v-loading="loading"
+         
+        />
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:current 用于双向绑定当前配置项 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
@@ -124,8 +161,6 @@ onMounted(() => {
 .enter_page {
   border: 1px dashed #32adf7;
 }
-
-
 
 :deep(.dragging) {
   background-color: #fff;
@@ -156,5 +191,4 @@ onMounted(() => {
     z-index: 999;
   }
 }
-
 </style>

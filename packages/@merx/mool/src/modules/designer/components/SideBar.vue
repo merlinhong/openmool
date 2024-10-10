@@ -6,6 +6,8 @@
         <button class="nav-button" @click="openPanel('js')">JS</button>
         <button class="nav-button" @click="openPanel('ref')">ref</button>
         <button class="var-button" @click="openPanel('var');">var</button>
+        <!-- 其他现有按钮 -->
+        <button class="page-button" @click="openPanel('page');">Page</button>
       </div>
 
       <div class="bottom-buttons">
@@ -128,12 +130,16 @@
   </div>
   <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf" :foundationModel="foundationModel"
     class="robot-main" />
+    <PagePanel v-if="showPagePanel" @close="showPagePanel = false" @selectPage="selectPage" />
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType } from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
+import PagePanel from "./PagePanel.vue";
+import { useStore } from "@/mool/store";
+const {canvas} = useStore();
 
 const props = defineProps({
   pageConfig: {
@@ -145,7 +151,7 @@ const props = defineProps({
     default: "100%",
   },
   currentConf: {
-    type: Object as PropType<Col>,
+    type: Object as PropType<Col|null>,
     required: true,
   },
 });
@@ -158,7 +164,7 @@ const labelTypeList: Record<string, string> = {
 
   添加生命周期: "函数名",
 };
-
+const showPagePanel = ref(false);
 const drawer = ref(false);
 const showSchema = ref(false);
 const showJS = ref(false);
@@ -177,7 +183,14 @@ const closeAllPanels = () => {
   setVarRef.value = false;
 };
 
-const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar") => {
+const openPagePanel = () => {
+  showPagePanel.value = true;
+};
+const selectPage = (row: { id: string; name: string; schema: any }) => {
+  showPagePanel.value = false;
+  emit("editPage",row.id);
+};
+const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar"|'page') => {
   // 检查当前点击的面板是否已经打开
   const isCurrentPanelOpen = 
     (panel === "drawer" && drawer.value) ||
@@ -242,6 +255,9 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar")
         });
       }
       break;
+    case 'page':
+      openPagePanel();
+      break;
   }
 
 };
@@ -299,13 +315,18 @@ const addList = ref<string[]>([]);
 
 const typeName = ref("");
 
+const MsizeList = ref<Record<string,string[]>>({
+  pc: ['20px 80px','20px 200px'],
+  mobile: ['20px 440px','20px 560px'],
+});
 watch(
   () => drawer.value,
   (n, o) => {
     if (n) {
-      emit("change", [n, { "--ml": "80px", "--mr": "80px" }]);
+      
+      emit("change", [n, MsizeList.value[canvas.canvasType][0]]);
     } else {
-      emit("change", [n, null]);
+      emit("change", [n, MsizeList.value[canvas.canvasType][1]]);
     }
   },
 
@@ -368,7 +389,7 @@ const updateConf = (schema?: Col) => {
         }
       }
     }
-    updateObject(props.currentConf, schema as Col);
+    updateObject(props.currentConf as Col, schema as Col);
   }
 
   const setProp = (conf: Col) => {
@@ -384,7 +405,7 @@ const updateConf = (schema?: Col) => {
       }
     });
   };
-  setProp(props.currentConf);
+  setProp(props.currentConf as Col);
 };
 
 const saveEditor = () => {
@@ -536,7 +557,7 @@ const saveEditor = () => {
 
   closeAllPanels();
 };
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change",'editPage']);
 </script>
 
 <style lang="less" scoped>
@@ -599,7 +620,11 @@ const emit = defineEmits(["change"]);
   border: none;
   padding: 5px;
 }
-
+.page-button {
+  font-weight: bold;
+  background: none;
+  border: none;
+}
 .bottom-buttons {
   margin-bottom: 20px;
   display: flex;

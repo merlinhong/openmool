@@ -2,14 +2,53 @@
   <div
     class="toolbar shadow-xl flex justify-between items-center bg-white py-2.5 px-5 border-t border-b border-gray-200"
   >
-    <span class="text-xs text-green-600">查看新手引导</span>
-    <div>
-      <el-button type="warning" plain>撤销</el-button>
-      <el-button type="primary">重做</el-button>
-      <el-button type="primary" plain @click="preview">预览</el-button>
-      <el-button type="success" @click="saveSchema">保存</el-button>
-      <el-button type="primary" @click="genCode">出码</el-button>
-      <!-- <input type="file" webkitdirectory @change="handleFolderSelect" ref="fileInput" class="hidden" /> -->
+    <span class="text-xs text-blue-400 font-bold">查看新手引导</span>
+
+    <!--PC/移动端切换图标-->
+    <div class="flex items-center space-x-2">
+      <el-tooltip content="PC端" placement="top">
+        <el-button type="text" @click="switchToPC" :class="{ 'icon-active': isPC }">
+          <el-icon class="custom-icon"><Monitor /></el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="移动端" placement="top">
+        <el-button type="text" @click="switchToMobile" :class="{ 'icon-active': !isPC }">
+          <el-icon class="custom-icon"><Iphone /></el-icon>
+        </el-button>
+      </el-tooltip>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <!-- 创建页面 -->
+      <el-button type="primary" text @click="createPage">创建页面</el-button>
+      <span class="mx-2 text-gray-400">|</span>
+
+      <el-tooltip content="撤销" placement="top">
+        <el-button type="text">
+          <el-icon class="custom-icon"><RefreshLeft /></el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="重做" placement="top">
+        <el-button type="text">
+          <el-icon class="custom-icon"><RefreshRight /></el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="预览" placement="top">
+        <el-button type="text" @click="preview">
+          <el-icon class="custom-icon"><View /></el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="保存" placement="top">
+        <el-button type="text" @click="saveSchema">
+          <el-icon class="custom-icon"><Upload /></el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="出码" placement="top">
+        <el-button type="text" @click="genCode">
+          <el-icon class="custom-icon"><Download /></el-icon>
+          
+        </el-button>
+      </el-tooltip>
     </div>
   </div>
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
@@ -28,16 +67,15 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, Ref, PropType } from "vue";
+import { ref, Ref, PropType, watch } from "vue";
 import { Page, Col } from "@/mool/types";
 import BasicPage from "$/designer/components/canvasContainer.vue";
+import { Monitor, Iphone, RefreshLeft, RefreshRight, View, Download, Upload } from "@element-plus/icons-vue";
 
-defineProps({
-  pageConfig: {
-    type: Object as PropType<Page>,
-    required: true,
-  },
-});
+const PCMSize = "200px";
+const MobileMSize = "560px";
+
+const emit = defineEmits(["changeSize"]);
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
 const statuIcon = ref<"info" | "success" | "warning" | "error">("info");
 
@@ -47,6 +85,17 @@ const generateCoding = ref(false);
 const previewRef = ref(false);
 const preview = () => {
   previewRef.value = true;
+};
+
+const createPage = () => {
+  const newPage = {
+    type: "Page",
+    children: [],
+    props: {
+      name: "新页面",
+    },
+  };
+  PageSchema.value.children.push(newPage);
 };
 
 const genCode = async () => {
@@ -176,18 +225,74 @@ const saveSchema = () => {
     },
 
     body: JSON.stringify({
-      pageInfo: {
-        name: "page",
+      id: PageSchema.value.id,
+      schema: {
+        pageInfo: {
+          name: PageSchema.value.componentName,
 
-        schema: PageSchema.value,
+          schema: PageSchema.value,
+        },
+
+        blocksData: [],
       },
-
-      blocksData: [],
     }),
   }).then((res) => {
     ElMessage.success("保存成功");
   });
 };
+
+// 新增的响应式变量和方法
+const isPC = ref(true);
+
+const switchToPC = () => {
+  isPC.value = true;
+  // 这里可以添加切换到PC视图的逻辑
+  emit("changeSize", { Msize: PCMSize, isPC: true });
+};
+
+const switchToMobile = () => {
+  isPC.value = false;
+  // 这里可以添加切换到移动端视图的逻辑
+  emit("changeSize", { Msize: MobileMSize, isPC: false });
+};
+
+// 监听isPC的变化
+watch(isPC, (newValue) => {
+  if (newValue) {
+    console.log("切换到PC视图");
+    // 这里可以添加更多PC视图相关的逻辑
+  } else {
+    console.log("切换到移动端视图");
+    // 这里可以添加更多移动端视图相关的逻辑
+  }
+});
+
+// 其他脚本代码保持不变
 </script>
 
-<style></style>
+<style scoped>
+.el-button.text-blue-500 {
+  color: #409eff;
+}
+
+.custom-icon {
+  font-size: 20px; /* 调整图标大小 */
+  color: #333; /* 图标颜色 */
+}
+
+.el-button {
+  padding: 8px; /* 保持按钮内边距 */
+}
+
+.el-button:hover .custom-icon {
+  color: #409eff; /* 鼠标悬停时的颜色 */
+}
+
+.icon-active {
+  color: #409eff; /* 选中时的颜色 */
+}
+
+.icon-active .custom-icon {
+  color: #409eff; /* 确保选中时图标也变色 */
+}
+</style>

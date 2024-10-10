@@ -2,16 +2,16 @@
   <div
     :class="['page-design-content']"
     :style="{
-      width:'100%',
+      width: '100%',
       ...props.customStyle,
       backgroundColor: '#f5f6f7 !important ',
-      margin: `${props.customStyle?.margin||'20px var(--ml,180px)'}`,
+      margin: `${props.customStyle?.margin||'20px 200px'}`,
       overflow: 'scroll',
       scrollbarWidth: 'none',
       boxSizing: 'border-box',
-      flex: 1,
       background: '#f5f6f7',
     }"
+    ref="canvasRef"
   >
     <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
 
@@ -77,10 +77,17 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref, onUnmounted } from "vue";
+import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref, onUnmounted, defineComponent } from "vue";
 import { BasicFormConfig, Col, Page } from "@/mool";
 import { DragUtil, type RemoveDrag } from "@/mool/utils";
 import BasicPage from "$/designer/components/canvasContainer.vue";
+
+defineComponent({
+  components:{
+    ResizeObserver
+  }
+})
+
 const props = defineProps({
   pageConfig: {
     type: Object as PropType<Page>,
@@ -120,6 +127,7 @@ type CurrAEl = {
   insertBottomId: string | null;
 };
 
+const canvasRef = ref<HTMLElement>();
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
 const currAEl = ref<CurrAEl>({
   clickId: null,
@@ -143,7 +151,10 @@ const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem,i
   },
   (AEl) => Object.assign(currAEl.value, AEl),
 );
-
+canvasRef.value?.addEventListener('resize',()=>{
+  console.log(2222);
+  
+})
 const emit = defineEmits(["active"]);
 const del = (id: string) => {
   deleteItem(id);

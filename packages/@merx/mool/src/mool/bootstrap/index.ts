@@ -8,7 +8,6 @@ import { Loading } from "../utils";
 import "../../assets/less/global.less";
 // import { createEps } from "./eps";
 import "virtual:svg-register";
-
 export async function bootstrap(app: App) {
   // pinia
   app.use(createPinia());
@@ -16,7 +15,6 @@ export async function bootstrap(app: App) {
   app.use(ElementPlus, {
     locale: zhCn,
   });
-
   // 路由
   app.use(router);
 
