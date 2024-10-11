@@ -1,0 +1,62 @@
+{
+  "pageInfo": {
+    "name": "新页面",
+    "schema": {
+      "ref": {},
+      "lifeCycles": {},
+      "state": {},
+      "methods": {},
+      "componentName": "新页面",
+      "props": {
+        "style": {
+          "backgroundColor": "#fff"
+        }
+      },
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "style": {
+              "padding": "5px",
+              "backgroundColor": "#fff"
+            },
+            "class": ""
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "props": {
+                "style": {
+                  "padding": "5px",
+                  "backgroundColor": "#fff"
+                },
+                "class": ""
+              },
+              "children": [
+                {
+                  "label": "文本",
+                  "props": {
+                    "style": {
+                      "width": "fit-content",
+                      "color": "#000",
+                      "fontSize": "16px"
+                    },
+                    "class": ""
+                  },
+                  "key": "text",
+                  "componentName": "Text",
+                  "id": "jcjwpsbh"
+                }
+              ],
+              "id": "d5crxscf"
+            }
+          ],
+          "id": "sind7hh6"
+        }
+      ],
+      "id": "cmef4ey5",
+      "css": ""
+    }
+  },
+  "blocksData": []
+}

@@ -77,7 +77,10 @@ export const JsonSchema: {
   div: {
     componentName: "div",
     props: {
-      style: {},
+      style: {
+        padding:'5px',
+        backgroundColor:'#fff'
+      },
       class: "",
     },
     children: [],

@@ -84,6 +84,7 @@ export const useDrag = (
 
     end?: (...arg: [el: DragEvent, data: string, insertIndex: typeof insertIndex]) => void;
   },
+  doc: Document = window.document,
 ) => {
   function start(el: DragEvent) {
     const target = el.currentTarget as HTMLElement;
@@ -137,14 +138,16 @@ export const useDrag = (
   const EVENTLIST = { dragenter: enter, dragover: over, dragleave: leave, drop: end };
   for (const [name, event] of Object.entries(EVENTLIST)) {
     const eventName = name as keyof HTMLElementEventMap;
-    document.querySelectorAll<HTMLElement>(targetEl)!.forEach((el) => {
+    doc.querySelectorAll<HTMLElement>(targetEl)!.forEach((el) => {
+      console.log(el);
+      
       el.addEventListener(eventName, event as EventListenerOrEventListenerObject);
     });
   }
   function removeDrag() {
     for (const [name, event] of Object.entries(EVENTLIST)) {
       const eventName = name as keyof HTMLElementEventMap;
-      document.querySelectorAll<HTMLElement>(targetEl)!.forEach((el) => {
+      doc.querySelectorAll<HTMLElement>(targetEl)!.forEach((el) => {
         el.removeEventListener(eventName, event as EventListenerOrEventListenerObject);
       });
     }

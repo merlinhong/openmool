@@ -323,8 +323,8 @@ const typeName = ref("");
 watch(
   () => drawer.value,
   (n, o) => {
+    
     if (n) {
-
       emit("change", [n, '20px 40px']);
     } else {
       emit("change", [n, '20px 160px']);

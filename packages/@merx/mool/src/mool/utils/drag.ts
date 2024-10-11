@@ -110,7 +110,8 @@ export class DragUtil {
    */
   public dragCompToCanvas = (
     pageConfig: Ref<Page>,
-    callback?: (arg: Col) => void
+    callback?: (arg: Col) => void,
+    doc: Document = window.document
   ) => {
     this.initializeComponentMap(pageConfig.value);
     const { drag, canvasDrag } = this.targetEle;
@@ -139,7 +140,6 @@ export class DragUtil {
         if (!config.props.style) {
           config.props.style = {};
         }
-        console.log(target.classList);
         
         if (!target.classList.contains(canvasDrag.endEle.replace(".", ""))) {
           const comp = cloneDeep({ ...config, id });
@@ -174,7 +174,7 @@ export class DragUtil {
         callback?.(this.componentMap.get(id));
         this.compId = null;
       },
-    });
+    },doc);
     return [remove];
   };
 

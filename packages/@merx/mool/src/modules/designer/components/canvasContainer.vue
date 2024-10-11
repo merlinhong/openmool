@@ -443,7 +443,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
       {
         default: () => [
           Array.isArray(Component.children)
-            ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
+            ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style",'class'])}></item>)
             : Component.children,
           col?.children && col?.componentName != "ElTags"
             ? col?.children.length
@@ -521,7 +521,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
           },
         }),
         Array.isArray(Component.children)
-          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style"])}></item>)
+          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style",'class'])}></item>)
           : Component.children,
         col?.children && col?.componentName != "ElTags"
           ? col?.children.length
@@ -584,8 +584,8 @@ const schema = computed<Col>(() => {
 
 .nonEmpty {
   height: fit-content;
-  // background-color: #fff ;
-  color: #000 ;
+  padding: 5px;
+  background-color: #fff ;
 }
 
 .canvascomp {

@@ -2,20 +2,15 @@
 import type { Config } from 'tailwindcss'
 
 export default {
+  jit: true,
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
-   
+    extend: {}
   },
-  safelist: [
-    {
-      pattern: /^[a-zA-Z0-9:_-]+$/,
-    },
-
-  ],
   plugins: [],
+  
 } satisfies Config
 

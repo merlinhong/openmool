@@ -1,20 +1,10 @@
 <template>
   <div
-    :class="['page-design-content']"
-    :style="{
-      width: '100%',
-      ...props.customStyle,
-      backgroundColor: '#f5f6f7 !important ',
-      margin: `${props.customStyle?.margin||'20px 160px'}`,
-      overflow: 'scroll',
-      scrollbarWidth: 'none',
-      boxSizing: 'border-box',
-      background: '#f5f6f7',
-    }"
+    :class="['page-design-content','h-full']"
     ref="canvasRef"
+    :style="customStyle"
   >
     <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
-
     <div
       :class="[
         'page-design-placeholder',
@@ -102,6 +92,10 @@ const props = defineProps({
     type: Object,
     default: () => ({width: "80%"}),
   },
+  doc: {
+    type: Object as PropType<Document|null>,
+    default: () => window.document,
+  },
 });
 
 type CurrAEl = {
@@ -151,10 +145,7 @@ const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem,i
   },
   (AEl) => Object.assign(currAEl.value, AEl),
 );
-canvasRef.value?.addEventListener('resize',()=>{
-  console.log(2222);
-  
-})
+
 const emit = defineEmits(["active"]);
 const del = (id: string) => {
   deleteItem(id);
@@ -184,7 +175,7 @@ watch(
       const [remove] = dragCompToCanvas(PageSchema, (conf) => {
         console.log(PageSchema.value);
         getCurrent(conf);
-      });
+      },props.doc as Document);
       removeDrag = remove;
     } else {
       removeDrag?.();
@@ -192,7 +183,11 @@ watch(
   },
 );
 onMounted(() => {
+  console.log(props.hasActive);
+  
   if (props.hasActive) {
+    console.log(333);
+    
     const [remove] = dragCompToCanvas(PageSchema, (conf) => {
       getCurrent(conf);
     });
@@ -207,4 +202,6 @@ defineExpose({
 })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+</style>

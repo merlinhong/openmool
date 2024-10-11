@@ -192,8 +192,7 @@
               "background": "#fff",
               "display": "flex",
               "alignItems": "center",
-              "justifyContent": "space-around",
-              "flexDirection": "row"
+              "justifyContent": "space-around"
             }
           },
           "children": [

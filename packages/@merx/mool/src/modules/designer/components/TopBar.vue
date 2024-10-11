@@ -52,7 +52,9 @@
     </div>
   </div>
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
-    <BasicPage :isPreview="previewRef" v-for="(box, ind) in PageSchema.children" :key="ind" :schema="box" />
+    <div class="">
+      <BasicPage :isPreview="previewRef" v-for="(box, ind) in PageSchema.children" :key="ind" :schema="box" />
+    </div>
   </el-drawer>
   <el-result
     class="w-80 absolute bg-white left-1/2 top-2/5 -translate-x-1/2 z-50 border border-gray-200"
@@ -73,7 +75,7 @@ import BasicPage from "$/designer/components/canvasContainer.vue";
 import { Monitor, Iphone, RefreshLeft, RefreshRight, View, Download, Upload } from "@element-plus/icons-vue";
 
 const PCSize = "100%";
-const MobileSize = "30%";
+const MobileSize = "25%";
 
 const emit = defineEmits(["changeSize"]);
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
