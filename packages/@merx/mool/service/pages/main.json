@@ -190,61 +190,94 @@
           "props": {
             "style": {
               "background": "#fff",
+              "height": "500px",
               "display": "flex",
+              "padding": "15px",
               "alignItems": "center",
-              "justifyContent": "space-around"
+              "justifyContent": "center",
+              "flexDirection": "column"
             }
           },
           "children": [
             {
-              "label": "卡片",
-              "componentName": "ElCard",
+              "label": "产品描述",
               "props": {
                 "style": {
-                  "width": "200px",
-                  "height": "200px"
-                }
+                  "width": "fit-content",
+                  "color": "#000",
+                  "fontSize": "16px"
+                },
+                "class": ""
               },
-              "id": "ekzwcys5"
+              "key": "text",
+              "componentName": "Text",
+              "id": "xtz37yt8",
+              "parentId": "sphhpkhc"
             },
             {
-              "label": "卡片",
-              "componentName": "ElCard",
+              "componentName": "div",
               "props": {
                 "style": {
-                  "width": "200px",
-                  "height": "200px"
+                  "background": "#fff",
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "space-around"
                 }
               },
-              "id": "6jnwi2ca",
-              "parentId": "im7s435w"
-            },
-            {
-              "label": "卡片",
-              "componentName": "ElCard",
-              "props": {
-                "style": {
-                  "width": "200px",
-                  "height": "200px"
+              "children": [
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "ekzwcys5"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "6jnwi2ca",
+                  "parentId": "im7s435w"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "zmhkkws4",
+                  "parentId": "im7s435w"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "5wm8d2hn",
+                  "parentId": "im7s435w"
                 }
-              },
-              "id": "zmhkkws4",
-              "parentId": "im7s435w"
-            },
-            {
-              "label": "卡片",
-              "componentName": "ElCard",
-              "props": {
-                "style": {
-                  "width": "200px",
-                  "height": "200px"
-                }
-              },
-              "id": "5wm8d2hn",
-              "parentId": "im7s435w"
+              ],
+              "id": "im7s435w",
+              "parentId": "main"
             }
           ],
-          "id": "im7s435w"
+          "id": "sphhpkhc"
         },
         {
           "componentName": "div",
@@ -255,90 +288,122 @@
               "display": "flex",
               "padding": "15px",
               "alignItems": "center",
-              "justifyContent": "space-around"
+              "justifyContent": "center",
+              "flexDirection": "column"
             }
           },
           "children": [
+            {
+              "label": "产品服务",
+              "props": {
+                "style": {
+                  "width": "fit-content",
+                  "color": "#000",
+                  "fontSize": "16px"
+                },
+                "class": ""
+              },
+              "key": "text",
+              "componentName": "Text",
+              "id": "fwat374i",
+              "parentId": "sphhpkhc"
+            },
             {
               "componentName": "div",
               "props": {
                 "style": {
                   "background": "#fff",
-                  "width": "40%",
-                  "height": "fit-content",
-                  "wordWrap": "break-word",
-                  "padding": "10px"
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "space-around"
                 }
               },
               "children": [
                 {
-                  "label": "文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本",
+                  "label": "卡片",
+                  "componentName": "ElCard",
                   "props": {
                     "style": {
-                      "width": "fit-content",
-                      "color": "#000",
-                      "fontSize": "16px"
+                      "width": "200px",
+                      "height": "200px"
                     }
                   },
-                  "key": "text",
-                  "componentName": "Text",
-                  "id": "d7nkiisz"
+                  "id": "8rpcrfh5"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "mmsawbze",
+                  "parentId": "im7s435w"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "dkrmkinz",
+                  "parentId": "im7s435w"
+                },
+                {
+                  "label": "卡片",
+                  "componentName": "ElCard",
+                  "props": {
+                    "style": {
+                      "width": "200px",
+                      "height": "200px"
+                    }
+                  },
+                  "id": "kbrj2a8r",
+                  "parentId": "im7s435w"
                 }
               ],
-              "id": "mey22ijs"
-            },
-            {
-              "label": "",
-              "key": "",
-              "componentName": "ElTable",
-              "props": {
-                "headerCellStyle": {
-                  "background": "#fff"
-                },
-                "style": {
-                  "height": "auto",
-                  "marginLeft": "0px"
-                },
-                "data": [
-                  {
-                    "name": "张三",
-                    "age": 18,
-                    "sex": "男"
-                  },
-                  {
-                    "name": "李四",
-                    "age": 23,
-                    "sex": "女"
-                  },
-                  {
-                    "name": "王五",
-                    "age": 56,
-                    "sex": "男"
-                  }
-                ],
-                "columns": [
-                  {
-                    "title": "姓名",
-                    "dataIndex": "name",
-                    "render": {
-                      "type": "JSFunction",
-                      "value": "function r(){return '<div>123</div>'}"
-                    }
-                  },
-                  {
-                    "title": "年龄",
-                    "dataIndex": "age"
-                  },
-                  {
-                    "title": "性别",
-                    "dataIndex": "sex"
-                  }
-                ]
-              },
-              "id": "jajentyn"
+              "id": "3id36f2p",
+              "parentId": "main"
             }
           ],
-          "id": "sphhpkhc"
+          "id": "itks32ej",
+          "parentId": "main"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": {
+              "background": "#fff",
+              "display": "flex",
+              "padding": "15px",
+              "alignItems": "center",
+              "justifyContent": "space-around",
+              "backgroundColor": "#000000"
+            }
+          },
+          "children": [
+            {
+              "label": "© 2023 公司名称. 保留所有权利.",
+              "props": {
+                "style": {
+                  "width": "fit-content",
+                  "color": "#FFFFFF",
+                  "fontSize": "16px"
+                },
+                "class": ""
+              },
+              "key": "text",
+              "componentName": "Text",
+              "id": "hih3z3ac"
+            }
+          ],
+          "id": "sh47h37a",
+          "parentId": "main"
         }
       ],
       "id": "main",

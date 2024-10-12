@@ -5,9 +5,9 @@ const fs = require("fs-extra");
 const path = require("path");
 // GPT
 router.post("/ai/chat", (req, res) => {
-  const { foundationModel, messages } = req.body;
+  const { foundationModel, messages, type } = req.body;
   // 示例调用
-  require("../openai")(foundationModel, messages)
+  require("../openai")(foundationModel, messages, type)
     .then((response) => {
       res.status(200).json({
         message: "Schema generated successfully",

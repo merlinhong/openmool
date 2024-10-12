@@ -40,10 +40,7 @@ const renderForm: {
 } = {
   div: {
     render: (data, col, child) => {
-      return (
-        <div >
-        </div>
-      )
+      return <div></div>;
     },
   },
   ElMenu: {
@@ -80,8 +77,10 @@ const renderForm: {
       return (
         <div>
           <el-carousel>
-            {col?.props?.option?.map((item) => {
-              return <el-carousel-item>{resolveComponent()}</el-carousel-item>;
+            {col?.props.option?.map((item) => {
+              return (
+                <el-carousel-item {...item}>{item.schema && CanvasComp(item.schema, false, true)}</el-carousel-item>
+              );
             })}
           </el-carousel>
         </div>
@@ -102,7 +101,7 @@ const renderForm: {
     render: (data, col) => {
       return (
         <div>
-          <span>{data}</span>
+          <el-text>{col?.label}</el-text>
         </div>
       );
     },
@@ -225,7 +224,23 @@ const renderForm: {
       );
     },
   },
-
+  ElImage: {
+    render: (data, col) => {
+      return (
+        <div>
+          <el-image
+          style={{width:'100%',height:'100%'}}
+          src={col?.props.src}
+          v-slots={{
+            placeholder: () => {
+              return <div>2222</div>;
+            }
+          }}
+        />
+        </div>
+      );
+    },
+  },
   ElButton: {
     render: (data, col, index, formEl) => {
       return (
@@ -249,7 +264,7 @@ const renderForm: {
                   v-slots={{
                     default: (scope: RowScope) => {
                       if (!!item.render?.schema?.children) {
-                        return CanvasComp(item.render.schema, true);
+                        return CanvasComp(item.render.schema, false, true);
                       } else {
                         return scope.row.data;
                       }
@@ -272,9 +287,7 @@ const renderForm: {
     render(data, col) {
       return (
         <div>
-          <el-card shadow="hover" style={{ width: "calc(100% - 2px)", height: "calc(100% - 2px)" }}>
-            Hover
-          </el-card>
+          <el-card style={{ width: "100%", height: "100%" }}></el-card>
         </div>
       );
     },
@@ -428,9 +441,14 @@ const HeaderBar = function (props: { name?: string }) {
     </div>
   );
 };
-const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRenderColumn = false) => {
+const CanvasComp: (col: Col, isSlot?: Boolean, isRender?: Boolean) => VNode = (
+  col,
+  isSlot = false,
+  isRender = false,
+) => {
   const Component = renderForm[col?.componentName as ComponentType]?.render?.(col?.label, col) || <div></div>;
-  if (props.isPreview || isRenderColumn) {
+
+  if (props.isPreview || isRender) {
     return h(
       Component,
       {
@@ -438,23 +456,37 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
         style: { ...col?.props.style, boxSizing: "border-box" },
         "data-tag": col?.componentName,
         "data-id": col?.id,
-        class: ["canvascomp",...typeof col?.props.class=="string"?[col?.props.class]:[]],
+        class: ["canvascomp", ...(typeof col?.props.class == "string" ? [col?.props.class] : [])],
       },
       {
         default: () => [
           Array.isArray(Component.children)
-            ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style",'class'])}></item>)
+            ? Component.children.map((item: VNode) => {
+                return (
+                  <item {...omit(col?.props, ["style", "class"])}>
+                    {isSlot
+                      ? col?.children && col?.componentName != "ElTags"
+                        ? col?.children.length
+                          ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+                          : ""
+                        : null
+                      : item.children?.default?.()}
+                  </item>
+                );
+              })
             : Component.children,
-          col?.children && col?.componentName != "ElTags"
-            ? col?.children.length
-              ? col?.children.map((child) => CanvasComp(child, isRenderColumn))
-              : null
-            : null,
+          isSlot
+            ? null
+            : col?.children && col?.componentName != "ElTags"
+              ? col?.children.length
+                ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+                : "拖拽组件到此处"
+              : null,
         ],
       },
     );
   }
-  
+
   return h(
     Component,
     {
@@ -472,7 +504,7 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
           nonEmpty: !!col?.children?.length,
           active: currAEl.value.clickId == col?.id,
         },
-        ...typeof col?.props.class=="string"?[col?.props.class]:[],
+        ...(typeof col?.props.class == "string" ? [col?.props.class] : []),
       ],
       onClick: (e) => {
         e.stopPropagation();
@@ -521,13 +553,27 @@ const CanvasComp: (col: Col, isRenderColumn?: Boolean) => VNode = (col, isRender
           },
         }),
         Array.isArray(Component.children)
-          ? Component.children.map((item: VNode) => <item {...omit(col?.props, ["style",'class'])}></item>)
+          ? Component.children.map((item: VNode) => {
+              return (
+                <item {...omit(col?.props, ["style", "class"])}>
+                  {isSlot
+                    ? col?.children && col?.componentName != "ElTags"
+                      ? col?.children.length
+                        ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+                        : "拖拽组件到此处"
+                      : null
+                    : item.children?.default?.()}
+                </item>
+              );
+            })
           : Component.children,
-        col?.children && col?.componentName != "ElTags"
-          ? col?.children.length
-            ? col?.children.map((child) => CanvasComp(child, isRenderColumn))
-            : "请将元素拖放到此"
-          : null,
+        isSlot
+          ? null
+          : col?.children && col?.componentName != "ElTags"
+            ? col?.children.length
+              ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+              : "拖拽组件到此处"
+            : null,
         currAEl.value.clickId == col?.id ? <FooterBar /> : null,
       ],
     },
@@ -549,7 +595,7 @@ const schema = computed<Col>(() => {
 </script>
 
 <template>
-  <component :is="CanvasComp(schema)"> </component>
+  <component :is="CanvasComp(schema, schema.componentName == 'ElCard')"> </component>
 </template>
 
 <style lang="less" scoped>
@@ -585,7 +631,7 @@ const schema = computed<Col>(() => {
 .nonEmpty {
   height: fit-content;
   padding: 5px;
-  background-color: #fff ;
+  background-color: #fff;
 }
 
 .canvascomp {

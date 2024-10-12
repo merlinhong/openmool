@@ -48,7 +48,7 @@ export const seniorComponentList = [
 
   { text: "row", dataType: "ElRow" },
 
-  { text: "图片上传", dataType: "upload" },
+  { text: "图片", dataType: "ElImage" },
 
   { text: "表格", dataType: "ElTable" },
 
@@ -141,6 +141,15 @@ export const JsonSchema: {
     props: {
       style: { width: "fit-content", textAlign: "left" },
       class: "",
+    },
+  },
+  ElImage: {
+    componentName: "ElImage",
+    props: {
+      style: { width: "300px",height:'300px' },
+      class: "",
+      fit: "contain",
+      src: `https://42f2671d685f51e10fc6-b9fcecea3e50b3b59bdc28dead054ebc.ssl.cf5.rackcdn.com/illustrations/undraw_messaging_7ho8_(2)_5g7e.svg`,
     },
   },
 
@@ -330,11 +339,14 @@ export const JsonSchema: {
 
     props: {
       style: {
-        width: "100%",
-        height: "auto",
+        maxWidth:'200px',
+        height: "200px",
+        width: "200px",
       },
+      shadow: "hover",
       class: "",
     },
+    children: []
   },
 
   ElDivider: {
@@ -441,7 +453,7 @@ export const JsonSchema: {
       type: 'card',
       direction: 'horizontal',
       class: "",
-      option: [1, 2, 3, 4],
+      option: [{id:'1',name:'',label:''},{id:'2',name:'',label:''},{id:'3',name:'',label:''}],
       motionBlur: false
     }
   }

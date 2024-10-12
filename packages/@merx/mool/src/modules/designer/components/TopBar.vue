@@ -29,7 +29,7 @@
         </el-button>
       </el-tooltip>
       <el-tooltip content="重做" placement="top">
-        <el-button type="text">
+        <el-button type="text" @click="redo">
           <el-icon class="custom-icon"><RefreshRight /></el-icon>
         </el-button>
       </el-tooltip>
@@ -268,6 +268,11 @@ watch(isPC, (newValue) => {
     // 这里可以添加更多移动端视图相关的逻辑
   }
 });
+
+const redo = () => {
+  console.log("重做");
+  PageSchema.value.children = [];
+}
 
 // 其他脚本代码保持不变
 </script>

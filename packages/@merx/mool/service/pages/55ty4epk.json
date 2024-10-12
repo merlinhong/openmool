@@ -500,6 +500,78 @@
             }
           ],
           "id": "nztpmn8y"
+        },
+        {
+          "label": "",
+          "key": "",
+          "componentName": "ElCarousel",
+          "props": {
+            "style": {
+              "width": "100%"
+            },
+            "height": "300px",
+            "arrow": "never",
+            "autoplay": false,
+            "interval": 3000,
+            "indicatorPosition": "outside",
+            "loop": true,
+            "trigger": "click",
+            "type": "card",
+            "direction": "horizontal",
+            "class": "",
+            "option": [
+              {
+                "id": "1",
+                "name": "",
+                "label": "",
+                "schema": {
+                  "ref": {},
+                  "lifeCycles": {},
+                  "state": {},
+                  "methods": {},
+                  "componentName": "Page",
+                  "props": {
+                    "style": {
+                      "backgroundColor": "#fff"
+                    }
+                  },
+                  "children": [
+                    {
+                      "label": "按钮文本",
+                      "key": "",
+                      "componentName": "ElButton",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "width": "fit-content"
+                        },
+                        "class": "",
+                        "type": "primary",
+                        "text": false,
+                        "color": ""
+                      },
+                      "id": "dncrtp87"
+                    }
+                  ],
+                  "id": "55ty4epk",
+                  "css": ""
+                }
+              },
+              {
+                "id": "2",
+                "name": "",
+                "label": ""
+              },
+              {
+                "id": "3",
+                "name": "",
+                "label": ""
+              }
+            ],
+            "motionBlur": false
+          },
+          "id": "schfh3ek"
         }
       ],
       "id": "55ty4epk",

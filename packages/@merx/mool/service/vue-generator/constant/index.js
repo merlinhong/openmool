@@ -228,7 +228,41 @@ const DEFAULT_COMPONENTS_MAP = [
     destructuring: true,
   },
 ];
+// 创建 Element Plus 图标映射函数
+function createElementPlusIconMap(iconNames) {
+  return iconNames.map(name => ({
+    componentName: name,
+    exportName: name,
+    package: '@element-plus/icons-vue',
+    version: '^2.1.0',
+    destructuring: true,
+  }));
+}
 
+// Element Plus 图标名称列表（这里只列出一部分常用图标，您可以根据需要扩展）
+const ELEMENT_PLUS_ICON_NAMES = [
+  'Add',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'Calendar',
+  'Check',
+  'Close',
+  'Delete',
+  'Edit',
+  'Loading',
+  'Search',
+  'Setting',
+  'User',
+  // ... 添加更多图标名称
+];
+
+// 生成 Element Plus 图标映射
+const ELEMENT_PLUS_ICON_MAP = createElementPlusIconMap(ELEMENT_PLUS_ICON_NAMES);
+
+// 在 exports 对象中添加新的导出
+exports.ELEMENT_PLUS_ICON_MAP = ELEMENT_PLUS_ICON_MAP;
 // 内置组件映射关系
 exports.BUILTIN_COMPONENTS_MAP = [
   {

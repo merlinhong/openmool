@@ -288,26 +288,32 @@
   <el-dialog
     destroy-on-close
     v-model="renderDialogVisible"
-    title="列内容组件拖拽渲染"
+    title="拖拽渲染schema"
     width="1000"
     :close-on-click-modal="false"
   >
     <!-- <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div> -->
-    <el-container :style="{ height: 'calc(40vh - 116px)', }" class="justify-between">
+    <el-container :style="{ height: 'calc(40vh - 116px)' }" class="justify-between">
       <ul class="base-component">
         <li v-for="item in renderColumnCompLi" :key="item.dataType" :data-type="item.dataType" class="component-item">
           <iEpDocument width="15px" />
           <span>{{ item.text }}</span>
         </li>
       </ul>
-      <BasicCanvas ref="canvasRef" :pageConfig="renderColumnSchema" hasActive :customStyle="{ width: '100%', height:'100%',margin: '20px',backgroundColor: '#f1f1f1', }" @active="activeCurrent"/>
+      <BasicCanvas
+        ref="canvasRef"
+        :pageConfig="renderSchema"
+        hasActive
+        :customStyle="{ width: '100%', height: '100%', margin: '20px', backgroundColor: '#f1f1f1' }"
+        @active="activeCurrent"
+      />
       <el-aside>
         <config-plane
           scrollHeight="40vh"
           style="height: fit-content"
           :is-show-config="true"
           v-model:current="currentConf"
-          v-model:pageConfig="renderColumnSchema"
+          v-model:pageConfig="renderSchema"
         />
       </el-aside>
     </el-container>
@@ -406,22 +412,25 @@ import BasicCanvas from "./BasicCanvas.vue";
 import * as _ from "lodash-es";
 // import ConfigPlane from "./settings.vue";
 
-// 渲染列模板的schema
-const renderColumnSchema = ref<Page>({
+// 渲染schema
+const renderSchema = ref<Col>({
   ref: {},
   lifeCycles: {},
   state: {},
   methods: {},
-  componentName: "div",
+  componentName: "Page",
   props: {
     style: {
-      backgroundColor: "#fff"
+      backgroundColor: "#fff",
     },
   },
   children: [],
-  id: uuid(),
+
+  id: "55ty4epk",
+
   css: "",
 });
+
 const renderDialogVisible = ref(false);
 const currentConf = ref<Col | null>(null);
 const activeCurrent = (val: Col) => {
@@ -1144,16 +1153,25 @@ const jsonToHtml = (json: Page | Col) => {
   return html;
 };
 const saveRender = () => {
-  const schema = _.cloneDeep(renderColumnSchema.value);
-  const columns = Current.value.props?.columns ?? [];
-  if (schema?.children.length) {
-    columns[currColIndex.value ?? 0].render = {
-      type: "JSFunction",
-      value: `function r(){return '${jsonToHtml(schema)}'}`,
-      schema,
-    };
-  } else {
-    delete columns[currColIndex.value ?? 0].render;
+  const schema = _.cloneDeep(renderSchema.value);
+  console.log(schema);
+
+  if (Current.value.componentName == "ElTable") {
+    const columns = Current.value.props?.columns ?? [];
+    if (schema?.children.length) {
+      columns[currColIndex.value ?? 0].render = {
+        type: "JSFunction",
+        value: `function r(){return '${jsonToHtml(schema)}'}`,
+        schema,
+      };
+    } else {
+      delete columns[currColIndex.value ?? 0].render;
+    }
+  }
+  if (Current.value.componentName == "ElCarousel") {
+    const option = Current.value.props?.option ?? [];
+
+    option[currCarouselIndex.value ?? 0].schema = schema;
   }
   renderDialogVisible.value = false;
 };
@@ -1212,6 +1230,7 @@ const _useDrag = () => {
   remove = removeDrag;
 };
 const currColIndex = ref<number | null>(null);
+const currCarouselIndex = ref<number | null>(null);
 const isAddColumn = ref<boolean>(false);
 const tableConfig = ref<BasicFormConfig>({
   row: {
@@ -1299,8 +1318,7 @@ const tableConfig = ref<BasicFormConfig>({
               onClick={() => {
                 renderDialogVisible.value = true;
                 const columns = Current.value.props?.columns ?? [];
-                renderColumnSchema.value.children =
-                  (columns[currColIndex.value ?? 0].render?.schema as Page)?.children ?? [];
+                renderSchema.value.children = (columns[currColIndex.value ?? 0].render?.schema as Page)?.children ?? [];
               }}
             >
               {" "}
@@ -1493,6 +1511,119 @@ const basicConfig = ref<BasicFormConfig>({
                   (Current.value.props ?? {}).ref = value;
                 }}
               />
+            </>
+          );
+        },
+      },
+      {
+        label: "图片列表",
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElImage",
+          },
+        },
+        key: "",
+        props: { style: { display: "flex", flexDirection: "column" } },
+        render(data, col) {
+          const count = ref(0);
+          const load = () => {
+            count.value += 2;
+          };
+          return (
+            <ul v-infinite-scroll={load} class="infinite-list" style="overflow: auto">
+              {[1, 2, 3, 4].map((item) => {
+                return <li class="infinite-list-item">{item}</li>;
+              })}
+            </ul>
+          );
+        },
+      },
+      {
+        label: "轮播项",
+        key: "",
+        props: { style: { display: "flex", flexDirection: "column" } },
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElCarousel",
+          },
+        },
+        labelWidth: "100%",
+        render(data, col) {
+          return (
+            <>
+              <div style={{ width: "100%" }} class="radioGroup">
+                {Current.value.props?.option?.map((opt, index) => {
+                  return (
+                    <div
+                      style={{
+                        padding: "2px 20px 2px 2px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        borderBottom: "1px solid #f1f1f1",
+                      }}
+                      class="hover"
+                      draggable
+                      key={opt.id}
+                    >
+                      <div class="flex">
+                        <svg
+                          t="1720276255218"
+                          class="icon"
+                          viewBox="0 0 1024 1024"
+                          version="1.1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          p-id="2736"
+                          width="25"
+                          height="33"
+                          style={{ verticalAlign: "middle", cursor: "move" }}
+                        >
+                          <path
+                            d="M368 672a64 64 0 1 1 0 128 64 64 0 0 1 0-128z m288 0a64 64 0 1 1 0 128 64 64 0 0 1 0-128zM368 448a64 64 0 1 1 0 128 64 64 0 0 1 0-128z m288 0a64 64 0 1 1 0 128 64 64 0 0 1 0-128z m-288-224a64 64 0 1 1 0 128 64 64 0 0 1 0-128z m288 0a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"
+                            fill="#707070"
+                            p-id="2737"
+                          ></path>
+                        </svg>
+
+                        <el-input v-model={opt.label} placeholder="指示器文本"></el-input>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <i-ep-edit
+                          onClick={() => {
+                            renderDialogVisible.value = true;
+                            currCarouselIndex.value = index;
+                            const option = Current.value.props?.option ?? [];
+                            renderSchema.value.children =
+                              (option[currCarouselIndex.value ?? 0]?.schema as Page)?.children ?? [];
+                          }}
+                        />
+                        <i-ep-delete
+                          style={{
+                            color: "#999",
+
+                            width: "20px",
+
+                            height: "20px",
+                          }}
+                          onClick={() => {
+                            Current.value.props?.option?.splice(index, 1);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <el-button
+                type="primary"
+                text
+                onClick={() => {
+                  Current.value.props?.option?.push({ title: "", index: Current.value.props?.option?.length });
+                }}
+              >
+                新增轮播项
+              </el-button>
             </>
           );
         },
@@ -2310,6 +2441,71 @@ const moreConfig = ref<BasicFormConfig>({
   row: {
     col: [
       {
+        label: "autoplay",
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElCarousel",
+          },
+        },
+        pkey: "props",
+        key: "autoplay",
+
+        props: { style: { display: "flex" } },
+
+        render(data, col) {
+          return <el-switch></el-switch>;
+        },
+      },
+      {
+        label: "loop",
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElCarousel",
+          },
+        },
+        pkey: "props",
+        key: "loop",
+
+        props: { style: { display: "flex" } },
+
+        render(data, col) {
+          return <el-switch></el-switch>;
+        },
+      },
+      {
+        label: "卡片模式",
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElCarousel",
+          },
+        },
+        pkey: "props",
+        key: "type",
+        props: { style: { display: "flex" } },
+
+        render(data, col) {
+          console.log(data);
+
+          return (
+            <>
+              <el-switch
+                modelValue={Current.value.props.type == "card"}
+                onUpdate:modelValue={(e: boolean) => {
+                  if (e) {
+                    Current.value.props.type = "card";
+                  } else {
+                    delete Current.value.props.type;
+                  }
+                }}
+              ></el-switch>
+            </>
+          );
+        },
+      },
+      {
         label: "mode",
         display: {
           relate: {
@@ -2876,6 +3072,23 @@ const otherConfig = ref<BasicFormConfig>({
   row: {
     col: [
       {
+        label: "插槽",
+        display: {
+          relate: {
+            key: "componentName",
+            value: "ElCard",
+          },
+        },
+        pkey: "props",
+        key: "slot",
+
+        props: { style: { display: "flex" } },
+
+        render(data, col) {
+          return <el-switch></el-switch>;
+        },
+      },
+      {
         label: "maxlength",
         display: {
           relate: {
@@ -3226,6 +3439,22 @@ const seniorConfig: Ref<BasicFormConfig> = ref({
     &:hover {
       border: 1px dashed @primary-color !important;
     }
+  }
+}
+.infinite-list {
+  width: 100%;
+  height: 300px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  .infinite-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    background: var(--el-color-primary-light-9);
+    margin: 10px;
+    color: var(--el-color-primary);
   }
 }
 </style>

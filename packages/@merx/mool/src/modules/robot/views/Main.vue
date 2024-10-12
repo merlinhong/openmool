@@ -1,80 +1,38 @@
 <template>
   <div class="chat-box">
     <div class="chat-history" ref="chatHistory">
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        :class="['message-bubble', message.role]"
-      >
+      <el-space>
+        <el-form-item label="模型">
+          <el-select style="width: 200px" v-model="model" placeholder="请选择模型">
+            <el-option label="gpt-3.5-turbo" value="gpt-3.5-turbo"></el-option>
+
+            <el-option label="gpt-3.5-turbo-0125" value="gpt-3.5-turbo-0125"></el-option>
+
+            <el-option label="gpt-4o-mini" value="gpt-4o-mini"></el-option>
+
+            <el-option label="gpt-4o" value="gpt-4o"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类别">
+          <el-select style="width: 200px" v-model="category" placeholder="请选择生成类别">
+            <el-option label="官网" value="官网"></el-option>
+
+            <el-option label="表单" value="表单"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-space>
+      <div v-for="(message, index) in messages" :key="index" :class="['message-bubble', message.role]">
         <div :class="['message-content', message.role]">
-          <span>
-            <el-icon
-              v-if="message.role === 'user'"
-              style="width: 25px; height: 25px; vertical-align: text-top"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 48 48"
-                style="width: 100%; height: 100%"
-              >
-                <path
-                  fill="#FF9800"
-                  d="M22 38c-4.8 0-5-7-5-7v-6h10v6s-.2 7-5 7"
-                />
+          <el-icon v-if="message.role === 'user'" class="text-gray-500 text-2xl mx-2 align-top">
+            <i-ep-Avatar />
+          </el-icon>
 
-                <g fill="#FFA726">
-                  <circle cx="31" cy="19" r="2" />
-
-                  <circle cx="13" cy="19" r="2" />
-                </g>
-
-                <path
-                  fill="#FFB74D"
-                  d="M31 13c0-7.6-18-5-18 0v7c0 5 4 9 9 9s9-4 9-9z"
-                />
-
-                <path
-                  fill="#424242"
-                  d="M22 4c-6.1 0-10 4.9-10 11v2.3l2 1.7v-5l12-4l4 4v5l2-1.7V15c0-4-1-8-6-9l-1-2z"
-                />
-
-                <g fill="#784719">
-                  <circle cx="26" cy="19" r="1" />
-
-                  <circle cx="18" cy="19" r="1" />
-                </g>
-
-                <path
-                  fill="#009688"
-                  d="M27 31s-1.8 2-5 2s-5-2-5-2S6 33 6 44h32c0-11-11-13-11-13"
-                />
-
-                <g fill="#FF9800">
-                  <path d="m40.997 4.065l7 7l-7 6.999l-7-7z" />
-
-                  <path d="M36 6h10v10H36z" />
-                </g>
-
-                <circle cx="41" cy="11" r="3" fill="#FFEB3B" />
-              </svg>
-            </el-icon>
-
-            <el-icon
-              v-if="message.role === 'system'"
-              style="width: 25px; height: 25px; vertical-align: text-top"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                style="width: 100%; height: 100%"
-              >
-                <path
-                  fell="currentColor"
-                  d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
-                />
-              </svg>
-            </el-icon>
-          </span>
+          <div
+            v-if="message.role === 'system'"
+            class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center"
+          >
+            AI
+          </div>
 
           <div>
             <p
@@ -114,11 +72,7 @@
                   word-break: break-all;
                 "
               >
-                <TypedMessage
-                  v-if="message.typed"
-                  :message="message"
-                  :id="`typed-message${index}`"
-                />
+                <TypedMessage v-if="message.typed" :message="message" :id="`typed-message${index}`" />
 
                 <p v-if="!message.typed">{{ message.content }}</p>
               </div>
@@ -129,25 +83,7 @@
     </div>
 
     <div style="display: flex">
-      <el-select style="width: 200px" v-model="model" placeholder="请选择模型">
-        <el-option label="gpt-3.5-turbo" value="gpt-3.5-turbo"></el-option>
-
-        <el-option
-          label="gpt-3.5-turbo-0125"
-          value="gpt-3.5-turbo-0125"
-        ></el-option>
-
-        <el-option label="gpt-4o-mini" value="gpt-4o-mini"></el-option>
-
-        <el-option label="gpt-4o" value="gpt-4o"></el-option>
-      </el-select>
-
-      <el-input
-        v-model="userInput"
-        placeholder="输入你的消息..."
-        @keyup.enter="sendMessage"
-        class="input-box"
-      />
+      <el-input v-model="userInput" placeholder="输入你的消息..." @keyup.enter="sendMessage" class="input-box" />
 
       <el-button type="primary" @click="sendMessage">发送</el-button>
     </div>
@@ -155,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch, nextTick, defineModel } from "vue";
+import { ref, defineComponent, watch, nextTick, defineModel, watchEffect } from "vue";
 
 import { onMounted } from "vue";
 
@@ -199,6 +135,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const model = ref(props.foundationModel);
 
+    const messages = ref<Record<string, any>[]>([]);
+    const category = ref("官网");
     const userInput = ref("");
 
     const isTyped = ref(false);
@@ -207,18 +145,14 @@ export default defineComponent({
 
     let extra = ""; // 额外的输入描述
 
-    const messages = ref<Record<string, any>[]>([
-      {
-        role: "system",
-
-        content:
-          "你好！有什么我可以帮助你的吗？我可以为你绑定v-model变量等其他变量(需要您提供变量名)",
-
-        name: "AI",
-
-        typed: false,
-      },
-    ]);
+    watchEffect(() => {
+      messages.value = [
+        {
+          role: "system",
+          content: `你好！当前我可以为您辅助生成${category.value}页面，${category.value === "表单" ? "你也可以选中一个表单，我可以为您绑定表单数据和规则校验," : ""}有什么需求请告诉我`,
+        },
+      ];
+    });
 
     const chatHistory = ref<HTMLElement | null>(null);
 
@@ -238,75 +172,79 @@ export default defineComponent({
       isTyped.value = true;
 
       userInput.value = "";
-      if (!props.schema)
-        return messages.value.push({
-          role: "system",
+      if (category.value === "表单") {
+        if (!props.schema)
+          return messages.value.push({
+            role: "system",
 
-          content: "请先选择一个组件",
+            content: "请先选择一个组件",
 
-          typed: false,
-        });
-      if (props.schema.componentName == "div" && input.includes("表单")) {
-        const msg = {
-          role: "system",
-          content: "请选择是否需要行列布局组件包裹?",
-          typed: true,
-          isqt: true,
-          choosed: (res: string) => {
-            if (res == "是") {
-              extra = "表单组件需要行列布局组件包裹";
-            }
-            fecthAi(input, extra, "已为您成功生成表单");
-            return
-          },
-        };
-        return messages.value.push(msg);
+            typed: false,
+          });
+        if (props.schema.componentName == "div" && input.includes("表单")) {
+          const msg = {
+            role: "system",
+            content: "请选择是否需要行列布局组件包裹?",
+            typed: true,
+            isqt: true,
+            choosed: (res: string) => {
+              if (res == "是") {
+                extra = "表单组件需要行列布局组件包裹";
+              }
+              fecthAi(input, extra, "已为您成功生成表单");
+              return;
+            },
+          };
+          return messages.value.push(msg);
+        } else {
+          const msg = {
+            role: "system",
 
+            content: "正在分析当前组件...",
+
+            typed: true,
+          };
+
+          const second = Math.random() * 10 * 500;
+
+          setTimeout(() => {
+            messages.value.push(msg);
+
+            scrollToBottom();
+          }, second / 2);
+
+          setTimeout(
+            () => {
+              messages.value[messages.value.length - 1].content = "正在绑定变量...请稍等";
+
+              scrollToBottom();
+            },
+
+            second * 2 + Math.random() * 10 * 500,
+          );
+
+          setTimeout(
+            () => {
+              messages.value[messages.value.length - 1].content = "解析中...";
+
+              scrollToBottom();
+            },
+
+            second + Math.random() * 10 * 500,
+          );
+        }
       } else {
-        const msg = {
+        messages.value.push({
           role: "system",
-
-          content: "正在分析当前组件...",
-
+          content: "正在生成...",
           typed: true,
-        };
-
-        const second = Math.random() * 10 * 500;
-
-        setTimeout(() => {
-          messages.value.push(msg);
-
-          scrollToBottom();
-        }, second / 2);
-
-        setTimeout(
-          () => {
-            messages.value[messages.value.length - 1].content =
-              "正在绑定变量...请稍等";
-
-            scrollToBottom();
-          },
-
-          second * 2 + Math.random() * 10 * 500
-        );
-
-        setTimeout(
-          () => {
-            messages.value[messages.value.length - 1].content = "解析中...";
-
-            scrollToBottom();
-          },
-
-          second + Math.random() * 10 * 500
-        );
+        });
       }
 
-      fecthAi(input, "", "");
+      fecthAi(input, "", "已完成");
       // 滚动到最新消息
 
       scrollToBottom();
-
-      console.log(props.schema);
 
       // 调用 AI 回复
     };
@@ -317,12 +255,11 @@ export default defineComponent({
 
         body: JSON.stringify({
           messages:
-            `请分析当前组件schema：${JSON.stringify(props.schema)}\n` +
-            prompt +
-            extra,
+            category.value == "表单" ? `请分析当前组件schema：${JSON.stringify(props.schema)}\n` : "" + prompt + extra,
           foundationModel: {
             model: model.value,
           },
+          type: category.value,
         }),
 
         headers: {
@@ -333,18 +270,19 @@ export default defineComponent({
 
         .then((res) => {
           if (res.data.success === false) {
-            return (messages.value[messages.value.length - 1].content =
-              "解析失败");
+            return (messages.value[messages.value.length - 1].content = "解析失败");
           }
 
           messages.value[messages.value.length - 1].content = desc;
 
           scrollToBottom();
 
-          emit("update:schema", res.data);
+          emit("update:schema", res.data, category.value === "表单");
         })
 
         .catch((error) => {
+          console.log(error);
+
           messages.value.push({
             role: "system",
 
@@ -385,6 +323,7 @@ export default defineComponent({
       Schema,
 
       model,
+      category,
     };
   },
 });

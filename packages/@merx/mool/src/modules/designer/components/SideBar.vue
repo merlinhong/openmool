@@ -341,7 +341,11 @@ const openRobot = () => {
 };
 
 // 获取AI返回的结果进行schema赋值
-const updateConf = (schema?: Col) => {
+const updateConf = (schema?: Col,isneed=true) => {
+  if(!isneed){
+    return props.pageConfig.children.push(schema as Col);
+    
+  }
   let ruleProps: string[] = [];
   if (props.currentConf?.componentName == "div") {
     function collectValues(obj: Record<string, any>) {

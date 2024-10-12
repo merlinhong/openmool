@@ -90,7 +90,7 @@ const props = defineProps({
   },
   customStyle: {
     type: Object,
-    default: () => ({width: "80%"}),
+    default: () => ({width: "100%"}),
   },
   doc: {
     type: Object as PropType<Document|null>,

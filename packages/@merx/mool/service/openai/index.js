@@ -12,7 +12,7 @@ const url = "https://api.chatanywhere.tech/v1/chat/completions/"; // OpenAI Chat
 //   apiKey, // 设置API密钥
 //   baseURL: "https://api.chatanywhere.tech/v1", // 设置API基础URL
 // });
-async function formatInputToSchema(model, prompt) {
+async function formatInputToSchema(model, prompt,type) {
   console.log(prompt);
   
   const Model = createLanguageModel({
@@ -20,7 +20,12 @@ async function formatInputToSchema(model, prompt) {
     OPENAI_API_KEY: apiKey,
     OPENAI_ENDPOINT: url,
   });
-  const schema = fs.readFileSync(path.join(__dirname, "./schema.ts"), "utf8");
+  let schema;
+  if(type==='表单'){
+    schema = fs.readFileSync(path.join(__dirname, "./formSchema.ts"), "utf8");
+  }else{
+    schema = fs.readFileSync(path.join(__dirname, "./schema.ts"), "utf8");
+  }
   const translator = createJsonTranslator(Model, {
     getSchemaText() {
       return schema;

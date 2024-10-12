@@ -5,7 +5,6 @@ import TopBar from "../components/TopBar.vue";
 import SideBar from "../components/SideBar.vue";
 import CanvasFrame from "../components/CanvasFrame.vue"; // 导入 CanvasFrame 组件
 import ConfigPlane from "../components/settings.vue";
-import { Avatar } from "@element-plus/icons-vue";
 import useLoading from "@/mool/hooks/loading";
 import { useStore } from "@/mool/store";
 const { loading, setLoading } = useLoading(true);
@@ -76,6 +75,7 @@ onMounted(querySchema);
 <template>
   <div class="common-layout">
     <el-container>
+ 
       <el-header style="display: flex; align-items: center; background: #fff">
         <el-page-header style="flex: 1" content="网页设计">
           <template #title>
@@ -91,12 +91,13 @@ onMounted(querySchema);
           <template #extra>
             <div style="width: 300px; text-align: right">
               <el-icon class="text-gray-500 text-2xl mx-2 align-top">
-                <Avatar /> </el-icon
+                <i-ep-Avatar/></el-icon
               >登录
             </div>
           </template>
         </el-page-header>
       </el-header>
+      
       <!-- 顶部栏组件，用于显示和编辑页面配置 -->
       <!-- v-model:pageConfig 用于双向绑定页面配置 -->
       <TopBar v-model:pageConfig="pageConfig" @changeSize="changeSize" />

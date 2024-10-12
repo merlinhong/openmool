@@ -136,7 +136,6 @@ console.log(props.hasActive);
               ref="canvasRef"
               :pageConfig="pageConfig"
               :hasActive="hasActive"
-              :customStyle="customStyle"
                v-loading="loading"
               @active="handleActive"
               @update:pageConfig="updatePageConfig"
