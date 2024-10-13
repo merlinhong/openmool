@@ -14,6 +14,7 @@ import seoPrerender from "vite-plugin-seo-prerender";
 import ElementPlus from "unplugin-element-plus/vite";
 
 import { mool } from "./src/mool/vite-plugin/src/index";
+// import basicSsl from '@vitejs/plugin-basic-ssl'
 // import tailwindcss from 'tailwindcss'
 // import autoprefixer from 'autoprefixer'
 function toPath(dir: string) {
@@ -28,6 +29,7 @@ export default ({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
+      // basicSsl(),
       mool(),
       ElementPlus({}),
       AutoImport({
@@ -108,11 +110,17 @@ export default ({ mode }) => {
     },
     server: {
       port: 3008,
+
       open: "#/page",
       proxy: {
         [`${env.VITE_APP_BASE_API}`]: {
           target: env.VITE_APP_PROXY,
           changeOrigin: true,
+        },
+        "/api_image": {
+          target: "https://undraw.co",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api_image/, ""),
         },
       },
     },

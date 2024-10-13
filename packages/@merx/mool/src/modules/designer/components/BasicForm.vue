@@ -278,6 +278,7 @@ defineExpose({
 
 :deep(.el-form-item__label-wrap) {
   margin-left: 0px !important;
+  margin-right: 0px !important;
 }
 
 :deep(.el-radio:last-child) {

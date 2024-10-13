@@ -58,6 +58,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    'IEp-{{': typeof import('~icons/ep/{{')['default']
     IEpArrowDown: typeof import('~icons/ep/arrow-down')['default']
     IEpArrowRight: typeof import('~icons/ep/arrow-right')['default']
     IEpAvatar: typeof import('~icons/ep/avatar')['default']

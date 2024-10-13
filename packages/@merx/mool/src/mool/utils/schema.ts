@@ -1,3 +1,4 @@
+import { hmr } from './../hooks/hmr';
 import { ComponentType, Col } from "@/mool/types/BasicForm";
 
 export const renderColumnCompLi = [
@@ -7,14 +8,16 @@ export const renderColumnCompLi = [
 
   { text: "单行文本", dataType: "ElInput" },
 
-  { text: '开关', dataType: 'ElSwitch' },
+  { text: "开关", dataType: "ElSwitch" },
 
   { text: "单选框", dataType: "ElRadio" },
 
   { text: "日期/时间", dataType: "ElDatePicker" },
 
   { text: "按钮", dataType: "ElButton" },
-]
+  { text: "图片", dataType: "ElImage" },
+  { text: "图标", dataType: "ElIcon" },
+];
 
 export const baseComponentList = [
   { text: "盒子", dataType: "div" },
@@ -50,6 +53,8 @@ export const seniorComponentList = [
 
   { text: "图片", dataType: "ElImage" },
 
+  { text: "图标", dataType: "ElIcon" },
+  
   { text: "表格", dataType: "ElTable" },
 
   { text: "多标签页", dataType: "ElTags" },
@@ -67,6 +72,7 @@ export const seniorComponentList = [
   { text: '走马灯', dataType: 'ElCarousel' },
 
   { text: "导航栏", dataType: "ElPageHeader" },
+
   { text: "菜单", dataType: "ElMenu" },
 
 ];
@@ -78,8 +84,8 @@ export const JsonSchema: {
     componentName: "div",
     props: {
       style: {
-        padding:'5px',
-        backgroundColor:'#fff'
+        padding: "5px",
+        backgroundColor: "#fff",
       },
       class: "",
     },
@@ -146,13 +152,21 @@ export const JsonSchema: {
   ElImage: {
     componentName: "ElImage",
     props: {
-      style: { width: "300px",height:'300px' },
+      style: { width: "100%", height: "100%" },
       class: "",
-      fit: "contain",
+      fit: "scale-down",
       src: `https://42f2671d685f51e10fc6-b9fcecea3e50b3b59bdc28dead054ebc.ssl.cf5.rackcdn.com/illustrations/undraw_messaging_7ho8_(2)_5g7e.svg`,
     },
   },
-
+  ElIcon: {
+    componentName: "ElIcon",
+    props: {
+      style: { width: "fit-content", height: "fit-content" },
+      class: "",
+      icon: "ArrowDown",
+      size: 25,
+    },
+  },
   ElSelect: {
     label: "",
     key: "select",
@@ -286,7 +300,6 @@ export const JsonSchema: {
           render: {
             type: "JSFunction",
             value: "function r(){return '<div>123</div>'}",
-
           },
         },
 
@@ -298,16 +311,19 @@ export const JsonSchema: {
   },
 
   ElTags: {
-
     key: "",
     active: 1,
     props: {
-      style: { height: '450px', background: '#fff' },
-      tabItems: [{ label: '标签1', name: 1, children: [] }, { label: '标签2', name: 2, children: [] }, { label: '标签3', name: 3, children: [] }]
+      style: { height: "450px", background: "#fff" },
+      tabItems: [
+        { label: "标签1", name: 1, children: [] },
+        { label: "标签2", name: 2, children: [] },
+        { label: "标签3", name: 3, children: [] },
+      ],
     },
 
     componentName: "ElTags",
-    children: []
+    children: [],
   },
 
   ElBreadCrumb: {
@@ -339,14 +355,14 @@ export const JsonSchema: {
 
     props: {
       style: {
-        maxWidth:'200px',
+        maxWidth: "200px",
         height: "200px",
         width: "200px",
       },
       shadow: "hover",
       class: "",
     },
-    children: []
+    children: [],
   },
 
   ElDivider: {
@@ -413,11 +429,10 @@ export const JsonSchema: {
 
     props: {
       style: { width: "100%" },
-      title: 'MlDesigner',
-      content: '',
-      icon: '',
+      title: "MlDesigner",
+      content: "",
+      icon: "",
     },
-
   },
   ElMenu: {
     label: "",
@@ -427,34 +442,47 @@ export const JsonSchema: {
     componentName: "ElMenu",
 
     props: {
-      style: { width: "100%", borderBottom: 'none !important', borderRight: 'none !important' },
-      textColor: '#fff',
-      backgroundColor: '#333',
+      style: { width: "100%", borderBottom: "none !important", borderRight: "none !important" },
+      textColor: "#fff",
+      backgroundColor: "#333",
       ellipsis: false,
-      mode: 'horizontal',
+      mode: "horizontal",
       class: "",
-      option: [{ title: '菜单1', index: '1', subMenu: [{ title: '子菜单1', index: '1-1' }, { title: '子菜单2', index: '1-2' },] }, { title: '菜单2', index: '2' }, { title: '菜单3', index: '3', }]
-    }
-
+      option: [
+        {
+          title: "菜单1",
+          index: "1",
+          subMenu: [
+            { title: "子菜单1", index: "1-1" },
+            { title: "子菜单2", index: "1-2" },
+          ],
+        },
+        { title: "菜单2", index: "2" },
+        { title: "菜单3", index: "3" },
+      ],
+    },
   },
   ElCarousel: {
     label: "",
     key: "",
     componentName: "ElCarousel",
     props: {
+      height: "500px",
       style: { width: "100%" },
-      height: '300px',
-      arrow: 'never',
+      arrow: "never",
       autoplay: true,
       interval: 3000,
-      indicatorPosition: 'outside',
+      indicatorPosition: "outside",
       loop: true,
-      trigger: 'click',
-      type: 'card',
-      direction: 'horizontal',
+      trigger: "click",
+      direction: "horizontal",
       class: "",
-      option: [{id:'1',name:'',label:''},{id:'2',name:'',label:''},{id:'3',name:'',label:''}],
-      motionBlur: false
-    }
-  }
+      option: [
+        { id: "1", name: "", label: "1" },
+        { id: "2", name: "", label: "2" },
+        { id: "3", name: "", label: "3" },
+      ],
+      motionBlur: false,
+    },
+  },
 };

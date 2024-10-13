@@ -1,1 +1,722 @@
-{"pageInfo":{"name":"酒店官网ai","schema":{"ref":{},"lifeCycles":{},"state":{},"methods":{},"componentName":"酒店官网ai","props":{"style":{"backgroundColor":"#fff"}},"children":[{"componentName":"div","props":{"style":{"padding":"5px","backgroundColor":"#fff"},"class":""},"children":[{"componentName":"ElContainer","props":{"style":{}},"id":"root12345","children":[{"componentName":"div","props":{"style":{"background":"#333 !important","padding":"10px","display":"flex","alignItems":"center","justifyContent":"space-between"},"class":"bg-white"},"children":[{"label":"酒店官网","props":{"style":{"width":"fit-content","color":"#fff","fontSize":"18px"}},"componentName":"Text","id":"text1"},{"componentName":"ElMenu","props":{"style":{"width":"fit-content","borderBottom":"none !important","borderRight":"none !important"},"textColor":"#fff","backgroundColor":"#333","mode":"horizontal","option":[{"title":"首页","index":"1"},{"title":"房间","index":"2"},{"title":"服务","index":"3"},{"title":"联系我们","index":"4"}]},"id":"menu1"},{"label":"登录","componentName":"ElButton","props":{"style":{"display":"flex","flexDirection":"row","width":"fit-content","justifyContent":"space-between"},"type":"primary","plain":true},"id":"button1"}],"id":"header1"},{"componentName":"div","props":{"style":{"background":"#fff"}},"children":[{"componentName":"ElCarousel","props":{"style":{"width":"100%"},"autoplay":true,"interval":3000,"indicatorPosition":"outside","loop":true,"trigger":"click","type":"default","direction":"horizontal","option":[1,2,3,4],"motionBlur":true},"id":"carousel1"}],"id":"main1"},{"componentName":"div","props":{"style":{"background":"#fff","height":"500px","display":"flex","padding":"15px","alignItems":"center","justifyContent":"center","flexDirection":"column"}},"children":[{"label":"我们的房间","props":{"style":{"width":"fit-content","color":"#000","fontSize":"16px"}},"componentName":"Text","id":"text2"},{"componentName":"div","props":{"style":{"background":"#fff","display":"flex","alignItems":"center","justifyContent":"space-around"}},"children":[{"label":"豪华房","componentName":"ElCard","props":{"style":{"width":"200px","height":"200px"}},"id":"card1"},{"label":"标准房","componentName":"ElCard","props":{"style":{"width":"200px","height":"200px"}},"id":"card2"},{"label":"单人房","componentName":"ElCard","props":{"style":{"width":"200px","height":"200px"}},"id":"card3"},{"label":"双人房","componentName":"ElCard","props":{"style":{"width":"200px","height":"200px"}},"id":"card4"}],"id":"roomCards","parentId":"main1"}],"id":"roomSection"},{"componentName":"div","props":{"style":{"background":"#fff","display":"flex","padding":"15px","alignItems":"center","justifyContent":"space-around","backgroundColor":"#000000"}},"children":[{"label":"© 2023 酒店名称. 保留所有权利.","props":{"style":{"width":"fit-content","color":"#FFFFFF","fontSize":"16px"}},"componentName":"Text","id":"footerText"}],"id":"footer1","parentId":"main1"}]}],"id":"sind7hh6"}],"id":"cmef4ey5","css":""}},"blocksData":[]}
+{
+  "pageInfo": {
+    "name": "摄影官网ai",
+    "schema": {
+      "ref": {},
+      "lifeCycles": {},
+      "state": {},
+      "methods": {},
+      "componentName": "摄影官网ai",
+      "props": {
+        "style": {
+          "backgroundColor": "#fff"
+        }
+      },
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "style": {
+              "padding": "5px",
+              "backgroundColor": "#fff"
+            },
+            "class": ""
+          },
+          "children": [
+            {
+              "componentName": "ElContainer",
+              "props": {
+                "style": {}
+              },
+              "id": "root12345",
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "background": "#333 !important",
+                      "padding": "10px",
+                      "display": "flex",
+                      "alignItems": "center",
+                      "justifyContent": "space-between"
+                    },
+                    "class": "bg-white"
+                  },
+                  "children": [
+                    {
+                      "label": "摄影官网",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "color": "#fff",
+                          "fontSize": "18px"
+                        }
+                      },
+                      "componentName": "Text",
+                      "id": "text1"
+                    },
+                    {
+                      "componentName": "ElMenu",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "borderBottom": "none !important",
+                          "borderRight": "none !important"
+                        },
+                        "textColor": "#fff",
+                        "backgroundColor": "#333",
+                        "mode": "horizontal",
+                        "option": [
+                          {
+                            "title": "首页",
+                            "index": "1"
+                          },
+                          {
+                            "title": "房间",
+                            "index": "2"
+                          },
+                          {
+                            "title": "服务",
+                            "index": "3"
+                          },
+                          {
+                            "title": "联系我们",
+                            "index": "4"
+                          }
+                        ]
+                      },
+                      "id": "menu1"
+                    },
+                    {
+                      "label": "登录",
+                      "componentName": "ElButton",
+                      "props": {
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "width": "fit-content",
+                          "justifyContent": "space-between"
+                        },
+                        "type": "primary",
+                        "plain": true
+                      },
+                      "id": "button1"
+                    }
+                  ],
+                  "id": "header1"
+                },
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "background": "#fff",
+                      "height": "600px",
+                      "backgroundImage": "url(https://picsum.photos/id/27/3264/1836)",
+                      "backgroundSize": "cover",
+                      "backgroundPosition": "center",
+                      "backgroundRepeat": "no-repeat",
+                      "display": "flex",
+                      "alignItems": "center",
+                      "justifyContent": "center"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": {
+                          "padding": "5px !important",
+                          "backgroundColor": "transparent",
+                          "justifyContent": "center",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "alignItems": "center",
+                          "lineHeight": "2"
+                        },
+                        "class": ""
+                      },
+                      "children": [
+                        {
+                          "label": "捕捉美好瞬间",
+                          "props": {
+                            "style": {
+                              "width": "fit-content",
+                              "color": "#FFFFFF",
+                              "fontSize": "40px",
+                              "fontWeight": "bold"
+                            },
+                            "class": ""
+                          },
+                          "key": "text",
+                          "componentName": "Text",
+                          "id": "fayrc2sm",
+                          "parentId": "7yr4wnrp"
+                        },
+                        {
+                          "label": "专业摄影和妆造服务，为您创造永恒记忆",
+                          "props": {
+                            "style": {
+                              "width": "fit-content",
+                              "color": "#FFFFFF",
+                              "fontSize": "18px"
+                            },
+                            "class": ""
+                          },
+                          "key": "text",
+                          "componentName": "Text",
+                          "id": "meytds4e",
+                          "parentId": "7yr4wnrp"
+                        },
+                        {
+                          "label": "预约拍摄",
+                          "key": "",
+                          "componentName": "ElButton",
+                          "props": {
+                            "style": {
+                              "display": "flex",
+                              "flexDirection": "row",
+                              "width": "fit-content",
+                              "marginTop": "10px"
+                            },
+                            "class": "",
+                            "type": "primary",
+                            "text": false,
+                            "color": ""
+                          },
+                          "id": "ykse5x2s"
+                        }
+                      ],
+                      "id": "7yr4wnrp"
+                    }
+                  ],
+                  "id": "main1"
+                },
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "background": "#fff",
+                      "height": "500px",
+                      "display": "flex",
+                      "padding": "15px",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "flexDirection": "column",
+                      "marginTop": "20px"
+                    }
+                  },
+                  "children": [
+                    {
+                      "label": "我们的房间",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "color": "#000",
+                          "fontSize": "16px"
+                        }
+                      },
+                      "componentName": "Text",
+                      "id": "text2",
+                      "parentId": "roomCards"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": {
+                          "padding": "5px",
+                          "backgroundColor": "#fff",
+                          "display": "flex",
+                          "width": "100%",
+                          "height": "auto",
+                          "justifyContent": "space-around",
+                          "alignItems": "center"
+                        },
+                        "class": "max-md:flex-col max-md:overflow-auto "
+                      },
+                      "children": [
+                        {
+                          "label": "卡片",
+                          "componentName": "ElCard",
+                          "props": {
+                            "style": {
+                              "maxWidth": "300px",
+                              "height": "300px",
+                              "width": "300px"
+                            },
+                            "shadow": "hover",
+                            "class": ""
+                          },
+                          "children": [
+                            {
+                              "componentName": "ElImage",
+                              "props": {
+                                "style": {
+                                  "width": "100%",
+                                  "height": "100%"
+                                },
+                                "class": "",
+                                "fit": "scale-down",
+                                "src": "https://picsum.photos/id/16/2500/1667"
+                              },
+                              "id": "wpbyjd3r",
+                              "parentId": "65bh5jpi"
+                            },
+                            {
+                              "componentName": "div",
+                              "props": {
+                                "style": {
+                                  "padding": "5px",
+                                  "backgroundColor": "#fff"
+                                },
+                                "class": ""
+                              },
+                              "children": [
+                                {
+                                  "label": "婚纱摄影",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "20px",
+                                      "fontWeight": "bold"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "cxwrbktx"
+                                },
+                                {
+                                  "label": "记录最重要的时刻",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "16px"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "33siek5c"
+                                }
+                              ],
+                              "id": "2wpxey7i"
+                            }
+                          ],
+                          "id": "65bh5jpi",
+                          "parentId": "3rwjx6kr"
+                        },
+                        {
+                          "label": "卡片",
+                          "componentName": "ElCard",
+                          "props": {
+                            "style": {
+                              "maxWidth": "300px",
+                              "height": "300px",
+                              "width": "300px"
+                            },
+                            "shadow": "hover",
+                            "class": ""
+                          },
+                          "children": [
+                            {
+                              "componentName": "ElImage",
+                              "props": {
+                                "style": {
+                                  "width": "100%",
+                                  "height": "100%"
+                                },
+                                "class": "",
+                                "fit": "scale-down",
+                                "src": "https://picsum.photos/id/12/2500/1667"
+                              },
+                              "id": "kdhpfmwe",
+                              "parentId": "65bh5jpi"
+                            },
+                            {
+                              "componentName": "div",
+                              "props": {
+                                "style": {
+                                  "padding": "5px",
+                                  "backgroundColor": "#fff"
+                                },
+                                "class": ""
+                              },
+                              "children": [
+                                {
+                                  "label": "婚纱摄影",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "20px",
+                                      "fontWeight": "bold"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "wxf8bnja"
+                                },
+                                {
+                                  "label": "记录最重要的时刻",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "16px"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "xcjzx4cs"
+                                }
+                              ],
+                              "id": "t46dmwyh"
+                            }
+                          ],
+                          "id": "h7siktmy",
+                          "parentId": "najbhh6j"
+                        },
+                        {
+                          "label": "卡片",
+                          "componentName": "ElCard",
+                          "props": {
+                            "style": {
+                              "maxWidth": "300px",
+                              "height": "300px",
+                              "width": "300px"
+                            },
+                            "shadow": "hover",
+                            "class": ""
+                          },
+                          "children": [
+                            {
+                              "componentName": "ElImage",
+                              "props": {
+                                "style": {
+                                  "width": "100%",
+                                  "height": "100%"
+                                },
+                                "class": "",
+                                "fit": "fill",
+                                "src": "https://picsum.photos/id/26/4209/2769"
+                              },
+                              "id": "e52nh24w",
+                              "parentId": "65bh5jpi"
+                            },
+                            {
+                              "componentName": "div",
+                              "props": {
+                                "style": {
+                                  "padding": "5px",
+                                  "backgroundColor": "#fff"
+                                },
+                                "class": ""
+                              },
+                              "children": [
+                                {
+                                  "label": "婚纱摄影",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "20px",
+                                      "fontWeight": "bold"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "yca6ys2p"
+                                },
+                                {
+                                  "label": "记录最重要的时刻",
+                                  "props": {
+                                    "style": {
+                                      "width": "fit-content",
+                                      "color": "#000",
+                                      "fontSize": "16px"
+                                    },
+                                    "class": ""
+                                  },
+                                  "key": "text",
+                                  "componentName": "Text",
+                                  "id": "dtj67jkh"
+                                }
+                              ],
+                              "id": "jap3x4dy"
+                            }
+                          ],
+                          "id": "imiezcf2",
+                          "parentId": "najbhh6j"
+                        }
+                      ],
+                      "id": "najbhh6j",
+                      "parentId": "roomCards"
+                    }
+                  ],
+                  "id": "roomSection"
+                },
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "height": "500px",
+                      "display": "flex",
+                      "padding": "15px",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "flexDirection": "column",
+                      "marginTop": "20px",
+                      "backgroundColor": "#F1F0F0"
+                    },
+                    "class": ""
+                  },
+                  "children": [
+                    {
+                      "label": "精选作品",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "color": "#000",
+                          "fontSize": "16px"
+                        }
+                      },
+                      "componentName": "Text",
+                      "id": "tjh3y68z",
+                      "parentId": "roomCards"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": {
+                          "backgroundColor": "#ECECEC",
+                          "flexDirection": "row",
+                          "display": "flex",
+                          "width": "100%",
+                          "height": "100%",
+                          "justifyContent": "space-around",
+                          "alignItems": "center",
+                          "flexWrap": "wrap"
+                        },
+                        "class": ""
+                      },
+                      "children": [
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/7/4728/3168"
+                          },
+                          "id": "i4dpkxck"
+                        },
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/6/5000/3333"
+                          },
+                          "id": "mw3xrph2",
+                          "parentId": "bscnz6xy"
+                        },
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/10/2500/1667"
+                          },
+                          "id": "f5snmpxb",
+                          "parentId": "bscnz6xy"
+                        },
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/23/3887/4899"
+                          },
+                          "id": "rnathz5s",
+                          "parentId": "bscnz6xy"
+                        },
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/25/5000/3333"
+                          },
+                          "id": "4c5mbaxf",
+                          "parentId": "bscnz6xy"
+                        },
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "33%",
+                              "height": "33%"
+                            },
+                            "class": "",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/27/3264/1836"
+                          },
+                          "id": "75csisd6",
+                          "parentId": "bscnz6xy"
+                        }
+                      ],
+                      "id": "bscnz6xy",
+                      "parentId": "hdfd2hh4"
+                    }
+                  ],
+                  "id": "hdfd2hh4",
+                  "parentId": "root12345"
+                },
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "padding": "5px",
+                      "backgroundColor": "#fff",
+                      "marginBottom": "20px",
+                      "height": "500px"
+                    },
+                    "class": ""
+                  },
+                  "children": [
+                    {
+                      "label": "关于我们",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "color": "#000",
+                          "fontSize": "24px",
+                          "marginLeft": "auto",
+                          "marginRight": "auto"
+                        },
+                        "class": ""
+                      },
+                      "key": "text",
+                      "componentName": "Text",
+                      "id": "56n2wm4s"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": {
+                          "backgroundColor": "#fff",
+                          "display": "flex",
+                          "justifyContent": "space-between",
+                          "alignItems": "flex-start",
+                          "marginTop": "20px"
+                        },
+                        "class": "max-md:flex-col"
+                      },
+                      "children": [
+                        {
+                          "componentName": "ElImage",
+                          "props": {
+                            "style": {
+                              "width": "100%",
+                              "height": "100%",
+                              "margin": "0px 10px",
+                              "backgroundColor": "#F9F9F9",
+                              "borderRadius": "5px"
+                            },
+                            "class": "rounded-lg",
+                            "fit": "cover",
+                            "src": "https://picsum.photos/id/24/4855/1803"
+                          },
+                          "id": "rksc3nb6"
+                        },
+                        {
+                          "label": "我们是一家专业的摄影妆造工作室，拥有多年的行业经验和一支充满激情的团队。\n\n我们致力于为每位客户提供高质量的摄影和妆造服务，捕捉生活中最美好的瞬间。\n\n无论是婚礼、个人写真还是商业摄影，我们都将用心为您创造独特而难忘的作品。",
+                          "props": {
+                            "style": {
+                              "width": "100%",
+                              "color": "#000",
+                              "fontSize": "17px",
+                              "alignItems": "flex-start",
+                              "justifyContent": "center",
+                              "height": "100%",
+                              "lineHeight": "30px",
+                              "letterSpacing": "2px"
+                            },
+                            "class": ""
+                          },
+                          "key": "text",
+                          "componentName": "Text",
+                          "id": "ccnwt7k2"
+                        }
+                      ],
+                      "id": "iynsrris"
+                    }
+                  ],
+                  "id": "s2x2266k",
+                  "parentId": "hdfd2hh4"
+                },
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": {
+                      "background": "#fff",
+                      "display": "flex",
+                      "padding": "15px",
+                      "alignItems": "center",
+                      "justifyContent": "space-around",
+                      "backgroundColor": "#000000"
+                    }
+                  },
+                  "children": [
+                    {
+                      "label": "© 2023 酒店名称. 保留所有权利.",
+                      "props": {
+                        "style": {
+                          "width": "fit-content",
+                          "color": "#FFFFFF",
+                          "fontSize": "16px"
+                        }
+                      },
+                      "componentName": "Text",
+                      "id": "footerText"
+                    }
+                  ],
+                  "id": "footer1",
+                  "parentId": "main1"
+                }
+              ]
+            }
+          ],
+          "id": "sind7hh6"
+        }
+      ],
+      "id": "cmef4ey5",
+      "css": ""
+    }
+  },
+  "blocksData": []
+}

@@ -140,6 +140,7 @@ export class DragUtil {
         if (!config.props.style) {
           config.props.style = {};
         }
+        console.log(target.classList);
         
         if (!target.classList.contains(canvasDrag.endEle.replace(".", ""))) {
           const comp = cloneDeep({ ...config, id });

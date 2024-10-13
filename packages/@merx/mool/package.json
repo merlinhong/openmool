@@ -21,6 +21,7 @@
     "@teleporthq/teleport-project-generator-vue": "^0.33.5",
     "@types/range-parser": "^1.2.7",
     "@types/store": "^2.0.5",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vue/shared": "^3.5.10",
     "@vueuse/core": "^11.1.0",
     "Tesseract.js": "npm:tesseract.js@^5.1.1",
