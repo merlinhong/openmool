@@ -2,7 +2,7 @@
 import { h, type PropType, computed, resolveComponent, shallowRef, VNode } from "vue";
 import type { ComponentType, Render, Col, RowScope } from "@/mool/types/BasicForm";
 import { omit } from "@/mool/utils";
-import * as ElementPlusIconsVue from '@element-plus/icons-vue';
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 defineOptions({
   inheritAttrs: false,
 });
@@ -101,7 +101,7 @@ const renderForm: {
     render: (data, col) => {
       return (
         // <div>
-          <span>{col?.label}</span>
+        <span>{col?.label}</span>
         // </div>
       );
     },
@@ -109,9 +109,9 @@ const renderForm: {
   ElInput: {
     render: (data, col) => {
       return (
-          <div>
-            <el-input />
-          </div>
+        <div>
+          <el-input />
+        </div>
       );
     },
     append: (data, col) => {
@@ -123,9 +123,7 @@ const renderForm: {
   },
   TextArea: {
     render: (data, col) => {
-      return (
-          <el-input type="textarea" />
-      );
+      return <el-input type="textarea" />;
     },
     append: (data, col) => {
       return <div></div>;
@@ -225,9 +223,9 @@ const renderForm: {
   ElImage: {
     render: (data, col) => {
       return (
-          <el-image
-          style={{width:'100%',height:'100%'}}
-        />
+        <div>
+          <el-image />
+        </div>
       );
     },
   },
@@ -236,19 +234,17 @@ const renderForm: {
       const IconComponent = ElementPlusIconsVue[col?.props.icon as keyof typeof ElementPlusIconsVue];
       console.log(IconComponent);
       return (
-       <div>
+        <div>
           <el-icon>
             <IconComponent />
           </el-icon>
-       </div>
+        </div>
       );
     },
   },
   ElButton: {
     render: (data, col, index, formEl) => {
-      return (
-          <el-button>{col?.label}</el-button>
-      );
+      return <el-button>{col?.label}</el-button>;
     },
   },
   ElTable: {
@@ -286,9 +282,9 @@ const renderForm: {
   },
   ElCard: {
     render(data, col) {
-      return (
-          <el-card style={{ width: "100%", height: "100%" }}></el-card>
-      );
+      return <div>
+        <el-card style={{ width: "100%", height: "100%" }}></el-card>
+      </div>;
     },
   },
   ElTags: {
@@ -460,136 +456,125 @@ const CanvasComp: (col: Col, isSlot?: Boolean, isRender?: Boolean) => VNode = (
       {
         default: () => [
           Array.isArray(Component.children)
-            ? Component.children.map((item: VNode) => {
+            ? Component.children.map((node: VNode | string | (() => VNode)) => {
+                if (typeof node === "string") return node;
+                const ChildNode = node as () => VNode;
                 return (
-                  <item {...omit(col?.props, ["style", "class"])}>
+                  <ChildNode {...omit(col?.props, ["style", "class"])}>
                     {isSlot
                       ? col?.children && col?.componentName != "ElTags"
                         ? col?.children.length
                           ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
                           : ""
                         : null
-                      : item.children?.default?.() || col?.label}
-                  </item>
+                      : (node as VNode).children?.default?.()}
+                  </ChildNode>
                 );
               })
-            : Component.children,
+            : Component.children?.default?.() || Component.children,
           isSlot
             ? null
             : col?.children && col?.componentName != "ElTags"
               ? col?.children.length
                 ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
-                : "拖拽组件到此处"
+                : ""
               : null,
         ],
       },
     );
   }
-  return h('div', {
-    style: { ...col?.props.style, boxSizing: "border-box", position: "relative" },
+  return h(
+    Component,
+    {
+      ...col?.props,
+      style: { ...col?.props.style, boxSizing: "border-box", position: "relative" },
+      "data-tag": col?.componentName,
+      "data-id": col?.id,
+      draggable: true,
+      class: [
+        "canvascomp",
+        {
+          hover_child: currAEl.value.hoverId == col?.id,
+          box: col?.children && !col?.children?.length,
+          dragover: currAEl.value.overId == col?.id,
+          nonEmpty: !!col?.children?.length,
+          active: currAEl.value.clickId == col?.id,
+        },
+        ...(typeof col?.props.class == "string" ? [col?.props.class] : []),
+      ],
+      onClick: (e) => {
+        e.stopPropagation();
+        currAEl.value.clickId = col?.id as string;
+        emit("current", col);
+      },
+      onMouseover: (e: MouseEvent) => {
+        e.stopPropagation();
+        currAEl.value.hoverId = col?.id as string;
+      },
+      onMouseleave: (e: MouseEvent) => {
+        e.stopPropagation();
+        currAEl.value.hoverId = null;
+      },
+      onDragstart(el) {
+        emit("start", el);
+      },
     },
     {
       default: () => [
-        h(
-          Component,
-          {
-            ...col?.props,
-            style: { ...col?.props.style, boxSizing: "border-box", position: "relative" },
-            "data-tag": col?.componentName,
-            "data-id": col?.id,
-            draggable: true,
-            class: [
-              "canvascomp",
-              {
-                hover_child: currAEl.value.hoverId == col?.id,
-                box: col?.children && !col?.children?.length,
-                dragover: currAEl.value.overId == col?.id,
-                nonEmpty: !!col?.children?.length,
-                active: currAEl.value.clickId == col?.id,
-                
-              },
-              ...(typeof col?.props.class == "string" ? [col?.props.class] : []),
-            ],
-            onClick: (e) => {
-              e.stopPropagation();
-              currAEl.value.clickId = col?.id as string;
-              emit("current", col);
+        h("div", {
+          "data-id": col?.id,
+          class: [
+            "overlay",
+            {
+              insertBottom: currAEl.value.insertBottomId == col?.id,
+              insertTop: currAEl.value.insertTopId == col?.id,
             },
-            onMouseover: (e: MouseEvent) => {
-              e.stopPropagation();
-              currAEl.value.hoverId = col?.id as string;
-            },
-            onMouseleave: (e: MouseEvent) => {
-              e.stopPropagation();
-              currAEl.value.hoverId = null;
-            },
-            onDragstart(el) {
-              emit("start", el);
-            },
+          ],
+          style: { zIndex: col?.componentName == "ElTags" ? 0 : 1 },
+          onDragenter(el) {
+            emit("enter", el);
+            el.preventDefault();
           },
-          {
-            default: () => [
-              h('div', {
-                "data-id": col?.id,
-                class: [
-                  "overlay",
-                  {
-                    insertBottom: currAEl.value.insertBottomId == col?.id,
-                    insertTop: currAEl.value.insertTopId == col?.id,
-                  },
-                ],
-                style: { zIndex: col?.componentName == "ElTags" ? 0 : 1 },
-                onDragenter(el) {
-                  emit("enter", el);
-                  el.preventDefault();
-                },
-                onDragleave(el) {
-                  el.preventDefault();
-                  emit("leave", el);
-                },
-                onDragover(el) {
-                  emit("over", el);
-                  el.preventDefault();
-                },
-                onDrop(el) {
-                  emit("end", el);
-                },
-
-              }),
-              Array.isArray(Component.children)
-                ? Component.children.map((node: VNode | string | (() => VNode)) => {
-                  if(typeof node === 'string') return node;
-                  const ChildNode = node as ()=>VNode;
-                  return (
-                    <ChildNode {...omit(col?.props, ["style", "class"])}>
-                      {isSlot
-                        ? col?.children && col?.componentName != "ElTags"
-                          ? col?.children.length
-                            ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
-                            : "拖拽组件到此处"
-                          : null
-                        : (node as VNode).children?.default?.()
-                        }
-                    </ChildNode>
-                  );
-                })
-                : Component.children?.default?.()||Component.children,
-              isSlot
-                ? null
-                : col?.children && col?.componentName != "ElTags"
-                  ? col?.children.length
-                    ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
-                    : "拖拽组件到此处"
-                  : null,
-              currAEl.value.clickId == col?.id ? <HeaderBar name={col?.componentName} /> : null,
-              currAEl.value.clickId == col?.id ? <FooterBar /> : null,
-            ],
+          onDragleave(el) {
+            el.preventDefault();
+            emit("leave", el);
           },
-        ),
-        
-
+          onDragover(el) {
+            emit("over", el);
+            el.preventDefault();
+          },
+          onDrop(el) {
+            emit("end", el);
+          },
+        }),
+        Array.isArray(Component.children)
+          ? Component.children.map((node: VNode | string | (() => VNode)) => {
+              if (typeof node === "string") return node;
+              const ChildNode = node as () => VNode;
+              return (
+                <ChildNode {...omit(col?.props, ["style", "class"])}>
+                  {isSlot
+                    ? col?.children && col?.componentName != "ElTags"
+                      ? col?.children.length
+                        ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+                        : "拖拽组件到此处"
+                      : null
+                    : (node as VNode).children?.default?.()}
+                </ChildNode>
+              );
+            })
+          : Component.children?.default?.() || Component.children,
+        isSlot
+          ? null
+          : col?.children && col?.componentName != "ElTags"
+            ? col?.children.length
+              ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+              : "拖拽组件到此处"
+            : null,
+        currAEl.value.clickId == col?.id ? <HeaderBar name={col?.componentName} /> : null,
+        currAEl.value.clickId == col?.id ? <FooterBar /> : null,
       ],
-    }
+    },
   );
 };
 const emit = defineEmits(["delete", "copy", "start", "enter", "leave", "over", "end", "current"]);
@@ -654,7 +639,7 @@ const schema = computed<Col>(() => {
 }
 
 .overlay {
-position: absolute;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -828,7 +813,7 @@ position: absolute;
   align-items: start;
 }
 
-.demo-tabs>.el-tabs__content {
+.demo-tabs > .el-tabs__content {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;

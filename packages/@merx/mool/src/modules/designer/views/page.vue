@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref, nextTick, watch, onUnmounted } from "vue";
 import { Page, Col } from "@/mool/types";
 import TopBar from "../components/TopBar.vue";
 import SideBar from "../components/SideBar.vue";
@@ -7,6 +7,7 @@ import CanvasFrame from "../components/CanvasFrame.vue"; // 导入 CanvasFrame �
 import ConfigPlane from "../components/settings.vue";
 import useLoading from "@/mool/hooks/loading";
 import { useStore } from "@/mool/store";
+import { useMagicKeys, useEventListener } from "@vueuse/core";
 const { loading, setLoading } = useLoading(true);
 const { canvas } = useStore();
 const canvasFrameRef = ref<InstanceType<typeof CanvasFrame> | null>(null);
@@ -41,7 +42,6 @@ const hasActive = ref(false);
 const openBar = (arr: [boolean, string]) => {
   hasActive.value = arr[0];
   containerStyle.value.margin = arr[1];
-  
 };
 const changeSize = (option: { size: string; isPC: boolean }) => {
   canvas.setCanvasType(option.isPC ? "pc" : "mobile");
@@ -69,13 +69,55 @@ const querySchema = (id: string = "55ty4epk") => {
     });
 };
 
-onMounted(querySchema);
+// 添加这些新的 ref
+const history = ref<Page[]>([]);
+const historyIndex = ref(-1);
+
+// 添加一个新的函数来保存历史记录
+const saveToHistory = (config: Page) => {
+  if (historyIndex.value < history.value.length - 1) {
+    history.value = history.value.slice(0, historyIndex.value + 1);
+  }
+  history.value.push(JSON.parse(JSON.stringify(config)));
+  historyIndex.value = history.value.length - 1;
+};
+
+// 添加一个撤销函数
+const undo = () => {
+  if (historyIndex.value > 0) {
+    historyIndex.value--;
+    pageConfig.value = JSON.parse(JSON.stringify(history.value[historyIndex.value]));
+  }
+};
+
+// 监听 pageConfig 的变化
+watch(
+  () => pageConfig.value,
+  (newValue) => {
+    saveToHistory(newValue);
+  },
+  { deep: true },
+);
+const handleKeyDown = (e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+      console.log("Undo triggered");
+      undo();
+    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      console.log("Save triggered");
+      // 在这里添加保存逻辑
+    }
+  };
+// 修改组件挂载逻辑
+onMounted(() => {
+  
+  querySchema();
+});
+
 </script>
 
 <template>
-  <div class="common-layout">
+  <div class="common-layout" >
     <el-container>
- 
       <el-header style="display: flex; align-items: center; background: #fff">
         <el-page-header style="flex: 1" content="网页设计">
           <template #title>
@@ -90,14 +132,12 @@ onMounted(querySchema);
           </template>
           <template #extra>
             <div style="width: 300px; text-align: right">
-              <el-icon class="text-gray-500 text-2xl mx-2 align-top">
-                <i-ep-Avatar/></el-icon
-              >登录
+              <el-icon class="text-gray-500 text-2xl mx-2 align-top"> <i-ep-Avatar /></el-icon>登录
             </div>
           </template>
         </el-page-header>
       </el-header>
-      
+
       <!-- 顶部栏组件，用于显示和编辑页面配置 -->
       <!-- v-model:pageConfig 用于双向绑定页面配置 -->
       <TopBar v-model:pageConfig="pageConfig" @changeSize="changeSize" />
@@ -122,6 +162,8 @@ onMounted(querySchema);
           :customStyle="containerStyle"
           :loading="loading"
           @active="activeCurrent"
+          @keydown="handleKeyDown"
+          tabindex="-1"
         />
 
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
@@ -144,6 +186,7 @@ onMounted(querySchema);
 
 .common-layout {
   position: relative;
+  outline: none; /* 添加这行以去除 focus 时的轮廓 */
 }
 
 .enter_page {

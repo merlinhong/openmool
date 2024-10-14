@@ -266,7 +266,9 @@
                               "props": {
                                 "style": {
                                   "padding": "5px",
-                                  "backgroundColor": "#fff"
+                                  "backgroundColor": "#fff",
+                                  "display": "flex",
+                                  "flexDirection": "column"
                                 },
                                 "class": ""
                               },
@@ -329,9 +331,9 @@
                                 },
                                 "class": "",
                                 "fit": "scale-down",
-                                "src": "https://picsum.photos/id/12/2500/1667"
+                                "src": "https://picsum.photos/id/16/2500/1667"
                               },
-                              "id": "kdhpfmwe",
+                              "id": "hxy4hbbb",
                               "parentId": "65bh5jpi"
                             },
                             {
@@ -339,7 +341,9 @@
                               "props": {
                                 "style": {
                                   "padding": "5px",
-                                  "backgroundColor": "#fff"
+                                  "backgroundColor": "#fff",
+                                  "display": "flex",
+                                  "flexDirection": "column"
                                 },
                                 "class": ""
                               },
@@ -357,7 +361,7 @@
                                   },
                                   "key": "text",
                                   "componentName": "Text",
-                                  "id": "wxf8bnja"
+                                  "id": "zpcm3nrd"
                                 },
                                 {
                                   "label": "记录最重要的时刻",
@@ -371,13 +375,13 @@
                                   },
                                   "key": "text",
                                   "componentName": "Text",
-                                  "id": "xcjzx4cs"
+                                  "id": "mxcxybja"
                                 }
                               ],
-                              "id": "t46dmwyh"
+                              "id": "rpftpys4"
                             }
                           ],
-                          "id": "h7siktmy",
+                          "id": "3ke3ccb5",
                           "parentId": "najbhh6j"
                         },
                         {
@@ -401,10 +405,10 @@
                                   "height": "100%"
                                 },
                                 "class": "",
-                                "fit": "fill",
-                                "src": "https://picsum.photos/id/26/4209/2769"
+                                "fit": "scale-down",
+                                "src": "https://picsum.photos/id/16/2500/1667"
                               },
-                              "id": "e52nh24w",
+                              "id": "6ypc56hh",
                               "parentId": "65bh5jpi"
                             },
                             {
@@ -412,7 +416,9 @@
                               "props": {
                                 "style": {
                                   "padding": "5px",
-                                  "backgroundColor": "#fff"
+                                  "backgroundColor": "#fff",
+                                  "display": "flex",
+                                  "flexDirection": "column"
                                 },
                                 "class": ""
                               },
@@ -430,7 +436,7 @@
                                   },
                                   "key": "text",
                                   "componentName": "Text",
-                                  "id": "yca6ys2p"
+                                  "id": "p2bhajeb"
                                 },
                                 {
                                   "label": "记录最重要的时刻",
@@ -444,13 +450,13 @@
                                   },
                                   "key": "text",
                                   "componentName": "Text",
-                                  "id": "dtj67jkh"
+                                  "id": "aan8besa"
                                 }
                               ],
-                              "id": "jap3x4dy"
+                              "id": "kbhwhnsb"
                             }
                           ],
-                          "id": "imiezcf2",
+                          "id": "bb36m3x2",
                           "parentId": "najbhh6j"
                         }
                       ],
