@@ -1,6 +1,6 @@
 <template>
   <div class="chat-box">
-    <div class="chat-history" ref="chatHistory">
+    <div ref="chatHistory">
       <el-space>
         <el-form-item label="模型">
           <el-select style="width: 200px" v-model="model" placeholder="请选择模型">
@@ -15,21 +15,20 @@
         </el-form-item>
         <el-form-item label="类别">
           <el-select style="width: 200px" v-model="category" placeholder="请选择生成类别">
-            <el-option label="官网" value="官网"></el-option>
-
+            <el-option label="网站" value="网站"></el-option>
+            <el-option label="功能" value="功能"></el-option>
             <el-option label="表单" value="表单"></el-option>
           </el-select>
         </el-form-item>
       </el-space>
-      <div v-for="(message, index) in messages" :key="index" :class="['message-bubble', message.role]">
+      <div class="chat-history"  v-for="(message, index) in messages" :key="index" :class="['message-bubble', message.role]">
         <div :class="['message-content', message.role]">
           <el-icon v-if="message.role === 'user'" class="text-gray-500 text-2xl mx-2 align-top">
             <i-ep-Avatar />
           </el-icon>
-
           <div
             v-if="message.role === 'system'"
-            class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center"
+            class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center text-[13px]"
           >
             AI
           </div>
@@ -136,12 +135,18 @@ export default defineComponent({
     const model = ref(props.foundationModel);
 
     const messages = ref<Record<string, any>[]>([]);
-    const category = ref("官网");
+    const category = ref("网站");
     const userInput = ref("");
 
     const isTyped = ref(false);
 
     const Schema = ref("");
+
+    const descList = ref<Record<string, string>>({
+      "网站": "你好！当前我可以为您辅助生成网站页面，有什么需求请告诉我",
+      "功能": "你好！当前我可以为您辅助生成js代码，请告诉我你的需求",
+      "表单": "你好！当前我可以为您辅助生成表单页面，你也可以选中一个表单，我可以为您绑定表单数据和规则校验,有什么需求请告诉我", 
+    });
 
     let extra = ""; // 额外的输入描述
 
@@ -149,7 +154,8 @@ export default defineComponent({
       messages.value = [
         {
           role: "system",
-          content: `你好！当前我可以为您辅助生成${category.value}页面，${category.value === "表单" ? "你也可以选中一个表单，我可以为您绑定表单数据和规则校验," : ""}有什么需求请告诉我`,
+          content: descList.value[category.value],
+          typed: false,
         },
       ];
     });

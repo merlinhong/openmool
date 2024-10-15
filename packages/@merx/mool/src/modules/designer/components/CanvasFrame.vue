@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick, onUnmounted,Ref } from "vue";
+import { ref, onMounted, watch, nextTick, onUnmounted, Ref } from "vue";
 import BasicCanvas from "./BasicCanvas.vue";
 import { Page, Col } from "@/mool/types";
 import { useMagicKeys, useEventListener } from "@vueuse/core";
 
 const props = defineProps<{
   pageConfig: Page;
+  currentConf?: Col;
   hasActive?: boolean;
   customStyle?: { width?: string; margin?: string };
   loading: boolean;
 }>();
 const pageConfig = defineModel<Page>("pageConfig");
+const currentConf = defineModel<Col | null>("current");
 const emit = defineEmits<{
   (e: "update:pageConfig", value: Page): void;
   (e: "active", value: Col): void;
@@ -31,6 +33,7 @@ const historyIndex = ref(-1);
 
 // 添加一个新的函数来保存历史记录
 const saveToHistory = (config: Page) => {
+  // 如果当前不在历史记录的末尾，删除后面的记录
   if (historyIndex.value < history.value.length - 1) {
     history.value = history.value.slice(0, historyIndex.value + 1);
   }
@@ -42,12 +45,19 @@ const saveToHistory = (config: Page) => {
 const undo = () => {
   if (historyIndex.value > 0) {
     historyIndex.value--;
-  console.log(11,JSON.parse(JSON.stringify(history.value[historyIndex.value])));
-      
     pageConfig.value = JSON.parse(JSON.stringify(history.value[historyIndex.value]));
   }
 };
 
+// 添加一个重做函数
+const redo = () => {
+  if (historyIndex.value < history.value.length - 1) {
+    historyIndex.value++;
+    pageConfig.value = JSON.parse(JSON.stringify(history.value[historyIndex.value]));
+  }
+};
+// 粘贴板
+const pasteIframe = ref<Col | null>(null);
 onMounted(() => {
   if (iframeRef.value) {
     const iframeDoc = iframeRef.value.contentDocument;
@@ -112,20 +122,36 @@ onMounted(() => {
       });
     }
   }
-  const { ctrl_z, ctrl_s, meta_z, meta_s } = useMagicKeys({
+  const { ctrl_z, ctrl_y, ctrl_c, ctrl_v, meta_z, meta_y, meta_c, meta_v } = useMagicKeys({
     target: iframeRef.value?.contentDocument as EventTarget,
   });
-  watch([ctrl_z, meta_z, ctrl_s, meta_s], ([ctrlZ, metaZ, ctrlS, metaS]) => {
-    if (ctrlZ || metaZ) {
-      console.log("Undo triggered (useMagicKeys)");
-      undo();
-    } else if (ctrlS || metaS) {
-      console.log("Save triggered (useMagicKeys)");
-      // 在这里添加保存逻辑
-    }
-  });
+  watch(
+    [ctrl_z, meta_z, ctrl_y, meta_y, ctrl_c, meta_c, ctrl_v, meta_v],
+    ([ctrlZ, metaZ, ctrlY, metaY, ctrlC, metaC, ctrlV, metaV]) => {
+      if (ctrlZ || metaZ) {
+        // 撤销
+        undo();
+      } else if (ctrlY || metaY) {
+        // 重做
+        redo();
+      } else if (ctrlC || metaC) {
+        // 复制
+        copy();
+      } else if (ctrlV || metaV) {
+        // 粘贴
+        paste();
+      }
+    },
+  );
 });
-
+const copy = () => {
+  pasteIframe.value = JSON.parse(JSON.stringify(currentConf.value));
+};
+const paste = () => {
+  if (pasteIframe.value) {
+    currentConf.value?.children?.push({...pasteIframe.value,id:Date.now().toString().substring(8)});
+  }
+};
 watch(
   () => props.pageConfig,
   (newValue) => {
@@ -133,9 +159,10 @@ watch(
       if (canvasRef.value) {
         canvasRef.value.init(props.pageConfig);
       }
-      saveToHistory(newValue);
-      // 在 pageConfig 更新后调用 adjustStyles
-      //   adjustStyles();
+      // 只有当新值与当前历史记录的最后一项不同时，才保存到历史记录
+      if (JSON.stringify(newValue) !== JSON.stringify(history.value[historyIndex.value])) {
+        saveToHistory(newValue);
+      }
     });
   },
   { deep: true },

@@ -49,6 +49,7 @@
       @mouseleave="currAEl.hoverId = null"
     >
       <BasicPage
+        :popup="PageSchema?.popup"
         v-for="(box, ind) in PageSchema?.children"
         :key="ind"
         :schema="box"
@@ -123,6 +124,8 @@ type CurrAEl = {
 
 const canvasRef = ref<HTMLElement>();
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
+console.log(PageSchema.value);
+
 const currAEl = ref<CurrAEl>({
   clickId: null,
   overId: null,

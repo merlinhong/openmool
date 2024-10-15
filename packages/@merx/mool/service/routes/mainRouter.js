@@ -128,6 +128,7 @@ router.post("/pages", (req, res) => {
             backgroundColor: "#fff",
           },
         },
+        popup: [],
         children: [],
         id,
         css: "",

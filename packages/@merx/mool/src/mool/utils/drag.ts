@@ -140,7 +140,6 @@ export class DragUtil {
         if (!config.props.style) {
           config.props.style = {};
         }
-        console.log(target.classList);
         
         if (!target.classList.contains(canvasDrag.endEle.replace(".", ""))) {
           const comp = cloneDeep({ ...config, id });
@@ -230,7 +229,6 @@ export class DragUtil {
       const isBottom = this.bottom >= clientY && this.bottom - 10 < clientY;
       const isTop = this.top < clientY && this.top + 10 > clientY;
       const isInCenter = clientY > this.top + 10 && clientY < this.bottom - 10;
-      console.log(isTop);
 
       if (
         isBottom !== this.lastIsInElement ||
@@ -254,7 +252,6 @@ export class DragUtil {
         } else {
           if (isTop) {
             newState.insertTopId = this.enterId;
-            console.log(2);
           }
           if (isBottom) {
             newState.insertBottomId = this.enterId;

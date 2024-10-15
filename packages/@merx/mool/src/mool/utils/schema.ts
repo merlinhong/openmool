@@ -56,6 +56,7 @@ export const seniorComponentList = [
   { text: "图标", dataType: "ElIcon" },
   
   { text: "表格", dataType: "ElTable" },
+  {text:'弹窗',dataType:'ElDialog'},
 
   { text: "多标签页", dataType: "ElTags" },
 
@@ -158,6 +159,7 @@ export const JsonSchema: {
       src: `https://42f2671d685f51e10fc6-b9fcecea3e50b3b59bdc28dead054ebc.ssl.cf5.rackcdn.com/illustrations/undraw_messaging_7ho8_(2)_5g7e.svg`,
     },
   },
+  
   ElIcon: {
     componentName: "ElIcon",
     props: {

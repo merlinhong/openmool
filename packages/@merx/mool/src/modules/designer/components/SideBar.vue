@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType } from "vue";
+import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType, watchEffect } from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 import PagePanel from "./PagePanel.vue";
@@ -160,7 +160,7 @@ const props = defineProps({
   },
 });
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
-
+const OpenPanel = defineModel<Record<'js'|'ref',boolean>>('openPanel')
 const activeName = ref("0");
 const addType = ref("");
 const labelTypeList: Record<string, string> = {
@@ -186,7 +186,14 @@ const closeAllPanels = () => {
   showVar.value = false;
   setVarRef.value = false;
 };
-
+watch(()=>OpenPanel.value,()=>{
+  if(OpenPanel.value?.js){
+    openPanel('js')
+  }
+  if(OpenPanel.value?.ref){
+    openPanel('ref')
+  }
+},{deep:true})
 const openPagePanel = () => {
   showPagePanel.value = true;
 };
@@ -227,11 +234,17 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
       }
       break;
     case "js":
-      showJS.value = true
+      showJS.value = true;
+        nextTick(() => {
+          initEditorWithCommonOptions({
+            id: "JS_editor_container",
+            code: generateJsCode(),
+            lang: "typescript",
+          });
+        });
       break;
     case "ref":
       showRef.value = true;
-      if (showRef.value) {
         nextTick(() => {
           initEditorWithCommonOptions({
             id: "Ref_editor_container",
@@ -239,7 +252,6 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
             lang: "typescript",
           });
         });
-      }
       break;
     case "var":
       showVar.value = true;
@@ -287,6 +299,14 @@ const generateRefCode = () => {
     .join("\n\n");
 };
 
+const generateJsCode = () => {
+  return Object.entries(PageSchema.value.methods)
+    .map(([key, item]) => {
+      return `
+      ${item.value}`;
+    })
+    .join("\n\n");
+};
 const initEditorWithCommonOptions = (options: {
   id?: string;
   code: string;

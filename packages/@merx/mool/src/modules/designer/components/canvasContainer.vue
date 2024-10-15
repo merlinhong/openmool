@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { h, type PropType, computed, resolveComponent, shallowRef, VNode } from "vue";
+import { h, type PropType, computed, resolveComponent, shallowRef, VNode, onMounted } from "vue";
 import type { ComponentType, Render, Col, RowScope } from "@/mool/types/BasicForm";
 import { omit } from "@/mool/utils";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
@@ -29,6 +29,10 @@ const props = defineProps({
     type: Boolean,
     default: () => false,
   },
+  popup: {
+    type: Array as PropType<Col[]>,
+    default: () => [],
+  },
 });
 
 type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
@@ -41,6 +45,11 @@ const renderForm: {
   div: {
     render: (data, col, child) => {
       return <div></div>;
+    },
+  },
+  ElDialog: {
+    render: (data, col, child) => {
+      return <el-dialog ></el-dialog>;
     },
   },
   ElMenu: {
@@ -590,10 +599,17 @@ const currAEl = defineModel<{
 const schema = computed<Col>(() => {
   return props.schema;
 });
+console.log(props.popup);
+
 </script>
 
 <template>
-  <component :is="CanvasComp(schema, schema.componentName == 'ElCard')"> </component>
+  <component :is="CanvasComp(schema, schema.componentName == 'ElCard')"> 
+  </component>
+  <template v-for="item in props.popup">
+    <component :is="CanvasComp(item, false,false)"> 
+    </component>
+  </template>
 </template>
 
 <style lang="less" scoped>

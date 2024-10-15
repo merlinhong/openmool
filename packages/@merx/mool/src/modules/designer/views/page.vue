@@ -23,6 +23,7 @@ const pageConfig = ref<Page>({
       backgroundColor: "#fff",
     },
   },
+  popup: [],
   children: [],
 
   id: "55ty4epk",
@@ -99,24 +100,27 @@ watch(
   { deep: true },
 );
 const handleKeyDown = (e: KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-      console.log("Undo triggered");
-      undo();
-    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-      console.log("Save triggered");
-      // 在这里添加保存逻辑
-    }
-  };
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+    console.log("Undo triggered");
+    undo();
+  } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+    console.log("Save triggered");
+    // 在这里添加保存逻辑
+  }
+};
 // 修改组件挂载逻辑
 onMounted(() => {
-  
   querySchema();
 });
 
+const openPanel = ref<Record<"js" | "ref", boolean>>({
+  js: false,
+  ref: false,
+});
 </script>
 
 <template>
-  <div class="common-layout" >
+  <div class="common-layout">
     <el-container>
       <el-header style="display: flex; align-items: center; background: #fff">
         <el-page-header style="flex: 1" content="网页设计">
@@ -150,6 +154,7 @@ onMounted(() => {
           @change="openBar"
           :current-conf="currentConf"
           @editPage="querySchema"
+          v-model:openPanel="openPanel"
         />
         <!-- 画布组件，用于显示和编辑页面内容 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
@@ -158,6 +163,7 @@ onMounted(() => {
         <CanvasFrame
           ref="canvasFrameRef"
           v-model:pageConfig="pageConfig"
+          v-model:current="currentConf"
           :hasActive="hasActive"
           :customStyle="containerStyle"
           :loading="loading"
@@ -170,7 +176,13 @@ onMounted(() => {
         <!-- v-model:current 用于双向绑定当前配置项 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <el-aside class="page-design-config" style="background-color: #fff; width: 260px">
-          <config-plane :is-show-config="true" v-model:current="currentConf" v-model:pageConfig="pageConfig" />
+          <config-plane
+            :is-show-config="true"
+            v-model:current="currentConf"
+            v-model:pageConfig="pageConfig"
+            @openJs="openPanel.js = true"
+            @openRef="openPanel.ref = true"
+          />
         </el-aside>
       </el-container>
     </el-container>

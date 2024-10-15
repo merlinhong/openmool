@@ -1,0 +1,57 @@
+{
+  "pageInfo": {
+    "name": "新页面",
+    "schema": {
+      "ref": {},
+      "lifeCycles": {},
+      "state": {},
+      "methods": {},
+      "componentName": "新页面",
+      "props": {
+        "style": {
+          "backgroundColor": "#fff"
+        }
+      },
+      "popup": [
+        {
+          "componentName": "ElDialog",
+          "props": {
+            "style": {},
+            "title": "弹窗1",
+            "width": "50%",
+            "value": {
+              "type": "JSExpression",
+              "value": "dialogVisible",
+              "model": {
+                "prop": "modelValue"
+              }
+            }
+          },
+          "children": []
+        }
+      ],
+      "children": [
+        {
+          "label": "按钮文本",
+          "key": "",
+          "componentName": "ElButton",
+          "props": {
+            "style": {
+              "display": "flex",
+              "flexDirection": "row",
+              "width": "fit-content"
+            },
+            "class": "",
+            "type": "primary",
+            "text": false,
+            "color": ""
+          },
+          "id": "ksi3kh4m"
+        }
+      ],
+      "id": "6bjpk55f",
+      "css": ""
+    }
+  },
+  "blocksData": []
+}
