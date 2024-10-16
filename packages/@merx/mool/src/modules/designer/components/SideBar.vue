@@ -2,12 +2,12 @@
   <div class="sidebar-container">
     <nav class="sidebar-nav">
       <div class="top-buttons">
-        <button class="add-button" @click="openPanel('drawer');">+</button>
+        <button class="add-button" @click="openPanel('drawer')">+</button>
         <button class="nav-button" @click="openPanel('js')">JS</button>
         <button class="nav-button" @click="openPanel('ref')">ref</button>
-        <button class="var-button" @click="openPanel('var');">var</button>
+        <button class="var-button" @click="openPanel('var')">var</button>
         <!-- 其他现有按钮 -->
-        <button class="page-button" @click="openPanel('page');">Page</button>
+        <button class="page-button" @click="openPanel('page')">Page</button>
       </div>
 
       <div class="bottom-buttons">
@@ -29,7 +29,7 @@
     </nav>
 
     <aside v-if="drawer" class="component-drawer">
-      <el-tabs v-model="activeName" type="card" >
+      <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="组件" name="0">
           <el-scrollbar height="75vh">
             <div class="component-list">
@@ -144,6 +144,7 @@ import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType, watchEffect } fr
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 import PagePanel from "./PagePanel.vue";
+import { reactive } from "vue";
 
 const props = defineProps({
   pageConfig: {
@@ -160,7 +161,7 @@ const props = defineProps({
   },
 });
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
-const OpenPanel = defineModel<Record<'js'|'ref',boolean>>('openPanel')
+const OpenPanel = defineModel<Record<"js" | "ref", boolean>>("openPanel");
 const activeName = ref("0");
 const addType = ref("");
 const labelTypeList: Record<string, string> = {
@@ -186,14 +187,18 @@ const closeAllPanels = () => {
   showVar.value = false;
   setVarRef.value = false;
 };
-watch(()=>OpenPanel.value,()=>{
-  if(OpenPanel.value?.js){
-    openPanel('js')
-  }
-  if(OpenPanel.value?.ref){
-    openPanel('ref')
-  }
-},{deep:true})
+watch(
+  () => OpenPanel.value,
+  () => {
+    if (OpenPanel.value?.js) {
+      openPanel("js");
+    }
+    if (OpenPanel.value?.ref) {
+      openPanel("ref");
+    }
+  },
+  { deep: true },
+);
 const openPagePanel = () => {
   showPagePanel.value = true;
 };
@@ -201,7 +206,7 @@ const selectPage = (row: { id: string; name: string; schema: any }) => {
   showPagePanel.value = false;
   emit("editPage", row.id);
 };
-const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" | 'page') => {
+const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" | "page") => {
   // 检查当前点击的面板是否已经打开
   const isCurrentPanelOpen =
     (panel === "drawer" && drawer.value) ||
@@ -235,23 +240,66 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
       break;
     case "js":
       showJS.value = true;
-        nextTick(() => {
-          initEditorWithCommonOptions({
-            id: "JS_editor_container",
-            code: generateJsCode(),
-            lang: "typescript",
-          });
+      executeCode(generateJsCode());
+
+      function executeCode(code: string) {
+        console.log(code);
+
+        try {
+          // 清空上下文对象
+          Object.keys(context).forEach((key) => delete context[key]);
+
+          // 识别变量声明
+          const varDeclarations = code.match(/(?:var|let|const)\s+(\w+)/g) || [];
+          const functionDeclarations = code.match(/function\s+(\w+)/g) || [];
+
+          // 提取变量名
+          const variables = [
+            ...varDeclarations.map((decl) => decl.split(/\s+/)[1]),
+            ...functionDeclarations.map((decl) => decl.split(/\s+/)[1]),
+          ];
+
+          // 创建一个新的函数来执行代码
+          const executeFunction = new Function(
+            ...variables,
+            `
+      ${code}
+      return { ${variables.join(", ")} };
+    `,
+          );
+
+          // 执行代码
+          const result = executeFunction();
+          console.log(result);
+
+          Object.assign(context, result);
+
+          // 更新定义的变量列表
+          definedVariables.value = Object.keys(context);
+
+          executionResult.value = "代码执行成功";
+        } catch (error) {
+          console.error("代码执行失败:", error);
+          executionResult.value = "执行失败: " + error.message;
+        }
+      }
+      nextTick(() => {
+        initEditorWithCommonOptions({
+          id: "JS_editor_container",
+          code: generateJsCode(),
+          lang: "typescript",
         });
+      });
       break;
     case "ref":
       showRef.value = true;
-        nextTick(() => {
-          initEditorWithCommonOptions({
-            id: "Ref_editor_container",
-            code: generateRefCode(),
-            lang: "typescript",
-          });
+      nextTick(() => {
+        initEditorWithCommonOptions({
+          id: "Ref_editor_container",
+          code: generateRefCode(),
+          lang: "typescript",
         });
+      });
       break;
     case "var":
       showVar.value = true;
@@ -271,16 +319,17 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
         });
       }
       break;
-    case 'page':
+    case "page":
       openPagePanel();
       break;
   }
-
 };
 
 const generateRefCode = () => {
   return Object.entries(PageSchema.value.ref)
     .map(([key, item]) => {
+      console.log(key, item);
+
       if (!item.type) {
         return `//页面表单绑定数据\nconst ${key} = vue.ref(${JSON.stringify(item, null, 2)})`;
       } else {
@@ -302,11 +351,15 @@ const generateRefCode = () => {
 const generateJsCode = () => {
   return Object.entries(PageSchema.value.methods)
     .map(([key, item]) => {
-      return `
-      ${item.value}`;
+      return `${item.value}`;
     })
     .join("\n\n");
 };
+const savedCode = ref("");
+const executionResult = ref<string | null>(null);
+const context = reactive<Record<string, any>>({});
+const definedVariables = ref<string[]>([]);
+
 const initEditorWithCommonOptions = (options: {
   id?: string;
   code: string;
@@ -324,12 +377,9 @@ const initEditorWithCommonOptions = (options: {
   });
 };
 
-
 const setVar = () => {
   openPanel("setVar");
 };
-
-
 
 const pageSchema = ref<string>("");
 
@@ -339,15 +389,13 @@ const addList = ref<string[]>([]);
 
 const typeName = ref("");
 
-
 watch(
   () => drawer.value,
   (n, o) => {
-    
     if (n) {
-      emit("change", [n, '20px 40px']);
+      emit("change", [n, "20px 40px"]);
     } else {
-      emit("change", [n, '20px 160px']);
+      emit("change", [n, "20px 160px"]);
     }
   },
 
@@ -361,10 +409,9 @@ const openRobot = () => {
 };
 
 // 获取AI返回的结果进行schema赋值
-const updateConf = (schema?: Col,isneed=true) => {
-  if(!isneed){
+const updateConf = (schema?: Col, isneed = true) => {
+  if (!isneed) {
     return props.pageConfig.children.push(schema as Col);
-    
   }
   let ruleProps: string[] = [];
   if (props.currentConf?.componentName == "div") {
@@ -438,17 +485,17 @@ const saveEditor = () => {
     let config = pageSchema.value;
 
     // 新的函数解析逻辑
-    const parseFunctions = (code:string) => {
+    const parseFunctions = (code: string) => {
       const results = [];
       let bracketCount = 0;
       let currentFunction = null;
-      let buffer = '';
+      let buffer = "";
 
       for (let i = 0; i < code.length; i++) {
         const char = code[i];
         buffer += char;
 
-        if (char === '{') {
+        if (char === "{") {
           bracketCount++;
           if (bracketCount === 1) {
             // 函数开始
@@ -457,19 +504,19 @@ const saveEditor = () => {
               currentFunction = {
                 functionName: match[1].trim(),
                 parameters: match[2].trim(),
-                body: ''
+                body: "",
               };
-              buffer = '';
+              buffer = "";
             }
           }
-        } else if (char === '}') {
+        } else if (char === "}") {
           bracketCount--;
           if (bracketCount === 0 && currentFunction) {
             // 函数结束
             currentFunction.body = buffer.slice(0, -1).trim(); // 移除最后的 '}'
             results.push(currentFunction);
             currentFunction = null;
-            buffer = '';
+            buffer = "";
           }
         }
       }
@@ -478,7 +525,7 @@ const saveEditor = () => {
     };
 
     const functions = parseFunctions(config);
-    
+
     // 清空现有的方法
     PageSchema.value.methods = {};
 
@@ -486,7 +533,7 @@ const saveEditor = () => {
     functions.forEach((func) => {
       PageSchema.value.methods[func.functionName] = {
         type: "JSFunction",
-        value: `function ${func.functionName}(${func.parameters}){\n${func.body}\n}`
+        value: `function ${func.functionName}(${func.parameters}){\n${func.body}\n}`,
       };
     });
   }
@@ -573,7 +620,7 @@ const saveEditor = () => {
 
   closeAllPanels();
 };
-const emit = defineEmits(["change", 'editPage']);
+const emit = defineEmits(["change", "editPage"]);
 </script>
 
 <style lang="less" scoped>
@@ -705,4 +752,3 @@ const emit = defineEmits(["change", 'editPage']);
   right: 320px;
 }
 </style>
-
