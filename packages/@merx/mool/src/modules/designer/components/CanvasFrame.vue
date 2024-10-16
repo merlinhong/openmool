@@ -175,7 +175,6 @@ const handleActive = (val: Col) => {
 const updatePageConfig = (newConfig: Page) => {
   emit("update:pageConfig", newConfig);
 };
-console.log(props.hasActive);
 </script>
 
 <template>

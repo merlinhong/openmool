@@ -173,10 +173,7 @@ watch(
   () => props.hasActive,
   (n, o) => {
     if (n) {
-      console.log('n',n);
-      
       const [remove] = dragCompToCanvas(PageSchema, (conf) => {
-        console.log(PageSchema.value);
         getCurrent(conf);
       },props.doc as Document);
       removeDrag = remove;
@@ -186,11 +183,7 @@ watch(
   },
 );
 onMounted(() => {
-  console.log(props.hasActive);
-  
   if (props.hasActive) {
-    console.log(333);
-    
     const [remove] = dragCompToCanvas(PageSchema, (conf) => {
       getCurrent(conf);
     });

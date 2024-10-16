@@ -437,65 +437,56 @@ const saveEditor = () => {
   if (showJS.value) {
     let config = pageSchema.value;
 
-    const regex = /^[;\s]*function\s+(\w+)\s*\(([^)]*)\)\s*{([\s\S]*?)}[;\s]*/;
+    // 新的函数解析逻辑
+    const parseFunctions = (code:string) => {
+      const results = [];
+      let bracketCount = 0;
+      let currentFunction = null;
+      let buffer = '';
 
-    let matches;
+      for (let i = 0; i < code.length; i++) {
+        const char = code[i];
+        buffer += char;
 
-    function isBracePairBalanced(codeString: string, tempArr: any[]) {
-      const stack = [];
-
-      for (let i = 0; i < codeString.length; i++) {
-        const char = codeString[i];
-
-        if (char === "{") {
-          stack.push(char);
-        } else if (char == "}") {
-          // if(stack.length===0||stack.pop()!=='{'){
-
-          // return false;// 错误：未匹配到右大括号或匹配不正确
-
-          // }
-
-          stack.pop();
-
-          if (stack.length == 0) {
-            // 当前函数匹配结束
-
-            matches = regex.exec(codeString.substring(0, i + 1));
-
-            if (matches) {
-              matches[3] += "}" + codeString.substring(0, i).replace(matches[0], "");
-
-              tempArr.push({
-                functionName: matches[1].trim(),
-
-                parameters: matches[2].trim(),
-
-                body: matches[3].trim(),
-              });
-
-              // 继续匹配后面的函数
-
-              isBracePairBalanced(codeString.substring(i + 1), tempArr);
-
-              break; // 这里必须中止当前循环
+        if (char === '{') {
+          bracketCount++;
+          if (bracketCount === 1) {
+            // 函数开始
+            const match = buffer.match(/function\s+(\w+)\s*\(([^)]*)\)\s*{/);
+            if (match) {
+              currentFunction = {
+                functionName: match[1].trim(),
+                parameters: match[2].trim(),
+                body: ''
+              };
+              buffer = '';
             }
+          }
+        } else if (char === '}') {
+          bracketCount--;
+          if (bracketCount === 0 && currentFunction) {
+            // 函数结束
+            currentFunction.body = buffer.slice(0, -1).trim(); // 移除最后的 '}'
+            results.push(currentFunction);
+            currentFunction = null;
+            buffer = '';
           }
         }
       }
-    }
 
-    const results: any[] = [];
+      return results;
+    };
 
-    isBracePairBalanced(config, results);
+    const functions = parseFunctions(config);
+    
+    // 清空现有的方法
+    PageSchema.value.methods = {};
 
-    // 遍匹配结果设置到schema的方法中
-
-    results.forEach((res) => {
-      PageSchema.value.methods[res.functionName] = {
+    // 添加解析出的函数
+    functions.forEach((func) => {
+      PageSchema.value.methods[func.functionName] = {
         type: "JSFunction",
-
-        value: `function ${res.functionName}(${res.parameters}){\n${res.body}\n};`,
+        value: `function ${func.functionName}(${func.parameters}){\n${func.body}\n}`
       };
     });
   }
@@ -714,3 +705,4 @@ const emit = defineEmits(["change", 'editPage']);
   right: 320px;
 }
 </style>
+
