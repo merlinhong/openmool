@@ -3,11 +3,16 @@ import { h, type PropType, computed, resolveComponent, shallowRef, VNode, onMoun
 import type { ComponentType, Render, Col, RowScope } from "@/mool/types/BasicForm";
 import { omit } from "@/mool/utils";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import * as vue from "vue";
 defineOptions({
   inheritAttrs: false,
 });
 
 const props = defineProps({
+  ctx: {
+    type: Object as PropType<Function>,
+    default: () => {},
+  },
   // 页面区块的配置json schema
   schema: {
     type: Object as PropType<Col>,
@@ -34,6 +39,7 @@ const props = defineProps({
     default: () => [],
   },
 });
+const ctx = props.ctx?.(vue);
 
 type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
 
@@ -49,14 +55,14 @@ const renderForm: {
   },
   ElDialog: {
     render: (data, col, child) => {
-      return <el-dialog ></el-dialog>;
+      return <el-dialog v-model={ctx[col?.props?.value?.value].value}></el-dialog>;
     },
   },
   ElMenu: {
     render: (data, col, child) => {
       return (
         <div>
-          <el-menu style={{ ...col?.props.style }}>
+          <el-menu>
             {col?.props.option?.map((item) => {
               if (item.subMenu) {
                 return (
@@ -253,7 +259,19 @@ const renderForm: {
   },
   ElButton: {
     render: (data, col, index, formEl) => {
-      return <el-button>{col?.label}</el-button>;
+      if (!props.isPreview) {
+        return <el-button>{col?.label}</el-button>;
+      } else {
+        return (
+          <el-button
+            onClick={() => {
+              col.props.onClick && ctx[col.props.onClick?.value]?.();
+            }}
+          >
+            {col?.label}
+          </el-button>
+        );
+      }
     },
   },
   ElTable: {
@@ -291,9 +309,11 @@ const renderForm: {
   },
   ElCard: {
     render(data, col) {
-      return <div>
-        <el-card style={{ width: "100%", height: "100%" }}></el-card>
-      </div>;
+      return (
+        <div>
+          <el-card style={{ width: "100%", height: "100%" }}></el-card>
+        </div>
+      );
     },
   },
   ElTags: {
@@ -451,46 +471,47 @@ const CanvasComp: (col: Col, isSlot?: Boolean, isRender?: Boolean) => VNode = (
   isRender = false,
 ) => {
   const Component = renderForm[col?.componentName as ComponentType]?.render?.(col?.label, col) || <div></div>;
+  const _props_: Record<string, any> = {
+    ...col?.props,
+    style: { ...col?.props.style, boxSizing: "border-box" },
+    "data-tag": col?.componentName,
+    "data-id": col?.id,
+    class: ["canvascomp", ...(typeof col?.props.class == "string" ? [col?.props.class] : [])],
+  };
 
   if (props.isPreview || isRender) {
-    return h(
-      Component,
-      {
-        ...col?.props,
-        style: { ...col?.props.style, boxSizing: "border-box" },
-        "data-tag": col?.componentName,
-        "data-id": col?.id,
-        class: ["canvascomp", ...(typeof col?.props.class == "string" ? [col?.props.class] : [])],
-      },
-      {
-        default: () => [
-          Array.isArray(Component.children)
-            ? Component.children.map((node: VNode | string | (() => VNode)) => {
-                if (typeof node === "string") return node;
-                const ChildNode = node as () => VNode;
-                return (
-                  <ChildNode {...omit(col?.props, ["style", "class"])}>
-                    {isSlot
-                      ? col?.children && col?.componentName != "ElTags"
-                        ? col?.children.length
-                          ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
-                          : ""
-                        : null
-                      : (node as VNode).children?.default?.()}
-                  </ChildNode>
-                );
-              })
-            : Component.children?.default?.() || Component.children,
-          isSlot
-            ? null
-            : col?.children && col?.componentName != "ElTags"
-              ? col?.children.length
-                ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
-                : ""
-              : null,
-        ],
-      },
-    );
+    return h(Component, _props_, {
+      default: () => [
+        Array.isArray(Component.children)
+          ? Component.children.map((node: VNode | string | (() => VNode)) => {
+              if (typeof node === "string") return node;
+              const ChildNode = node as () => VNode;
+              return (
+                <ChildNode {...omit(col?.props, ["style", "class"])}>
+                  {isSlot
+                    ? col?.children && col?.componentName != "ElTags"
+                      ? col?.children.length
+                        ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+                        : ""
+                      : null
+                    : (node as VNode).children?.default?.()}
+                </ChildNode>
+              );
+            })
+          : Component.children?.default?.() || Component.children,
+        isSlot
+          ? null
+          : col?.children && col?.componentName != "ElTags"
+            ? col?.children.length
+              ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
+              : ""
+            : null,
+        // props.isPreview &&
+        //   props.popup?.map((item: Col) => {
+        //     return CanvasComp(item, false, false);
+        //   }),
+      ],
+    });
   }
   return h(
     Component,
@@ -599,16 +620,12 @@ const currAEl = defineModel<{
 const schema = computed<Col>(() => {
   return props.schema;
 });
-console.log(props.popup);
-
 </script>
 
 <template>
-  <component :is="CanvasComp(schema, schema.componentName == 'ElCard')"> 
-  </component>
-  <template v-for="item in props.popup">
-    <component :is="CanvasComp(item, false,false)"> 
-    </component>
+  <component :is="CanvasComp(schema, schema.componentName == 'ElCard', false)"> </component>
+  <template v-if="props.isPreview">
+    <component :is="CanvasComp(item, false, false)" v-for="(item, index) in props.popup" :key="index"> </component>
   </template>
 </template>
 

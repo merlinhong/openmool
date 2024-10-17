@@ -12,24 +12,7 @@
           "backgroundColor": "#fff"
         }
       },
-      "popup": [
-        {
-          "componentName": "ElDialog",
-          "props": {
-            "style": {},
-            "title": "弹窗1",
-            "width": "50%",
-            "value": {
-              "type": "JSExpression",
-              "value": "dialogVisible",
-              "model": {
-                "prop": "modelValue"
-              }
-            }
-          },
-          "children": []
-        }
-      ],
+      "popup": [],
       "children": [
         {
           "label": "按钮文本",

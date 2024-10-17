@@ -771,6 +771,8 @@ const deletePopup = (index: number) => {
   PageConfig.value.popup.splice(index, 1);
 };
 const addPopup = () => {
+  PageConfig.value.ref[`dialogVisible${PageConfig.value.popup.length || ""}`] = false;
+
   PageConfig.value.popup.push({
     componentName: "ElDialog",
     props: {

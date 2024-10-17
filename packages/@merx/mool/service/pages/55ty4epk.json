@@ -3,23 +3,6 @@
     "name": "规范稿源",
     "schema": {
       "ref": {
-        "searchParams": {
-          "type": "SearchParams",
-          "value": [
-            {
-              "url": "v1/specSources",
-              "method": "POST",
-              "headers": {
-                "content-type": "application/json"
-              },
-              "data": {}
-            }
-          ]
-        },
-        "formaData": {
-          "specSource": "",
-          "updateUser": ""
-        },
         "datetimerange0": {
           "type": "ComputedRef",
           "value": ""
@@ -29,24 +12,7 @@
           "updateUser": ""
         }
       },
-      "popup": [
-        {
-          "componentName": "ElDialog",
-          "props": {
-            "style": {},
-            "title": "弹窗1",
-            "width": "50%",
-            "value": {
-              "type": "JSExpression",
-              "value": "dialogVisible",
-              "model": {
-                "prop": "modelValue"
-              }
-            }
-          },
-          "children": []
-        }
-      ],
+      "popup": [],
       "lifeCycles": {},
       "state": {},
       "methods": {},
@@ -330,7 +296,11 @@
                         "class": "",
                         "type": "warning",
                         "text": false,
-                        "color": ""
+                        "color": "",
+                        "onClick": {
+                          "type": "JSExpression",
+                          "value": "onClick"
+                        }
                       },
                       "id": "wkbn7mpw",
                       "parentId": "f2py2spt"
@@ -349,7 +319,11 @@
                         "class": "",
                         "type": "danger",
                         "text": false,
-                        "color": ""
+                        "color": "",
+                        "onClick": {
+                          "type": "JSExpression",
+                          "value": "onClick"
+                        }
                       },
                       "id": "xk5cfj82",
                       "parentId": "f2py2spt"

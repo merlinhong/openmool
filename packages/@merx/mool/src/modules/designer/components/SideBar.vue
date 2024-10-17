@@ -141,6 +141,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType, watchEffect } from "vue";
+import * as vue from "vue";
 import { Page, Col } from "@/mool/types";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 import PagePanel from "./PagePanel.vue";
@@ -240,49 +241,7 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
       break;
     case "js":
       showJS.value = true;
-      executeCode(generateJsCode());
-
-      function executeCode(code: string) {
-        console.log(code);
-
-        try {
-          // 清空上下文对象
-          Object.keys(context).forEach((key) => delete context[key]);
-
-          // 识别变量声明
-          const varDeclarations = code.match(/(?:var|let|const)\s+(\w+)/g) || [];
-          const functionDeclarations = code.match(/function\s+(\w+)/g) || [];
-
-          // 提取变量名
-          const variables = [
-            ...varDeclarations.map((decl) => decl.split(/\s+/)[1]),
-            ...functionDeclarations.map((decl) => decl.split(/\s+/)[1]),
-          ];
-
-          // 创建一个新的函数来执行代码
-          const executeFunction = new Function(
-            ...variables,
-            `
-      ${code}
-      return { ${variables.join(", ")} };
-    `,
-          );
-
-          // 执行代码
-          const result = executeFunction();
-          console.log(result);
-
-          Object.assign(context, result);
-
-          // 更新定义的变量列表
-          definedVariables.value = Object.keys(context);
-
-          executionResult.value = "代码执行成功";
-        } catch (error) {
-          console.error("代码执行失败:", error);
-          executionResult.value = "执行失败: " + error.message;
-        }
-      }
+      
       nextTick(() => {
         initEditorWithCommonOptions({
           id: "JS_editor_container",
@@ -328,13 +287,11 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
 const generateRefCode = () => {
   return Object.entries(PageSchema.value.ref)
     .map(([key, item]) => {
-      console.log(key, item);
-
       if (!item.type) {
         return `//页面表单绑定数据\nconst ${key} = vue.ref(${JSON.stringify(item, null, 2)})`;
       } else {
         if (item.type == "ComputedRef") {
-          return `//选择日期时间范围的计算属性\nconst ${key}:${item.type} = vue.computed({
+          return `//选择日期时间范围的计算属性\nconst ${key} = vue.computed({
             get(){
               return ${item.value}
             },
@@ -355,10 +312,7 @@ const generateJsCode = () => {
     })
     .join("\n\n");
 };
-const savedCode = ref("");
-const executionResult = ref<string | null>(null);
-const context = reactive<Record<string, any>>({});
-const definedVariables = ref<string[]>([]);
+
 
 const initEditorWithCommonOptions = (options: {
   id?: string;

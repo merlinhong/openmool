@@ -8,12 +8,16 @@
     <div class="flex items-center space-x-2">
       <el-tooltip content="PC端" placement="top">
         <el-button type="text" @click="switchToPC" :class="{ 'icon-active': isPC }">
-          <el-icon class="custom-icon"><Monitor /></el-icon>
+          <el-icon class="custom-icon">
+            <Monitor />
+          </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="移动端" placement="top">
         <el-button type="text" @click="switchToMobile" :class="{ 'icon-active': !isPC }">
-          <el-icon class="custom-icon"><Iphone /></el-icon>
+          <el-icon class="custom-icon">
+            <Iphone />
+          </el-icon>
         </el-button>
       </el-tooltip>
     </div>
@@ -25,35 +29,51 @@
 
       <el-tooltip content="撤销" placement="top">
         <el-button type="text">
-          <el-icon class="custom-icon"><RefreshLeft /></el-icon>
+          <el-icon class="custom-icon">
+            <RefreshLeft />
+          </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="重做" placement="top">
         <el-button type="text" @click="redo">
-          <el-icon class="custom-icon"><RefreshRight /></el-icon>
+          <el-icon class="custom-icon">
+            <RefreshRight />
+          </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="预览" placement="top">
         <el-button type="text" @click="preview">
-          <el-icon class="custom-icon"><View /></el-icon>
+          <el-icon class="custom-icon">
+            <View />
+          </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="保存" placement="top">
         <el-button type="text" @click="saveSchema">
-          <el-icon class="custom-icon"><Upload /></el-icon>
+          <el-icon class="custom-icon">
+            <Upload />
+          </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="出码" placement="top">
         <el-button type="text" @click="genCode">
-          <el-icon class="custom-icon"><Download /></el-icon>
-          
+          <el-icon class="custom-icon">
+            <Download />
+          </el-icon>
         </el-button>
       </el-tooltip>
     </div>
   </div>
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
     <div class="">
-      <BasicPage :isPreview="previewRef" v-for="(box, ind) in PageSchema.children" :key="ind" :schema="box" />
+      <BasicPage
+        :isPreview="previewRef"
+        v-for="(box, ind) in PageSchema.children"
+        :key="ind"
+        :schema="box"
+        :ctx="ctx"
+        :popup="PageSchema?.popup"
+      />
     </div>
   </el-drawer>
   <el-result
@@ -85,10 +105,63 @@ const statuTitle = ref("正在出码，请稍等....");
 const generateCoding = ref(false);
 
 const previewRef = ref(false);
+
+const ctx = ref<Function>(function () {});
+
 const preview = () => {
   previewRef.value = true;
+  ctx.value = executeCode(generateJsCode() + generateRefCode());
 };
 
+// 预览上下文
+const executeCode = (code: string) => {
+  // 创建预览函数
+  const previewFunction = new Function(
+    "vue",
+    `
+          ${code}
+          return {
+            ${
+              code
+                .match(/(?:var|let|const|function)\s+(\w+)/g)
+                ?.map((decl) => decl.split(/\s+/)[1])
+                .join(", ") || ""
+            }
+          };
+        `,
+  );
+  // 执行预览函数
+  const fn = previewFunction;
+  return fn;
+};
+const generateRefCode = () => {
+  return Object.entries(PageSchema.value.ref)
+    .map(([key, item]) => {
+      if (!item.type) {
+        return `//页面表单绑定数据\nconst ${key} = vue.ref(${JSON.stringify(item, null, 2)})`;
+      } else {
+        if (item.type == "ComputedRef") {
+          return `//选择日期时间范围的计算属性\nconst ${key} = vue.computed({
+            get(){
+              return ${item.value}
+            },
+            set(){
+            }
+          })`;
+        }
+        return `${/onSearch/.test(key) ? "//查询表格入参\n" : ""}const ${key} = vue.ref<${item.type}>(${JSON.stringify(item.value, null, 2)})`;
+      }
+    })
+    .join("\n\n");
+};
+
+const generateJsCode = () => {
+  return Object.entries(PageSchema.value.methods)
+    .map(([key, item]) => {
+      return `${item.value}`;
+    })
+    .join("\n\n");
+};
 const createPage = () => {
   const newPage = {
     type: "Page",
@@ -272,7 +345,7 @@ watch(isPC, (newValue) => {
 const redo = () => {
   console.log("重做");
   PageSchema.value.children = [];
-}
+};
 
 // 其他脚本代码保持不变
 </script>
@@ -283,23 +356,29 @@ const redo = () => {
 }
 
 .custom-icon {
-  font-size: 20px; /* 调整图标大小 */
-  color: #333; /* 图标颜色 */
+  font-size: 20px;
+  /* 调整图标大小 */
+  color: #333;
+  /* 图标颜色 */
 }
 
 .el-button {
-  padding: 8px; /* 保持按钮内边距 */
+  padding: 8px;
+  /* 保持按钮内边距 */
 }
 
 .el-button:hover .custom-icon {
-  color: #409eff; /* 鼠标悬停时的颜色 */
+  color: #409eff;
+  /* 鼠标悬停时的颜色 */
 }
 
 .icon-active {
-  color: #409eff; /* 选中时的颜色 */
+  color: #409eff;
+  /* 选中时的颜色 */
 }
 
 .icon-active .custom-icon {
-  color: #409eff; /* 确保选中时图标也变色 */
+  color: #409eff;
+  /* 确保选中时图标也变色 */
 }
 </style>
