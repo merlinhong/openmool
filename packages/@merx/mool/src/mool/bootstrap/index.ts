@@ -19,7 +19,7 @@ export async function bootstrap(app: App) {
   app.use(router);
 
   // 模块
-  const { eventLoop, list } = createModule(app);
+  const { eventLoop, list } = await createModule(app);
 
   // eps
 //   createEps(list);

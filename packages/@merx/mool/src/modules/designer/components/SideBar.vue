@@ -97,28 +97,24 @@
     <div v-if="showJS" class="w-[600px] absolute border-r border-[#e2e2e2] bg-white h-full left-[2.4rem] z-[999]">
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面JS</h4>
-
         <div>
           <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
               v-if="isChange">*</span></el-button>
           <i-ep-delete></i-ep-delete>
         </div>
       </div>
-
-      <div id="JS_editor_container" class="w-[560px] h-[90%] border border-[#c9c8c8]"></div>
+      <MlEditorMonaco :ref="setRefs('editor')" height="100%" v-model="jscode" lang="typescript" border></MlEditorMonaco>
     </div>
 
     <div v-if="showRef" class="w-[600px] absolute bg-white border-r border-[#e2e2e2] h-full left-[2.4rem] z-[999]">
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面Ref</h4>
-
         <div>
           <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
               v-if="isChange">*</span></el-button>
         </div>
       </div>
-
-      <div id="Ref_editor_container" class="w-[560px] h-[90%] border border-[#c9c8c8]"></div>
+      <MlEditorMonaco :ref="setRefs('editor')" height="100%" v-model="refcode" lang="typescript" border></MlEditorMonaco>
     </div>
 
     <div v-if="showSchema" class="w-[600px] absolute bg-white border-r border-[#e2e2e2] h-full left-[2.4rem] z-[999]">
@@ -130,8 +126,7 @@
           <el-button type="primary" text @click="showSchema = false">关闭</el-button>
         </div>
       </div>
-
-      <div id="editor_container" class="w-[560px] h-[90%] border border-[#c9c8c8]"></div>
+      <MlEditorMonaco :ref="setRefs('editor')" height="85%" v-model="schemaCode" border></MlEditorMonaco>
     </div>
   </div>
   <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf"
@@ -141,12 +136,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, nextTick, toRaw, Ref, PropType, watchEffect } from "vue";
-import * as vue from "vue";
 import { Page, Col } from "@/mool/types";
+import { useMool } from "@/mool";
 import { baseComponentList, seniorComponentList, initEditor, type MonacoEditor } from "@/mool/utils";
 import PagePanel from "./PagePanel.vue";
-import { reactive } from "vue";
 
+const { refs, setRefs } = useMool();
 const props = defineProps({
   pageConfig: {
     type: Object as PropType<Page>,
@@ -178,8 +173,9 @@ const showRef = ref(false);
 const showVar = ref(false);
 const setVarRef = ref(false);
 const isChange = ref(false);
-const jscode = ref<string[]>([]);
-
+const jscode = ref<string>('');
+const refcode = ref<string>('');
+const schemaCode = ref<string>('');
 const closeAllPanels = () => {
   drawer.value = false;
   showSchema.value = false;
@@ -231,34 +227,16 @@ const openPanel = (panel: "drawer" | "schema" | "js" | "ref" | "var" | "setVar" 
     case "schema":
       showSchema.value = true;
       if (showSchema.value) {
-        nextTick(() => {
-          initEditorWithCommonOptions({
-            id: "editor_container",
-            code: JSON.stringify(PageSchema.value, null, 2),
-          });
-        });
+        schemaCode.value = JSON.stringify(PageSchema.value, null, 2);
       }
       break;
     case "js":
       showJS.value = true;
-      
-      nextTick(() => {
-        initEditorWithCommonOptions({
-          id: "JS_editor_container",
-          code: generateJsCode(),
-          lang: "typescript",
-        });
-      });
+      jscode.value = generateJsCode();
       break;
     case "ref":
       showRef.value = true;
-      nextTick(() => {
-        initEditorWithCommonOptions({
-          id: "Ref_editor_container",
-          code: generateRefCode(),
-          lang: "typescript",
-        });
-      });
+      refcode.value = generateRefCode();
       break;
     case "var":
       showVar.value = true;
@@ -293,7 +271,7 @@ const generateRefCode = () => {
         if (item.type == "ComputedRef") {
           return `//选择日期时间范围的计算属性\nconst ${key} = vue.computed({
             get(){
-              return ${item.value}
+              return 
             },
             set(){
             }
@@ -395,7 +373,7 @@ const updateConf = (schema?: Col, isneed = true) => {
   } else {
     function updateObject(target: Record<string, any>, source: Record<string, any>) {
       for (const key in source) {
-        // 如果 source[key] 是对象且不是 null，递归调用
+        // 如果 source[key] ��对象且不是 null，递归调用
         if (source[key] !== null && typeof source[key] === "object") {
           if (key == "props" && "value" in source[key]) {
             ruleProps.push(source[key].value.value);
@@ -436,8 +414,7 @@ const updateConf = (schema?: Col, isneed = true) => {
 
 const saveEditor = () => {
   if (showJS.value) {
-    let config = pageSchema.value;
-
+    let config = refs.editor.getContent();
     // 新的函数解析逻辑
     const parseFunctions = (code: string) => {
       const results = [];
@@ -533,30 +510,43 @@ const saveEditor = () => {
   }
 
   if (showRef.value) {
-    const config = pageSchema.value;
-
-    const regex = /const (.*?) = vue\.ref<(.*?)>\(([^()]*)\)/g;
-
+    let config = refs.editor.getContent();
+    const regex = /(const|let|var)\s+(\w+)\s*=\s*vue\.(ref|computed|reactive)\s*\(([\s\S]*?)(?:\)\s*;|\)(?=\s*$))/g;
     let matches;
-
     const results = [];
 
     while ((matches = regex.exec(config)) !== null) {
+      console.log(matches);
+      
+      const variableName = matches[2].trim();
+      const vueFunction = matches[3];
+      let value = matches[4];
+
+      try {
+        // 尝试解析值
+        value = new Function(`return ${value}`)();
+        
+      } catch (e) {
+        // 如果解析失败，保留原始字符串
+        console.warn(`Failed to parse value for ${variableName}: ${e.message}`);
+      }
+      
       results.push({
-        variableName: matches[1].trim(),
-
-        type: matches[2].trim(),
-
-        value: JSON.parse(matches[3].trim()),
+        variableName,
+        vueFunction,
+        value
       });
     }
-
+    PageSchema.value.ref = {};
     results.forEach((res) => {
-      PageSchema.value.ref[res.variableName] = {
-        type: res.type,
-
-        value: res.value,
-      };
+      if(res.vueFunction == "computed"){
+        PageSchema.value.ref[res.variableName] = {
+          type: "ComputedRef",
+          value: res.value
+        }
+      }else{
+        PageSchema.value.ref[res.variableName] = res.value
+      }
     });
 
     function findFetchData(list: Page | Col) {
@@ -706,3 +696,5 @@ const emit = defineEmits(["change", "editPage"]);
   right: 320px;
 }
 </style>
+
+

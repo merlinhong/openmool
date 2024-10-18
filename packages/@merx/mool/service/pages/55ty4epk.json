@@ -147,7 +147,8 @@
                       "key": "single",
                       "componentName": "ElInput",
                       "append": [],
-                      "id": "8y7rhahh"
+                      "id": "sjk7z5pw",
+                      "parentId": "schrnti2"
                     }
                   ],
                   "id": "schrnti2",
@@ -278,7 +279,8 @@
                         "onClick": {
                           "type": "JSExpression",
                           "value": "onClick"
-                        }
+                        },
+                        "plain": true
                       },
                       "id": "ieks7s3b"
                     },
@@ -294,13 +296,14 @@
                           "marginRight": "10px"
                         },
                         "class": "",
-                        "type": "warning",
+                        "type": "primary",
                         "text": false,
                         "color": "",
                         "onClick": {
                           "type": "JSExpression",
                           "value": "onClick"
-                        }
+                        },
+                        "plain": true
                       },
                       "id": "wkbn7mpw",
                       "parentId": "f2py2spt"
@@ -317,13 +320,14 @@
                           "marginRight": "10px"
                         },
                         "class": "",
-                        "type": "danger",
+                        "type": "warning",
                         "text": false,
                         "color": "",
                         "onClick": {
                           "type": "JSExpression",
                           "value": "onClick"
-                        }
+                        },
+                        "plain": true
                       },
                       "id": "xk5cfj82",
                       "parentId": "f2py2spt"

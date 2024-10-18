@@ -1,4 +1,4 @@
-import { type App, type Directive } from "vue";
+import { type App, type Component, type Directive } from "vue";
 import { assign, isFunction, orderBy } from "lodash-es";
 import { filename } from "../utils";
 import { module } from "../module";
@@ -63,7 +63,7 @@ for (const i in files) {
 }
 
 // 创建
-export function createModule(app: App) {
+export async function createModule(app: App) {
 	// 排序
 	module.list.forEach((e) => {
 		const d = isFunction(e.value) ? e.value(app) : e.value;
@@ -77,31 +77,39 @@ export function createModule(app: App) {
 		}
 	});
 
-	const list = orderBy(module.list, "order", "desc").map((e) => {
-		console.log('e',e);
-		
-		// 初始化
-		e.install?.(app, e.options);
+	const list = orderBy(module.list, "order", "desc");
 
-		// 注册组件
-		e.components?.forEach(async (c) => {
-			// @ts-ignore
-			const v = await (isFunction(c) ? c() : c);
-			const n = v.default || v;
-			console.log('n',n);
+	// 使用 Promise.all 来并行注册所有组件
+	await Promise.all(
+		list.map(async (e) => {
+			console.log('e', e);
 			
-			if (n.name) {
-				app.component(n.name, n);
+			// 初始化
+			e.install?.(app, e.options);
+
+			// 注册组件
+			if (e.components) {
+				await Promise.all(
+					e.components.map(async (c) => {
+						const v = await (isFunction(c) ? c() : c);
+						const n = v.default || v;
+						console.log('n', n);
+						
+						if (n.name) {
+							app.component(n.name, n);
+						}
+					})
+				);
 			}
-		});
 
-		// 注册指令
-		e.directives?.forEach((v) => {
-			app.directive(v.name, v.value);
-		});
+			// 注册指令
+			e.directives?.forEach((v: { name: string; value: Directive }) => {
+				app.directive(v.name, v.value);
+			});
 
-		return e;
-	});
+			return e;
+		})
+	);
 
 	return {
 		// 模块列表
