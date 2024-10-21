@@ -192,6 +192,8 @@ export class DragUtil {
 
     // this.currAEl.overId = target.dataset.id as string;
     this.enterId = target.dataset.id as string;
+    // this.currAEl.hoverId = this.enterId;
+
     // this.currAEl.insertBottomId = target.dataset.id as string;
 
     this.bottom = target.getBoundingClientRect().bottom;
@@ -212,6 +214,7 @@ export class DragUtil {
     this.currAEl.insertTopId = null;
     this.lastIsInCenter = null;
     this.lastIsInElement = null;
+    // this.currAEl.hoverId = null;
   };
 
   /** 覆盖画布组件 */

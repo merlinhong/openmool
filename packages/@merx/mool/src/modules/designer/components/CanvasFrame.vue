@@ -178,7 +178,7 @@ const updatePageConfig = (newConfig: Page) => {
 </script>
 
 <template>
-  <div class="iframe-container">
+  <div class="iframe-container" >
     <iframe
       class="iframe-content"
       ref="iframeRef"

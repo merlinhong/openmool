@@ -470,12 +470,9 @@ const saveEditor = () => {
   }
 
   if (showSchema.value) {
-    const config = JSON.parse(pageSchema.value);
-
+    const config = JSON.parse(schemaCode.value);
     PageSchema.value = config;
-
     findFetchData(PageSchema.value as Page);
-
     function findFetchData(list: Page | Col) {
       list.children?.forEach((child, index, li) => {
         if (child.fetchData && child.fetchData.order !== null && child.componentName == "ElTable") {

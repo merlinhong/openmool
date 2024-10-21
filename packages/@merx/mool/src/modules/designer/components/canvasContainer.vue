@@ -287,7 +287,7 @@ const renderForm: {
                   {...item}
                   v-slots={{
                     default: (scope: RowScope) => {
-                      if (!!item.render?.schema?.children) {
+                      if (item.render?.schema?.children.length==1) {
                         return CanvasComp(item.render.schema, false, true);
                       } else {
                         return scope.row.data;
@@ -871,5 +871,8 @@ const schema = computed<Col>(() => {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+.el-menu {
+  border: none;
 }
 </style>

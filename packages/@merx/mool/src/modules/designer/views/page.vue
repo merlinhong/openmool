@@ -21,6 +21,7 @@ const pageConfig = ref<Page>({
     style: {
       marginBottom: "18px",
       backgroundColor: "#fff",
+      overflow:'auto'
     },
   },
   popup: [],

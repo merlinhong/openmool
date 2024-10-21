@@ -24,7 +24,7 @@ const strategy = {
 
   [JS_FUNCTION]: ({ value }) => {
     const { type, params, body } = getFunctionInfo(value);
-    const inlineFunc = `${type} (${params.join(",")}) => { ${body.replace(/this\./g, "").replace(/`/g, "")} }`;
+    const inlineFunc = `${type} (${params.join(",")}) => { ${body.replace(/this\./g, "").replace(/'/g, "")} }`;
 
     return `${start}${inlineFunc}${end}`;
   },
@@ -71,7 +71,6 @@ const transformType = (current, prop, description) => {
     JS_RESOURCE,
     JS_SLOT,
   ];
-  console.log("ty", current, prop, current[prop]);
   const { type, accessor, defaultValue } = current[prop] || {};
 
   if (builtInTypes.includes(type)) {

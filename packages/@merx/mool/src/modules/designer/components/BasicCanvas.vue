@@ -45,8 +45,8 @@
       :data-tag="PageSchema?.componentName"
       :data-id="PageSchema?.id"
       :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
-      @mouseover="currAEl.hoverId = PageSchema?.id ?? null"
       @mouseleave="currAEl.hoverId = null"
+      @mouseover="currAEl.hoverId=PageSchema?.id"
     >
       <BasicPage
         :popup="PageSchema?.popup"
@@ -199,5 +199,28 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
+.hover_child {
+ 
+  &::before {
+    display: block;
+    content: attr(data-tag);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: fit-content;
+    color: #32adf7;
+    z-index: 999;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px dashed #32adf7;
+    pointer-events: none;
+  }
 
+}
 </style>

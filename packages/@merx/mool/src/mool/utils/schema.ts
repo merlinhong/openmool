@@ -1,6 +1,5 @@
 import { hmr } from './../hooks/hmr';
 import { ComponentType, Col } from "@/mool/types/BasicForm";
-
 export const renderColumnCompLi = [
   { text: "盒子", dataType: "div" },
 
@@ -406,29 +405,20 @@ export const JsonSchema: {
 
   ElRow: {
     label: "",
-
     key: "",
-
     componentName: "ElRow",
-
     props: {
       gutter: 20,
-
       style: { width: "100%" },
       class: "",
     },
-
     children: [],
-
     id: "",
   },
   ElPageHeader: {
     label: "",
-
     key: "",
-
     componentName: "ElPageHeader",
-
     props: {
       style: { width: "100%" },
       title: "MlDesigner",
@@ -438,13 +428,10 @@ export const JsonSchema: {
   },
   ElMenu: {
     label: "",
-
     key: "",
-
     componentName: "ElMenu",
-
     props: {
-      style: { width: "100%", borderBottom: "none !important", borderRight: "none !important" },
+      style: { width: "100%",border:'none'},
       textColor: "#fff",
       backgroundColor: "#333",
       ellipsis: false,

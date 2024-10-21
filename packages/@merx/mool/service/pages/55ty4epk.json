@@ -10,9 +10,58 @@
         "formData": {
           "specSource": "",
           "updateUser": ""
-        }
+        },
+        "dialogVisible": false
       },
-      "popup": [],
+      "popup": [
+        {
+          "componentName": "ElDialog",
+          "props": {
+            "style": {},
+            "title": "弹窗1",
+            "width": "50%",
+            "value": {
+              "type": "JSExpression",
+              "value": "dialogVisible",
+              "model": {
+                "prop": "modelValue"
+              }
+            }
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "props": {
+                "style": {
+                  "padding": "5px",
+                  "backgroundColor": "#fff"
+                },
+                "class": ""
+              },
+              "children": [
+                {
+                  "label": "按钮文本",
+                  "key": "",
+                  "componentName": "ElButton",
+                  "props": {
+                    "style": {
+                      "display": "flex",
+                      "flexDirection": "row",
+                      "width": "fit-content"
+                    },
+                    "class": "",
+                    "type": "primary",
+                    "text": false,
+                    "color": ""
+                  },
+                  "id": "2srk6mb2"
+                }
+              ],
+              "id": "m72siyci"
+            }
+          ]
+        }
+      ],
       "lifeCycles": {},
       "state": {},
       "methods": {},
@@ -33,7 +82,8 @@
               "marginBottom": "20px",
               "alignItems": "baseline",
               "width": "100%",
-              "height": "fit-content"
+              "height": "fit-content",
+              "backgroundColor": "#fff"
             },
             "class": ""
           },
@@ -385,16 +435,18 @@
                     "align": "center",
                     "render": {
                       "type": "JSFunction",
-                      "value": "function r(){return '<div style=\"background-color: '#fff';\"><div style=\"padding: '5px'; background-color: '#fff'; display: 'flex'; justify-content: 'space-between';\" class=\"\"><ElButton style=\"display: 'flex'; flex-direction: 'row'; width: 'fit-content';\" class=\"\" type=\"primary\" text=\"true\" color=\"\"></ElButton><ElButton style=\"display: 'flex'; flex-direction: 'row'; width: 'fit-content';\" class=\"\" type=\"primary\" text=\"true\" color=\"\"></ElButton></div></div>'}",
+                      "value": "function r(){return '<page style={{backgroundColor: \"#fff\",width: \"100%\",height: \"100%\"}}><div style={{padding: \"5px\",backgroundColor: \"#fff\",display: \"flex\"}} class=\"\"><el-button style={{display: \"flex\",flexDirection: \"row\",width: \"fit-content\"}} class=\"\" type=\"primary\" text={false} color=\"\">按钮文本</el-button><el-button style={{display: \"flex\",flexDirection: \"row\",width: \"fit-content\"}} class=\"\" type=\"primary\" text={false} color=\"\">按钮文本</el-button></div></page>'}",
                       "schema": {
                         "ref": {},
                         "lifeCycles": {},
                         "state": {},
                         "methods": {},
-                        "componentName": "div",
+                        "componentName": "Page",
                         "props": {
                           "style": {
-                            "backgroundColor": "#fff"
+                            "backgroundColor": "#fff",
+                            "width": "100%",
+                            "height": "100%"
                           }
                         },
                         "children": [
@@ -404,14 +456,13 @@
                               "style": {
                                 "padding": "5px",
                                 "backgroundColor": "#fff",
-                                "display": "flex",
-                                "justifyContent": "space-between"
+                                "display": "flex"
                               },
                               "class": ""
                             },
                             "children": [
                               {
-                                "label": "编辑",
+                                "label": "按钮文本",
                                 "key": "",
                                 "componentName": "ElButton",
                                 "props": {
@@ -422,13 +473,13 @@
                                   },
                                   "class": "",
                                   "type": "primary",
-                                  "text": true,
+                                  "text": false,
                                   "color": ""
                                 },
-                                "id": "2d5a72rd"
+                                "id": "xa8mwenh"
                               },
                               {
-                                "label": "删除",
+                                "label": "按钮文本",
                                 "key": "",
                                 "componentName": "ElButton",
                                 "props": {
@@ -439,16 +490,16 @@
                                   },
                                   "class": "",
                                   "type": "primary",
-                                  "text": true,
+                                  "text": false,
                                   "color": ""
                                 },
-                                "id": "me5yrka5"
+                                "id": "d36dern3"
                               }
                             ],
-                            "id": "hpy5jemw"
+                            "id": "iehyyrb7"
                           }
                         ],
-                        "id": "je3ky5ft",
+                        "id": "55ty4epk",
                         "css": ""
                       }
                     }

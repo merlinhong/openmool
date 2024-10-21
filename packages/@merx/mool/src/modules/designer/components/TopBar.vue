@@ -76,8 +76,9 @@
       />
     </div>
   </el-drawer>
-  <el-result
-    class="w-80 absolute bg-white left-1/2 top-2/5 -translate-x-1/2 z-50 border border-gray-200"
+  <div class="">
+    <el-result
+    class="w-80 absolute bg-white left-1/2 top-[40%] -translate-x-1/2 z-50 border border-gray-200"
     v-if="generateCoding"
     :icon="statuIcon"
     :title="statuTitle"
@@ -86,6 +87,7 @@
       <el-button type="primary" @click="generateCoding = false">好的</el-button>
     </template>
   </el-result>
+  </div>
 </template>
 
 <script setup lang="tsx">
@@ -95,7 +97,7 @@ import BasicPage from "$/designer/components/canvasContainer.vue";
 import { Monitor, Iphone, RefreshLeft, RefreshRight, View, Download, Upload } from "@element-plus/icons-vue";
 
 const PCSize = "100%";
-const MobileSize = "25%";
+const MobileSize = "22%";
 
 const emit = defineEmits(["changeSize"]);
 const PageSchema = defineModel<Page>("pageConfig", { required: true });

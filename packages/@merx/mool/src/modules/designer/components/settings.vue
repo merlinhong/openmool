@@ -68,15 +68,13 @@
               </div>
               <div v-if="setFlex">
                 <el-form-item label="主轴方向"><el-select size="small" v-model="flexDirection"
-                    @change="changeFlex(1)"><el-option
-                      v-for="item in ['row', 'row-reverse', 'column', 'column-reverse']" :value="item"
-                      :label="item"></el-option></el-select></el-form-item>
+                    @change="changeFlex(1)"><el-option v-for="item in ['row', 'row-reverse', 'column', 'column-reverse']"
+                      :value="item" :label="item"></el-option></el-select></el-form-item>
                 <el-form-item label="主轴对齐"><el-select size="small" v-model="justifyContent"
                     @change="changeFlex(2)"><el-option
-                      v-for="item in ['flex-start', 'flex-end', 'center', 'space-between', 'space-around']"
-                      :value="item" :label="item"></el-option></el-select></el-form-item>
-                <el-form-item label="辅轴对齐"><el-select size="small" v-model="alignItems"
-                    @change="changeFlex(3)"><el-option
+                      v-for="item in ['flex-start', 'flex-end', 'center', 'space-between', 'space-around']" :value="item"
+                      :label="item"></el-option></el-select></el-form-item>
+                <el-form-item label="辅轴对齐"><el-select size="small" v-model="alignItems" @change="changeFlex(3)"><el-option
                       v-for="item in ['flex-start', 'flex-end', 'center', 'baseline', 'stretch']" :value="item"
                       :label="item"></el-option></el-select></el-form-item>
                 <el-form-item label="换行"><el-select size="small" v-model="flexWrap" @change="changeFlex(4)"><el-option
@@ -200,8 +198,7 @@
       </div>
     </template>
   </el-dialog>
-  <el-dialog destroy-on-close v-model="renderDialogVisible" title="拖拽渲染schema" width="1000"
-    :close-on-click-modal="false">
+  <el-dialog destroy-on-close v-model="renderDialogVisible" title="拖拽渲染schema" width="1000" :close-on-click-modal="false">
     <!-- <div id="renderEditor_container" style="width: 560px; height: 400px; border: 1px solid #c9c8c8"></div> -->
     <el-container :style="{ height: 'calc(50vh - 116px)' }" class="justify-between">
       <ul class="base-component">
@@ -214,8 +211,8 @@
         :customStyle="{ width: '100%', height: '100%', margin: '20px', backgroundColor: '#f1f1f1' }"
         @active="activeCurrent" />
       <el-aside>
-        <config-plane scrollHeight="40vh" style="height: fit-content" :is-show-config="true"
-          v-model:current="currentConf" v-model:pageConfig="renderSchema" />
+        <config-plane scrollHeight="40vh" style="height: fit-content" :is-show-config="true" v-model:current="currentConf"
+          v-model:pageConfig="renderSchema" />
       </el-aside>
     </el-container>
     <template #footer>
@@ -232,7 +229,7 @@
     <el-radio-group v-model="marginValue" @change="changeMargin">
       <el-radio-button v-for="item in ['auto', 0, 10, 20, 40, 60, 100, 140, 200]" :label="item">{{
         item
-        }}</el-radio-button>
+      }}</el-radio-button>
     </el-radio-group>
   </el-drawer>
   <el-drawer v-model="setTableVisible" title="设置表格" direction="rtl" :size="250" :modal="false" :z-index="1000"
@@ -283,9 +280,9 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref, resolveComponent, h } from "vue";
+import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref, resolveComponent, h, } from "vue";
 import { BasicFormConfig, Col, Page } from "@/mool";
-import { initEditor, renderColumnCompLi, uuid, hyphenate, type MonacoEditor } from "@/mool/utils";
+import { initEditor, renderColumnCompLi, camelize,hyphenate, type MonacoEditor } from "@/mool/utils";
 import { useDrag } from "@/mool/hooks";
 import { computed } from "vue";
 import { defineComponent } from "vue";
@@ -304,7 +301,7 @@ const renderSchema = ref<Col>({
   lifeCycles: {},
   state: {},
   methods: {},
-  componentName: "Page",
+  componentName: "div",
   props: {
     style: {
       backgroundColor: "#fff",
@@ -1035,23 +1032,25 @@ const jsonToHtml = (json: Page | Col) => {
   // 处理组件名
   if (json.componentName) {
     // 开始标签
-    html += `<${json.componentName}`;
+    html += `<${hyphenate(json.componentName)}`;
 
     // 处理属性
     if (json.props) {
       // 处理样式
       if (json.props.style) {
         const styleString = Object.entries(json.props.style)
-          .map(([key, value]) => `${hyphenate(key)}: '${value}';`)
-          .join(" ");
-        html += ` style="${styleString}"`;
+          .map(([key, value]) => `${camelize(key)}: "${value}"`)
+          .join(",");
+        html += ` style={{${styleString}}}`;
       }
 
       // 处理其他属性
       for (const [key, value] of Object.entries(json.props)) {
+        console.log(key,value);
+        
         if (key !== "style") {
           // 避免重复处理样式
-          html += ` ${key}="${value}"`;
+          html += ` ${key}=${typeof value=='boolean'?`{${value}}`:`"${value}"`}`;
         }
       }
     }
@@ -1065,9 +1064,8 @@ const jsonToHtml = (json: Page | Col) => {
       });
     }
 
-    html += `</${json.componentName}>`;
+    html += `${(json as Col).label??''}</${hyphenate(json.componentName)}>`;
   }
-
   return html;
 };
 const saveRender = () => {
@@ -1079,10 +1077,13 @@ const saveRender = () => {
   if (Current.value.componentName == "ElTable") {
     const columns = Current.value.props?.columns ?? [];
     if (schema?.children.length) {
+      if(schema?.children.length>1){
+        return ElMessage.warning('JSX element must has a parent node')
+      }
       columns[currColIndex.value ?? 0].render = {
         type: "JSFunction",
-        value: `function r(){return '${jsonToHtml(schema)}'}`,
-        schema,
+        value: `function r(){return '${jsonToHtml(schema.children[0])}'}`,
+        schema
       };
     } else {
       delete columns[currColIndex.value ?? 0].render;

@@ -54,8 +54,7 @@ function recurseChildren(children, state, description, result) {
     result.push(`{{ ${children.value.replace(/this\.(props\.)?/g, "")} }}`);
 
     Object.keys(description.jsResource).forEach((key) => {
-      description.jsResource[key] =
-        description.jsResource[key] || children.value.includes(`.${key}.`);
+      description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`);
     });
   } else if (children?.type === "i18n") {
     result.push(`{{ t('${children.key}') }}`);
@@ -67,8 +66,7 @@ function recurseChildren(children, state, description, result) {
 }
 
 const isEmptySlot = (componentName, children) =>
-  componentName === BUILTIN_COMPONENT_NAME.TEMPLATE &&
-  !(children?.length || children?.type);
+  componentName === BUILTIN_COMPONENT_NAME.TEMPLATE && !(children?.length || children?.type);
 
 function handleSlotBinding(item) {
   const { name, params } = item;
@@ -125,22 +123,22 @@ const handleLiteralBinding = ({
 
   // string 直接静态绑定
 
-  if (typeof item === "string")
-    return attrsArr.push(`${key}="${item.replace(/"/g, "&quot;")}"`);
+  if (typeof item === "string") return attrsArr.push(`${key}="${item.replace(/"/g, "&quot;")}"`);
 
   // // TODO: 拿到这里的场景 case？
 
-  // if (item?.componentName === BUILTIN_COMPONENT_NAME.ICON) {
+  if (item?.componentName === BUILTIN_COMPONENT_NAME.ICON) {
 
-  // const iconName = handleIconInProps(description, item)
+  const iconName = handleIconInProps(description, item)
 
-  // return attrsArr.push(`:${key}="${iconName}"`)
+  return attrsArr.push(`:${key}="${iconName}"`)
 
-  // }
+  }
 
   // 复杂类型（not null），解析协议（如：i18n）后，使用 v-bind 绑定，注意：双引号与单引号的处理
 
   if (typeof item === "object") {
+    const exteralArr = ['el-menu','el-select','el-table']
     traverseState(item, description);
 
     const canotBind =
@@ -156,31 +154,27 @@ const handleLiteralBinding = ({
       const valueKey = avoidDuplicateString(Object.keys(state), key);
       state[valueKey] = item;
 
-      return (
-        component != "el-table" &&
-        component != "el-select" &&
-        component != "el-menu" &&
-        attrsArr.push(`:${key}="state.${valueKey}"`)
-      );
+      return component != "el-table" && component != "el-select" && attrsArr.push(`:${key}="state.${valueKey}"`);
     }
 
     const parsedValue = unwrapExpression(JSON.stringify(item)).replace(
       /props\./g,
 
-      ""
+      "",
     );
 
     if (key == "option" || key == "data") {
+      if (component == "el-menu") {
+        key = "menuOption";
+      }
       const valueKey = avoidDuplicateString(Object.keys(state), key);
 
       state[key == "data" ? "table" + valueKey : valueKey] = item;
 
-      return attrsArr.push(
-        `:${key}="state.${key == "data" ? "table" + valueKey : valueKey}"`
-      );
+      return attrsArr.push(`:${key}="state.${key == "data" ? "table" + valueKey : valueKey}"`);
     }
 
-    return attrsArr.push(`:${key}="${parsedValue.replace(/"/g, "&quot;")}"`);
+    return !exteralArr.includes(component)&&attrsArr.push(`:${key}="${parsedValue.replace(/"/g, "&quot;")}"`);
   }
 
   // number/boolean/expression 使用 v-bind 绑定
@@ -236,9 +230,7 @@ function handleBinding(props, attrsArr, description, state, component) {
       if (item.model) {
         const modelArgs = item.model?.prop ? `:${item.model.prop}` : "";
 
-        return attrsArr.push(
-          `v-model${modelArgs}="${item.value.replace(/this\.(props\.)?/g, "")}"`
-        );
+        return attrsArr.push(`v-model${modelArgs}="${item.value.replace(/this\.(props\.)?/g, "")}"`);
       }
 
       // 弥补在recurseChildren方法中，当children为undefined，但是该元素的props存在变量绑定的情况，此变量绑定的为
@@ -247,20 +239,15 @@ function handleBinding(props, attrsArr, description, state, component) {
 
       const pickResourceKeys = item.value?.match(/(?<=this\.)\w+/g) || [];
 
-      const itemObject = Object.fromEntries(
-        pickResourceKeys.map((key) => [key, true])
-      );
+      const itemObject = Object.fromEntries(pickResourceKeys.map((key) => [key, true]));
 
       Object.keys(description.jsResource).forEach((jsResourceKey) => {
-        description.jsResource[jsResourceKey] =
-          description.jsResource[jsResourceKey] || itemObject[jsResourceKey];
+        description.jsResource[jsResourceKey] = description.jsResource[jsResourceKey] || itemObject[jsResourceKey];
       });
 
       // expression 使用 v-bind 绑定
 
-      return attrsArr.push(
-        `:${key}="${item.value.replace(/this\.(props\.)?/g, "")}"`
-      );
+      return attrsArr.push(`:${key}="${item.value.replace(/this\.(props\.)?/g, "")}"`);
     }
 
     if (propType === "i18n") {
@@ -331,7 +318,7 @@ function generateTemplate(schema, state, description, isRootNode = false) {
     result.push(
       `\n<${component} ${Object.entries(schema.option)
         .map(([key, value]) => `${key}="${value}"`)
-        .join(" ")}>`
+        .join(" ")}>`,
     );
     result.push(`</${component}>`);
   } else {
@@ -352,14 +339,11 @@ function generateTemplate(schema, state, description, isRootNode = false) {
     // 处理 condition, 条件渲染
 
     if (typeof condition === "object" || typeof condition === "boolean") {
-      const conditionValue = condition?.type
-        ? condition.value.replace(/this\.(props\.)?/g, "")
-        : condition;
+      const conditionValue = condition?.type ? condition.value.replace(/this\.(props\.)?/g, "") : condition;
 
       const directive = condition?.kind || "if";
 
-      const conditionStr =
-        directive === "else" ? "v-else" : `v-${directive}="${conditionValue}"`;
+      const conditionStr = directive === "else" ? "v-else" : `v-${directive}="${conditionValue}"`;
 
       attrsArr.push(conditionStr);
     }
@@ -396,7 +380,7 @@ function generateTemplate(schema, state, description, isRootNode = false) {
 
             </el-table-column>
 
-          `
+          `,
           );
 
           break;
@@ -409,27 +393,45 @@ function generateTemplate(schema, state, description, isRootNode = false) {
           });
 
           result.push(
-            `<el-option v-for="(item,index) in state.option${compInd - 1 || ""}" :label="item.label" :value="item.value" :key="index"></el-option>`
+            `<el-option v-for="(item,index) in state.option${compInd - 1 || ""}" :label="item.label" :value="item.value" :key="index"></el-option>`,
           );
 
           break;
-          case "el-menu":
-           
-            props.menuItems?.forEach((item, index) => {
-              if(item.subMenu){
-                result.push(`<el-sub-menu index="${item.index}">
-                <template #title>${item.title}</template>
-                ${item.subMenu.map((subItem) => {
-                  return `<el-menu-item index="${subItem.index}">${subItem.title}</el-menu-item>`
-                }).join('')
-                }
-                </el-sub-menu>`
-              )
-              }else{
-                result.push(`<el-menu-item index="${item.index}">${item.title}</el-menu-item>`)
-              }
-            })
-            break;
+        case "el-menu":
+          Object.keys(state).forEach((key) => {
+            if (/menuOption/.test(key)) {
+              compInd++;
+            }
+          });
+          result.push(
+            `
+            <template v-for="item in state.menuOption${compInd - 1 || ""}" :key="item.id">
+              <el-sub-menu
+              :index="item.index"
+               v-if="item.subItems"
+              >
+                <template #title>{{ item.name }}</template>
+                <el-menu-item
+                  v-for="subItem in item.subItems"
+                  :key="subItem.id"
+                  :index="subItem.index"
+                >
+                  {{ subItem.name }}
+                </el-menu-item>
+              </el-sub-menu>
+            </template>
+
+            <template v-for="item in state.menuOption${compInd - 1 || ""}" :key="item.id">
+              <el-menu-item
+                :index="item.index"
+                v-if="!item.subItems"
+              >
+                {{ item.name }}
+              </el-menu-item>
+            </template>
+            `,
+          );
+          break;
 
         default:
           break;
@@ -487,7 +489,7 @@ function generateTemplate(schema, state, description, isRootNode = false) {
 
           </div>
 
-        `
+        `,
         );
       }
     }
@@ -496,38 +498,24 @@ function generateTemplate(schema, state, description, isRootNode = false) {
   return result.join("");
 }
 
-const generateImports = (
-  description,
-  moduleName,
-  type,
-  componentsMap,
-  importType
-) => {
+const generateImports = (description, moduleName, type, componentsMap, importType) => {
   const { blockSet, componentSet } = description;
 
   const imports = [];
-  console.log(importType.join(","));
   const importsFromVue = [
     'import * as vue from "vue"',
-
-    'import { defineProps, defineEmits } from "vue"',
-
-    'import { I18nInjectionKey } from "vue-i18n"',
-
-    `import {type ${importType.join(",").replace(/^,|,$/g, "")}} from "./type.ts"`,
-
+    `import { defineProps, defineEmits,${importType['vueType'].join(",").replace(/^,|,$/g, "")} } from "vue"`,
     `import {request} from "./utils/request"`,
   ];
-
+  importType['customType'].length &&
+    importsFromVue.push(`import {type ${importType['customType'].join(",").replace(/^,|,$/g, "")}} from "./type.ts"`);
   imports.push(importsFromVue.join("\n"));
 
   // import components, support alias import, import from multi packages
 
   const componentsInSFC = [...componentSet];
 
-  const componentDeps = componentsMap.filter((item) =>
-    componentsInSFC.includes(item.componentName)
-  );
+  const componentDeps = componentsMap.filter((item) => componentsInSFC.includes(item.componentName));
 
   const componentPacks = {};
 
@@ -542,6 +530,7 @@ const generateImports = (
   });
 
   Object.entries(componentPacks).forEach(([pkgName, deps]) => {
+    console.log(deps);
     const items = deps.map((dep) => {
       const { componentName, exportName } = dep;
 
@@ -553,9 +542,7 @@ const generateImports = (
 
       // }
 
-      return exportName && exportName !== componentName
-        ? `${exportName} as ${componentName}`
-        : `${componentName}`;
+      return exportName && exportName !== componentName ? `${exportName} as ${componentName}` : `${componentName}`;
     });
 
     imports.push(`import { ${items.join(",")} } from '${pkgName}'`);
@@ -580,16 +567,12 @@ const generateImports = (
         [block]: path,
       }),
 
-      {}
+      {},
     );
 
-  const componentNames = componentsMap.map(
-    ({ componentName }) => componentName
-  );
+  const componentNames = componentsMap.map(({ componentName }) => componentName);
 
-  const needImportBlocks = blocksName.filter((name) =>
-    componentNames.includes(name)
-  );
+  const needImportBlocks = blocksName.filter((name) => componentNames.includes(name));
 
   needImportBlocks.forEach((block) => {
     const { [moduleName]: fromPath, [block]: toPath } = blocksPathMap;
@@ -610,9 +593,7 @@ const generateImports = (
 
           .replace(/\\/g, "/");
 
-        depPath = relativePath.startsWith(".")
-          ? relativePath
-          : `./${relativePath}`;
+        depPath = relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
       }
 
       blocks.push(`import ${block} from '${depPath}/${block}.vue'`);
@@ -646,6 +627,8 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
     lifeCycles = {},
 
     methods = {},
+
+    popup = []
   } = schema;
   if (!ref.pagerConfig) {
     const allPagerConfigs = [];
@@ -682,7 +665,7 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
   };
 
   const template = generateTemplate(schema, state, description, true);
-
+  const dialogTemplate = popup.map(pop=>generateTemplate(pop, state, description, false));
   const propsArr = [];
 
   const propsAccessor = [];
@@ -701,9 +684,7 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
         propValue = defaultValue.value;
       }
 
-      propsArr.push(
-        `${property}: { type: ${propType}, default: ${propValue} }`
-      );
+      propsArr.push(`${property}: { type: ${propType}, default: ${propValue} }`);
 
       addAccessorRecord(accessor, propsAccessor);
     });
@@ -712,12 +693,16 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
   const emitsArr = Object.keys(events).map(toEventKey);
 
   // 转换 state 中的特殊类型
-  const importType = [];
+  const importType = {
+    'customType':[],
+    'vueType':[],
+    'otherType':[]
+  };
   traverseState(state, description);
   if (state.columns) {
-    importType.push("SearchTableColumn");
+    importType['customType'].push("SearchTableColumn");
   }
-  const reactiveStatement = `const state = vue.reactive<{ ${importType.includes("SearchTableColumn") ? "columns?: SearchTableColumn[];" : ""}[key: string]: any }>(${unwrapExpression(JSON.stringify(state, null, 2))})`;
+  const reactiveStatement = `const state = vue.reactive<{ ${importType['customType'].includes("SearchTableColumn") ? "columns?: SearchTableColumn[];" : ""}[key: string]: any }>(${unwrapExpression(JSON.stringify(state, null, 2))})`;
 
   const allAccessor = [...propsAccessor, ...description.stateAccessor];
 
@@ -729,14 +714,12 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
 
   const methodsName = Object.keys(methods);
 
-  const methodsArr = Object.entries(methods).map(
-    ([key, item]) => `const ${key} = ${item.value}`
-  );
+  const methodsArr = Object.entries(methods).map(([key, item]) => `const ${key} = ${item.value}`);
 
   const _ref = Object.entries(ref).map(([key, item]) => {
     // ts类型处理收集
     if (key == "searchParams" || key == "pagerConfig") {
-      importType.push(item.type);
+      importType['customType'].push(item.type);
       return `const ${key} = vue.ref<${item.type}[]>(${unwrapExpression(JSON.stringify(item.value, null, 2))})`;
     }
     if (typeof item === "object" && !Array.isArray(item) && !item.type) {
@@ -750,46 +733,43 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
         `;
     }
     if (typeof item === "object" && item.type) {
-      if (item.type.indexOf("|") != -1) {
-        importType.push(item.type.split("|")[0]);
+      // if (item.type.indexOf("|") != -1) {
+      //   importType.push(item.type.split("|")[0]);
+      // } else {
+      //   item.type.indexOf("typeof") == -1 && importType.push(item.type);
+        
+      // }
+      if (item.type == "ComputedRef") {
+        importType['vueType'].push(item.type);
+        return `const ${key} = vue.computed<${item.type}>({
+          get(){
+            return ${item.value}
+          },
+          set(){
+            
+          }
+        })`;
       } else {
-        item.type.indexOf("typeof") == -1 && importType.push(item.type);
-        if (item.type == "ComputedRef") {
-          importType.push(item.type);
-          return `const ${key}:${item.type} = vue.computed({
-            get(){
-              return ${item.value}
-            },
-            set(){
-              
-            }
-          })`;
-        } else {
-          importType.push(item.type);
-          return `const ${key} = vue.ref<${item.type}>(${item.value})`;
-        }
+        return `const ${key} = vue.ref<${item.type}>(${item.value})`;
       }
     }
-    if (typeof item === "string") {
-      return `const ${key} = vue.ref<${item}>('')`;
+    if(typeof item === "string"){
+      return `const ${key} = vue.ref<string>('${item}')`
+    }
+    if (typeof item === "number"|| typeof item === "boolean") {
+      return `const ${key} = vue.ref<${typeof item}>(${item})`;
     }
   });
 
   const lifecycles = Object.entries(lifeCycles).map(
     ([key, item]) => `vue.${key}(()=>{
     ${item.value}
-  })`
+  })`,
   );
 
   const scriptLang = description.hasJSX ? 'lang="tsx"' : "";
 
-  const { imports } = generateImports(
-    description,
-    name,
-    type,
-    componentsMap,
-    importType
-  );
+  const { imports } = generateImports(description, name, type, componentsMap, importType);
 
   const { componentNames, exportNames } = description.iconComponents;
 
@@ -804,7 +784,7 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
 <template>
 
 ${template}
-
+${dialogTemplate}
 </template>
 
   
@@ -865,7 +845,7 @@ const getFilePath = (type = "page", name = "", componentsMap) => {
         [block]: path,
       }),
 
-      {}
+      {},
     );
 
   const path = blocksPathMap[name];
@@ -887,12 +867,9 @@ const generatePageCode = ({ pageInfo, componentsMap, isEntry = true }) => {
 
   const vueCode = generateVueCode({ schema, name, type, componentsMap });
 
-  const tsCode = fs
-    .readFileSync(path.resolve(__dirname, "../utils/type.js"), "utf-8")
-    .toString();
-  const requestCode = fs
-    .readFileSync(path.resolve(__dirname, "../utils/request.js"), "utf-8")
-    .toString();
+  const tsCode = fs.readFileSync(path.resolve(__dirname, "../utils/type.js"), "utf-8").toString();
+
+  const requestCode = fs.readFileSync(path.resolve(__dirname, "../utils/request.js"), "utf-8").toString();
 
   const panels = [
     {
@@ -968,24 +945,17 @@ const generateCode = ({ pageInfo, componentsMap = [], blocksData = [] }) => {
   // 注意区分区块 package: undefined, main: string（区块路径 main，空字符串表示当前目录，等价于 './'）
 
   const validComponents = componentsMap.filter(
-    ({ componentName, package: pkg, main }) =>
-      componentName && (pkg || typeof main === "string")
+    ({ componentName, package: pkg, main }) => componentName && (pkg || typeof main === "string"),
   );
 
-  const allComponents = [
-    ...validComponents,
-    ...DEFAULT_COMPONENTS_MAP,
-    ...BUILTIN_COMPONENTS_MAP,
-  ];
+  const allComponents = [...validComponents, ...DEFAULT_COMPONENTS_MAP, ...BUILTIN_COMPONENTS_MAP];
 
   // 对象数组，去重
 
   const allComponentsMap = new Map();
 
   allComponents.forEach(
-    (item) =>
-      !allComponentsMap.has(item.componentName) &&
-      allComponentsMap.set(item.componentName, item)
+    (item) => !allComponentsMap.has(item.componentName) && allComponentsMap.set(item.componentName, item),
   );
 
   const componentDepsPath = [...allComponentsMap.values()];

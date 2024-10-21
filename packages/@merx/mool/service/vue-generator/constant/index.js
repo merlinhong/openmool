@@ -5,7 +5,7 @@
 const DEFAULT_COMPONENTS_MAP = [
   {
     componentName: "ElAlert",
-    exportName: "ElElAlert",
+    exportName: "ElAlert",
     package: "element-plus",
     version: "^3.10.0",
     destructuring: true,
@@ -19,14 +19,14 @@ const DEFAULT_COMPONENTS_MAP = [
   },
   {
     componentName: "ElBreadcrumbItem",
-    exportName: "ElElBreadcrumbItem",
+    exportName: "ElBreadcrumbItem",
     package: "element-plus",
     version: "^3.10.0",
     destructuring: true,
   },
   {
     componentName: "ElButton",
-    exportName: "ElElButton",
+    exportName: "ElButton",
     package: "element-plus",
     version: "^3.10.0",
     destructuring: true,
@@ -87,13 +87,7 @@ const DEFAULT_COMPONENTS_MAP = [
     version: "^3.10.0",
     destructuring: true,
   },
-  {
-    componentName: "ElFloatbar",
-    exportName: "ElFloatbar",
-    package: "element-plus",
-    version: "^3.10.0",
-    destructuring: true,
-  },
+
   {
     componentName: "ElForm",
     exportName: "ElForm",

@@ -9,7 +9,8 @@
       "componentName": "摄影官网ai",
       "props": {
         "style": {
-          "backgroundColor": "#fff"
+          "backgroundColor": "#fff",
+          "overflow": "auto"
         }
       },
       "children": [
@@ -17,14 +18,13 @@
           "componentName": "div",
           "props": {
             "style": {
-              "padding": "5px",
               "backgroundColor": "#fff"
             },
             "class": ""
           },
           "children": [
             {
-              "componentName": "ElContainer",
+              "componentName": "div",
               "props": {
                 "style": {}
               },
@@ -56,16 +56,20 @@
                       "id": "text1"
                     },
                     {
+                      "label": "",
+                      "key": "",
                       "componentName": "ElMenu",
                       "props": {
                         "style": {
                           "width": "fit-content",
-                          "borderBottom": "none !important",
-                          "borderRight": "none !important"
+                          "border": "none",
+                          "height": "fit-content"
                         },
                         "textColor": "#fff",
                         "backgroundColor": "#333",
+                        "ellipsis": false,
                         "mode": "horizontal",
+                        "class": "",
                         "option": [
                           {
                             "title": "首页",
@@ -85,7 +89,8 @@
                           }
                         ]
                       },
-                      "id": "menu1"
+                      "id": "6se2ybdc",
+                      "parentId": "header1"
                     },
                     {
                       "label": "登录",
@@ -609,7 +614,7 @@
                       "padding": "5px",
                       "backgroundColor": "#fff",
                       "marginBottom": "20px",
-                      "height": "500px"
+                      "height": "fit-content"
                     },
                     "class": ""
                   },
@@ -622,7 +627,8 @@
                           "color": "#000",
                           "fontSize": "24px",
                           "marginLeft": "auto",
-                          "marginRight": "auto"
+                          "marginRight": "auto",
+                          "display": "block"
                         },
                         "class": ""
                       },
@@ -653,7 +659,7 @@
                               "backgroundColor": "#F9F9F9",
                               "borderRadius": "5px"
                             },
-                            "class": "rounded-lg",
+                            "class": "",
                             "fit": "cover",
                             "src": "https://picsum.photos/id/2/5000/3333"
                           },
