@@ -34,9 +34,7 @@ const pageConfig = ref<Page>({
 const clonePageConfig = { ...pageConfig.value };
 const currentConf = ref<Col | null>(null);
 const activeCurrent = (val: Col) => {
-  console.log(val);
-
-  currentConf.value = val;
+  currentConf.value = val ?? null;
 };
 const containerStyle = ref<{ width?: string; margin?: string }>({});
 const hasActive = ref(false);
@@ -127,7 +125,7 @@ const openPanel = ref<Record<"js" | "ref", boolean>>({
         <el-page-header style="flex: 1" content="网页设计">
           <template #title>
             <div>
-              {{ "未命名表单" }}
+              {{ "未命名项目" }}
             </div>
           </template>
           <template #content>

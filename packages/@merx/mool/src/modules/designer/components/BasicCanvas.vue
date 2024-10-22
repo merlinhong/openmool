@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="['page-design-content','h-full']"
-    ref="canvasRef"
-    :style="customStyle"
-  >
+  <div :class="['page-design-content', 'h-full']" ref="canvasRef" :style="customStyle">
     <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
     <div
       :class="[
@@ -40,13 +36,15 @@
         {
           hover_child: currAEl.hoverId == PageSchema?.id,
           enter_page: currAEl.hoverId == PageSchema?.id,
+          active: currAEl.clickId == PageSchema?.id,
         },
       ]"
       :data-tag="PageSchema?.componentName"
       :data-id="PageSchema?.id"
       :id="currAEl.clickId == PageSchema?.id ? 'active' : ''"
       @mouseleave="currAEl.hoverId = null"
-      @mouseover="currAEl.hoverId=PageSchema?.id"
+      @mouseover="currAEl.hoverId = PageSchema?.id"
+      @click="getCurrent()"
     >
       <BasicPage
         :popup="PageSchema?.popup"
@@ -74,10 +72,10 @@ import { DragUtil, type RemoveDrag } from "@/mool/utils";
 import BasicPage from "$/designer/components/canvasContainer.vue";
 
 defineComponent({
-  components:{
-    ResizeObserver
-  }
-})
+  components: {
+    ResizeObserver,
+  },
+});
 
 const props = defineProps({
   pageConfig: {
@@ -91,10 +89,10 @@ const props = defineProps({
   },
   customStyle: {
     type: Object,
-    default: () => ({width: "100%"}),
+    default: () => ({ width: "100%" }),
   },
   doc: {
-    type: Object as PropType<Document|null>,
+    type: Object as PropType<Document | null>,
     default: () => window.document,
   },
 });
@@ -135,7 +133,7 @@ const currAEl = ref<CurrAEl>({
 });
 
 let removeDrag: RemoveDrag = null;
-const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem,initializeComponentMap } = new DragUtil(
+const { dragCompToCanvas, start, enter, over, leave, end, deleteItem, copyItem, initializeComponentMap } = new DragUtil(
   {
     drag: {
       startEle: [".base-component li"],
@@ -164,18 +162,21 @@ const activeCurrent = (e: Event) => {
   currAEl.value.clickId = target.dataset.id as string;
 };
 
-const getCurrent = (conf: Col) => {
+const getCurrent = (conf?: Col) => {
   emit("active", conf);
-
-  currAEl.value.clickId = conf.id as string;
+  currAEl.value.clickId = !conf ? PageSchema.value.id : (conf?.id as string);
 };
 watch(
   () => props.hasActive,
   (n, o) => {
     if (n) {
-      const [remove] = dragCompToCanvas(PageSchema, (conf) => {
-        getCurrent(conf);
-      },props.doc as Document);
+      const [remove] = dragCompToCanvas(
+        PageSchema,
+        (conf) => {
+          getCurrent(conf);
+        },
+        props.doc as Document,
+      );
       removeDrag = remove;
     } else {
       removeDrag?.();
@@ -194,13 +195,13 @@ onUnmounted(() => {
   removeDrag?.();
 });
 defineExpose({
-  init:initializeComponentMap
-})
+  init: initializeComponentMap,
+  del,
+});
 </script>
 
 <style lang="less" scoped>
 .hover_child {
- 
   &::before {
     display: block;
     content: attr(data-tag);
@@ -221,6 +222,18 @@ defineExpose({
     border: 1px dashed #32adf7;
     pointer-events: none;
   }
-
+}
+.active {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #32adf7;
+    pointer-events: none;
+  }
 }
 </style>

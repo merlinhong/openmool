@@ -1,7 +1,7 @@
 <template>
   <div class="propSetting flex">
-    <el-scrollbar v-if="Current" :height="$props.scrollHeight">
-      <el-tabs type="card" v-model="activeName" style="height: 100%">
+    <el-scrollbar v-if="Current" :height="$props.scrollHeight" style="width: 100%;">
+      <el-tabs v-model="activeName" style="height: 100%;">
         <el-tab-pane label="属性" name="0">
           <el-collapse v-model="activeNames">
             <el-collapse-item name="1" style="padding: 0 10px">
@@ -3628,4 +3628,12 @@ const seniorConfig: Ref<BasicFormConfig> = ref({
     color: var(--el-color-primary);
   }
 }
+:deep(.el-tabs__nav-wrap::after) {
+  height: 0; /* 移除底部的线 */
+}
+:deep(.el-tabs__nav) {
+  float: none;
+  justify-content: center;
+}
+
 </style>

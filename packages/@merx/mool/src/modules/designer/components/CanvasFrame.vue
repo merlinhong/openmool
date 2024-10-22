@@ -122,12 +122,12 @@ onMounted(() => {
       });
     }
   }
-  const { ctrl_z, ctrl_y, ctrl_c, ctrl_v, meta_z, meta_y, meta_c, meta_v } = useMagicKeys({
+  const { ctrl_z, ctrl_y, ctrl_c, ctrl_v, meta_z, meta_y, meta_c, meta_v, ctrl_x, meta_x } = useMagicKeys({
     target: iframeRef.value?.contentDocument as EventTarget,
   });
   watch(
-    [ctrl_z, meta_z, ctrl_y, meta_y, ctrl_c, meta_c, ctrl_v, meta_v],
-    ([ctrlZ, metaZ, ctrlY, metaY, ctrlC, metaC, ctrlV, metaV]) => {
+    [ctrl_z, meta_z, ctrl_y, meta_y, ctrl_c, meta_c, ctrl_v, meta_v, ctrl_x, meta_x],
+    ([ctrlZ, metaZ, ctrlY, metaY, ctrlC, metaC, ctrlV, metaV, ctrlX, metaX]) => {
       if (ctrlZ || metaZ) {
         // 撤销
         undo();
@@ -140,10 +140,18 @@ onMounted(() => {
       } else if (ctrlV || metaV) {
         // 粘贴
         paste();
+      } else if(ctrlX || metaX) {
+        // 删除
+        canvasRef.value?.del(currentConf.value?.id as string);
       }
     },
   );
 });
+const del = () => {
+  if (currentConf.value) {
+    currentConf.value.children = currentConf.value.children?.filter((item) => item.id !== currentConf.value?.id);
+  }
+};
 const copy = () => {
   pasteIframe.value = JSON.parse(JSON.stringify(currentConf.value));
 };

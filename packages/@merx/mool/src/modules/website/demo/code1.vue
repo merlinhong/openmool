@@ -20,7 +20,6 @@
             :ellipsis="false"
             mode="horizontal"
             class=""
-            :menuOption="state.menuOption"
           >
             <template v-for="item in state.menuOption" :key="item.id">
               <el-sub-menu :index="item.index" v-if="item.subItems">
@@ -304,7 +303,6 @@
 <script setup lang="tsx">
 import * as vue from "vue";
 import { defineProps, defineEmits } from "vue";
-import { request } from "./utils/request";
 import { ElButton } from "element-plus";
 
 const props = defineProps({});

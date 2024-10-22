@@ -2,7 +2,6 @@ import { hmr } from './../hooks/hmr';
 import { ComponentType, Col } from "@/mool/types/BasicForm";
 export const renderColumnCompLi = [
   { text: "盒子", dataType: "div" },
-
   { text: "纯文本", dataType: "Text" },
 
   { text: "单行文本", dataType: "ElInput" },
@@ -17,65 +16,75 @@ export const renderColumnCompLi = [
   { text: "图片", dataType: "ElImage" },
   { text: "图标", dataType: "ElIcon" },
 ];
-
-export const baseComponentList = [
-  { text: "盒子", dataType: "div" },
-  { text: "纯文本", dataType: "Text" },
-
-  { text: "单行文本", dataType: "ElInput" },
-
-  { text: "多行文本", dataType: "TextArea" },
-
-  { text: "下拉框", dataType: "ElSelect" },
-
-  { text: "单选框", dataType: "ElRadio" },
-
-  { text: "多选框", dataType: "ElCheckBox" },
-
-  { text: "日期/时间", dataType: "ElDatePicker" },
-
-  { text: "按钮", dataType: "ElButton" },
-
-  { text: "图片上传", dataType: "upload" },
+export const componentGroups = [
+  {
+    title: "容器组件",
+    components: [
+      { text: "盒子", dataType: "div" },
+      { text: "Form", dataType: "ElForm" },
+      { text: "FormItem", dataType: "ElFormItem" },
+      { text: "卡片", dataType: "ElCard" },
+      { text: "弹窗", dataType: "ElDialog" },
+    ]
+  },
+  {
+    title: "布局组件",
+    components: [
+      { text: "col", dataType: "ElCol" },
+      { text: "row", dataType: "ElRow" },
+      { text: "分割线", dataType: "ElDivider" },
+      { text: "空格", dataType: "ElSpace" },
+      {text:"container",dataType:"ElContainer"},
+      {text:"header",dataType:"ElHeader"},
+      {text:"footer",dataType:"ElFooter"},
+      {text:"main",dataType:"ElMain"},
+      {text:"aside",dataType:"ElAside"},
+    ]
+  },
+  {
+    title: "表单组件",
+    components: [
+      { text: "纯文本", dataType: "Text" },
+      { text: "单行文本", dataType: "ElInput" },
+      { text: "多行文本", dataType: "TextArea" },
+      { text: "下拉框", dataType: "ElSelect" },
+      { text: "单选框", dataType: "ElRadio" },
+      { text: "多选框", dataType: "ElCheckBox" },
+      { text: "日期/时间", dataType: "ElDatePicker" },
+      { text: "按钮", dataType: "ElButton" },
+    ]
+  },
+  {
+    title: "数据展示组件",
+    components: [
+      { text: "表格", dataType: "ElTable" },
+      { text: "图片", dataType: "ElImage" },
+      { text: "图标", dataType: "ElIcon" },
+      { text: "多标签页", dataType: "ElTags" },
+      { text: "走马灯", dataType: "ElCarousel" },
+      { text: "进度条", dataType: "ElSteps" },
+    ]
+  },
+  {
+    title: "导航组件",
+    components: [
+      { text: "面包屑", dataType: "ElBreadCrumb" },
+      { text: "导航栏", dataType: "ElPageHeader" },
+      { text: "菜单", dataType: "ElMenu" },
+    ]
+  },
+  {
+    title: "其他组件",
+    components: [
+      { text: "图片上传", dataType: "upload" },
+      { text: "子表单", dataType: "ElBreadCrumb" },
+    ]
+  }
 ];
 
-
-export const seniorComponentList = [
-
-  { text: "Form", dataType: "ElForm" },
-
-  { text: "FormItem", dataType: "ElFormItem" },
-
-  { text: "col", dataType: "ElCol" },
-
-  { text: "row", dataType: "ElRow" },
-
-  { text: "图片", dataType: "ElImage" },
-
-  { text: "图标", dataType: "ElIcon" },
-  
-  { text: "表格", dataType: "ElTable" },
-  {text:'弹窗',dataType:'ElDialog'},
-
-  { text: "多标签页", dataType: "ElTags" },
-
-  { text: "面包屑", dataType: "ElBreadCrumb" },
-
-  { text: "分割线", dataType: "ElDivider" },
-
-  { text: "子表单", dataType: "ElBreadCrumb" },
-
-  { text: "进度条", dataType: "ElSteps" },
-
-  { text: "卡片", dataType: "ElCard" },
-
-  { text: '走马灯', dataType: 'ElCarousel' },
-
-  { text: "导航栏", dataType: "ElPageHeader" },
-
-  { text: "菜单", dataType: "ElMenu" },
-
-];
+// 保留原来的 baseComponentList 和 seniorComponentList，以防其他地方还在使用
+export const baseComponentList = componentGroups.flatMap(group => group.components);
+export const seniorComponentList = [];
 
 export const JsonSchema: {
   [K in ComponentType]: Col;
@@ -127,6 +136,46 @@ export const JsonSchema: {
     },
     key: "text",
     componentName: "Text",
+  },
+  ElContainer: {
+    componentName: "ElContainer",
+    props: {
+      style: { },
+      class: "",
+    },
+    children: [],
+  },
+  ElHeader: {
+    componentName: "ElHeader",
+    props: {
+      style: { },
+      class: "",
+    },
+    children: [],
+  },
+  ElFooter: {
+    componentName: "ElFooter",
+    props: {
+      style: {  },
+      class: "",
+    },
+    children: [],
+  },  
+  ElMain: {
+    componentName: "ElMain",
+    props: {
+      style: { },
+      class: "",
+    },
+    children: [],
+  },
+  ElAside: {
+    componentName: "ElAside",
+    props: {
+      style: {  },
+      class: "",
+    },
+    children: [],
   },
 
   ElInput: {

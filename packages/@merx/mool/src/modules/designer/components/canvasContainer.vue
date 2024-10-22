@@ -112,6 +112,31 @@ const renderForm: {
       return <el-form-item></el-form-item>;
     },
   },
+  ElContainer: {
+    render: (data, col, child) => {
+      return <el-container></el-container>;
+    },
+  },
+  ElHeader: {
+    render: (data, col, child) => {
+      return <el-header></el-header>;
+    },
+  },
+  ElFooter: {
+    render: (data, col, child) => {
+      return <el-footer></el-footer>;
+    },
+  }, 
+  ElMain: {
+    render: (data, col, child) => {
+      return <el-main></el-main>;
+    },
+  },
+  ElAside: {
+    render: (data, col, child) => {
+      return <el-aside></el-aside>;
+    },
+  },
   Text: {
     render: (data, col) => {
       return (

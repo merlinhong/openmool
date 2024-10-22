@@ -171,10 +171,10 @@ const handleLiteralBinding = ({
 
       state[key == "data" ? "table" + valueKey : valueKey] = item;
 
-      return attrsArr.push(`:${key}="state.${key == "data" ? "table" + valueKey : valueKey}"`);
+      return !exteralArr.includes(component)&&attrsArr.push(`:${key}="state.${key == "data" ? "table" + valueKey : valueKey}"`);
     }
 
-    return !exteralArr.includes(component)&&attrsArr.push(`:${key}="${parsedValue.replace(/"/g, "&quot;")}"`);
+    return attrsArr.push(`:${key}="${parsedValue.replace(/"/g, "&quot;")}"`);
   }
 
   // number/boolean/expression 使用 v-bind 绑定
