@@ -530,11 +530,8 @@ const CanvasComp: (col: Col, isSlot?: Boolean, isRender?: Boolean) => VNode = (
             ? col?.children.length
               ? col?.children.map((child) => CanvasComp(child, child?.componentName == "ElCard", isRender))
               : ""
-            : null,
-        // props.isPreview &&
-        //   props.popup?.map((item: Col) => {
-        //     return CanvasComp(item, false, false);
-        //   }),
+            : null
+        
       ],
     });
   }

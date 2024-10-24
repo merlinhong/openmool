@@ -48,7 +48,7 @@ const changeSize = (option: { size: string; isPC: boolean }) => {
   containerStyle.value.width = option.size;
 };
 
-const querySchema = (id: string = "55ty4epk") => {
+const querySchema = (id: string = "cmef4ey5") => {
   setLoading(true);
   Object.assign(pageConfig.value, clonePageConfig);
   fetch(`/api/query-schema/${id}`, {

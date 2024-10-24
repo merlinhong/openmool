@@ -6,6 +6,7 @@
     </div>
     <div class="card-actions">
       <button @click.stop="$emit('open', project)">打开</button>
+      <el-divider direction="vertical" class="!m-auto !h-[30px]"></el-divider>
       <button @click.stop="$emit('delete', project)" class="delete-btn">删除</button>
     </div>
   </div>
@@ -60,11 +61,11 @@ p {
 .card-actions {
   display: flex;
   border-top: 1px solid v-bind('theme.border');
+  background-color: #faf9f9;
 }
 
 button {
   flex: 1;
-  background-color: v-bind('theme.buttonBg');
   color: v-bind('theme.text');
   border: none;
   padding: 0.5rem 1rem;
@@ -77,6 +78,5 @@ button:hover {
 }
 
 .delete-btn {
-  color: #d32f2f;
 }
 </style>

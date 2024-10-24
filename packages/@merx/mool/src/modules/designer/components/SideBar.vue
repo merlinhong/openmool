@@ -2,7 +2,8 @@
   <div class="sidebar-container">
     <nav class="sidebar-nav">
       <div class="top-buttons">
-        <div v-for="item in btnGroup" :key="item.name" style="padding: 5px; width: 100%;" :class="[{ 'active-button': item.active }]">
+        <div v-for="item in btnGroup" :key="item.name" style="padding: 5px; width: 100%;"
+          :class="[{ 'active-button': item.active }]">
           <button @click="openPanel(item.name as any)" :class="item.className" style="margin:auto">
             {{ item.name }}
           </button>
@@ -12,10 +13,8 @@
       <div class="bottom-buttons">
         <button class="icon-button" @click="openRobot">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              fell="currentColor"
-              d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
-            />
+            <path fell="currentColor"
+              d="M13.5 2c0 .444-.193.843-.5 1.118V5h5a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h5V3.118A1.5 1.5 0 1 1 13.5 2M6 7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-4 3H0v6h2zm20 0h2v6h-2zM9 14.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m6 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3" />
           </svg>
         </button>
         <button class="icon-button" @click="openPanel('schema')">
@@ -35,19 +34,10 @@
           <el-scrollbar height="80vh">
             <div class="component-list">
               <ElCollapse v-model="activeGroups">
-                <ElCollapseItem
-                  v-for="(group, index) in componentGroups"
-                  :key="index"
-                  :title="group.title"
-                  :name="index"
-                >
+                <ElCollapseItem v-for="(group, index) in componentGroups" :key="index" :title="group.title" :name="index">
                   <ul class="base-component">
-                    <li
-                      v-for="item in group.components"
-                      :key="item.dataType"
-                      :data-type="item.dataType"
-                      class="component-item"
-                    >
+                    <li v-for="item in group.components" :key="item.dataType" :data-type="item.dataType"
+                      class="component-item">
                       <div class="component-item-inner">
                         <span>{{ item.text }}</span>
                       </div>
@@ -65,26 +55,25 @@
       </el-tabs>
     </aside>
 
-    <div class="w-[260px] absolute border-r border-[#e2e2e2] bg-white h-full left-[44px] z-[999]" v-if="showVar">
-      <div class="flex p-5 box-border">
+    <div class="w-[260px] absolute border-r border-l border-[#e2e2e2] bg-white h-full left-[44px] z-[999]" v-if="showVar">
+      <div class="flex px-5 pt-5 box-border">
         <el-radio-group v-model="addType" @change="setVar">
           <el-radio-button value="添加变量" label="添加变量"></el-radio-button>
           <el-radio-button value="添加生命周期" label="添加生命周期"></el-radio-button>
         </el-radio-group>
       </div>
 
-      <el-divider class="mt-0"></el-divider>
+      <el-divider class="mt-0 "></el-divider>
 
       <div class="p-[5px]">
         <div v-for="item in addList">{{ item }}</div>
       </div>
     </div>
 
-    <div class="w-[400px] absolute border-r border-[#e2e2e2] bg-white h-full left-[44px] z-[999]" v-if="setVarRef">
-      <div class="flex justify-end p-[10px]">
-        <el-button type="primary" plain size="small" @click="saveEditor"
-          >保存<span class="text-red-500" v-if="isChange">*</span></el-button
-        >
+    <div class="w-[400px] absolute border-r border-[#e2e2e2] bg-white h-full left-[304px] z-[999]" v-if="setVarRef">
+      <div class="flex justify-end p-3  box-border">
+        <el-button type="primary" plain size="small" @click="saveEditor">保存<span class="text-red-500"
+            v-if="isChange">*</span></el-button>
       </div>
 
       <el-divider class="mt-0"></el-divider>
@@ -104,9 +93,8 @@
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面JS</h4>
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span class="text-red-500" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
           <i-ep-delete></i-ep-delete>
         </div>
       </div>
@@ -117,40 +105,27 @@
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面Ref</h4>
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span class="text-red-500" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
         </div>
       </div>
-      <MlEditorMonaco
-        :ref="setRefs('editor')"
-        height="100%"
-        v-model="refcode"
-        lang="typescript"
-        border
-      ></MlEditorMonaco>
+      <MlEditorMonaco :ref="setRefs('editor')" height="100%" v-model="refcode" lang="typescript" border></MlEditorMonaco>
     </div>
 
     <div v-if="showSchema" class="w-[600px] absolute bg-white border-r border-[#e2e2e2] h-full left-[44px] z-[999]">
       <div class="flex justify-between items-center p-[2px_5px]">
         <h4 class="px-5">页面schema</h4>
         <div>
-          <el-button type="primary" plain @click="saveEditor"
-            >保存<span class="text-red-500" v-if="isChange">*</span></el-button
-          >
+          <el-button type="primary" plain @click="saveEditor">保存<span class="text-red-500"
+              v-if="isChange">*</span></el-button>
           <el-button type="primary" text @click="showSchema = false">关闭</el-button>
         </div>
       </div>
       <MlEditorMonaco :ref="setRefs('editor')" height="85%" v-model="schemaCode" border></MlEditorMonaco>
     </div>
   </div>
-  <RobotMainVue
-    v-if="openAiRef"
-    :schema="props.currentConf"
-    @update:schema="updateConf"
-    :foundationModel="foundationModel"
-    class="robot-main"
-  />
+  <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf"
+    :foundationModel="foundationModel" class="robot-main" />
   <PagePanel v-if="showPagePanel" @close="showPagePanel = false" @selectPage="selectPage" />
 </template>
 
@@ -246,23 +221,28 @@ const openPanel = (panel: "+" | "schema" | "JS" | "ref" | "var" | "setVar" | "Pa
 
   // 先关闭所有面板
   closeAllPanels();
-
+  if (panel == 'setVar') {
+    showVar.value = true;
+    setVarRef.value = true;
+  }
   // 如果当前面板已经打开，那么就保持关闭状态
   if (isCurrentPanelOpen) {
+
     btnGroup.value.forEach((item) => {
-    if (item.name == panel) {
-      item.active = false;
-    }
-  });
+      if (item.name == panel&&panel!='setVar') {
+        item.active = false;
+      }
+    });
     return;
   }
   btnGroup.value.forEach((item) => {
     if (item.name == panel) {
       item.active = true;
     } else {
-      item.active = false;
+      panel!='setVar'&&(item.active = false);
     }
   });
+
   switch (panel) {
     case "+":
       drawer.value = true;
@@ -352,6 +332,8 @@ const initEditorWithCommonOptions = (options: {
 };
 
 const setVar = () => {
+  console.log(33);
+
   openPanel("setVar");
 };
 
@@ -726,6 +708,7 @@ const activeGroups = ref([0]); // 默认展开第一个分组
   border-radius: 4px;
   transition: all 0.3s ease;
   cursor: move;
+
   &:hover {
     box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
@@ -795,13 +778,15 @@ const activeGroups = ref([0]); // 默认展开第一个分组
 }
 
 .centered-tabs :deep(.el-tabs__nav-wrap::after) {
-  height: 0; /* 移除底部的线 */
+  height: 0;
+  /* 移除底部的线 */
 }
 
 .centered-tabs :deep(.el-tabs__nav) {
   float: none;
   justify-content: center;
 }
+
 .active-button {
   border-right: 2px solid #409eff;
 }

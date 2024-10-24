@@ -1,48 +1,44 @@
 <template>
   <div class="project-manager">
     <header class="top-nav">
-      <h1>项目管理器</h1>
-      <nav>
-        <a href="#" @click="activeTab = 'projects'" :class="{ active: activeTab === 'projects' }">项目列表</a>
-        <a href="#" @click="activeTab = 'pages'" :class="{ active: activeTab === 'pages' }">图片列表</a>
-        <a href="#" @click="activeTab = 'components'" :class="{ active: activeTab === 'components' }">组件库</a>
-      </nav>
+      <h1><strong>MoolEngine</strong></h1>
+      <el-tabs class="m-auto" @tab-change="toggle">
+        <el-tab-pane label="我的应用" name="0">
+        </el-tab-pane>
+        <el-tab-pane label="应用中心" name="1"></el-tab-pane>
+        <el-tab-pane label="组件市场" name="2"></el-tab-pane>
+        <el-tab-pane label="使用手册" name="3"></el-tab-pane>
+      </el-tabs>
+      <div style="width: 300px; text-align: right">
+        <el-icon class="text-gray-500 text-2xl mx-2 align-top"> <i-ep-Avatar /></el-icon>登录
+      </div>
     </header>
-    <main>
-      <ProjectList v-if="activeTab === 'projects'" @select-project="selectProject" />
-      <PageList v-else-if="activeTab === 'pages' && selectedProject" :project-id="selectedProject.id" />
-      <!-- <ComponentLibrary v-else-if="activeTab === 'components'" /> -->
-      <div v-else class="placeholder">请选择一个项目以查看其页面</div>
-    </main>
+    <section class="w-full h-[250px] bg-blue-100 flex justify-evenly">
+      <h2 class="flex justify-center items-center text-4xl ">
+        我的应用
+      </h2>
+      <svg>
+        <use xlink:href="#icon-banner" />
+      </svg>
+    </section>
+    <ProjectList @select-project="selectProject" v-if="type == 0" />
   </div>
 </template>
 
-<script>
+<script setup lang="tsx">
+import * as vue from 'vue';
 import ProjectList from '../components/ProjectList.vue';
 import PageList from '../components/PageList.vue';
 // import ComponentLibrary from '../components/ComponentLibrary.vue';
 import { theme } from '../config';
 
-export default {
-  components: {
-    ProjectList,
-    PageList,
-    // ComponentLibrary,
-  },
-  data() {
-    return {
-      activeTab: 'projects',
-      selectedProject: null,
-      theme,
-    };
-  },
-  methods: {
-    selectProject(project) {
-      this.selectedProject = project;
-      this.activeTab = 'pages';
-    },
-  },
-};
+const type = vue.ref(0);
+const toggle = (val: number) => {
+  console.log(val);
+  type.value = val
+
+}
+
 </script>
 
 <style scoped>
@@ -57,7 +53,7 @@ export default {
 .top-nav {
   background-color: white;
   color: v-bind('theme.text');
-  padding: 1rem;
+  padding: 0.2rem 1rem;
   display: flex;
   align-items: center;
   border-bottom: 1px solid v-bind('theme.border');
@@ -74,17 +70,6 @@ export default {
   width: 90%;
 }
 
-.top-nav nav a {
-  color: v-bind('theme.text');
-  text-decoration: none;
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-}
-
-.top-nav nav a.active {
-  background-color: v-bind('theme.secondary');
-}
 
 main {
   flex: 1;
@@ -99,5 +84,10 @@ main {
   height: 100%;
   font-size: 18px;
   color: v-bind('theme.lightText');
+}
+
+:deep(.el-tabs__nav-wrap::after) {
+  height: 0;
+  /* 移除底部的线 */
 }
 </style>

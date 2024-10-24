@@ -207,8 +207,8 @@
           <span>{{ item.text }}</span>
         </li>
       </ul>
-      <BasicCanvas ref="canvasRef" :pageConfig="renderSchema" hasActive
-        :customStyle="{ width: '100%', height: '100%', margin: '20px', backgroundColor: '#f1f1f1' }"
+      <BasicCanvas ref="canvasRef" :pageConfig="renderSchema"
+        :customStyle="{ margin: '20px', backgroundColor: '#f1f1f1' }"
         @active="activeCurrent" />
       <el-aside>
         <config-plane scrollHeight="40vh" style="height: fit-content" :is-show-config="true" v-model:current="currentConf"
@@ -296,7 +296,7 @@ import BasicCanvas from "./BasicCanvas.vue";
 import * as _ from "lodash-es";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 // 渲染schema
-const renderSchema = ref<Col>({
+const renderSchema = ref<Page>({
   ref: {},
   lifeCycles: {},
   state: {},
@@ -619,20 +619,20 @@ const editPopup = (index: number) => {
   currPopupIndex.value = index;
 };
 const deletePopup = (index: number) => {
-  PageConfig.value.popup.splice(index, 1);
+  PageConfig.value.popup?.splice(index, 1);
 };
 const addPopup = () => {
-  PageConfig.value.ref[`dialogVisible${PageConfig.value.popup.length || ""}`] = false;
+  PageConfig.value.ref[`dialogVisible${PageConfig.value.popup?.length || ""}`] = false;
 
-  PageConfig.value.popup.push({
+  PageConfig.value.popup?.push({
     componentName: "ElDialog",
     props: {
       style: {},
-      title: `弹窗${PageConfig.value.popup.length + 1}`,
+      title: `弹窗${PageConfig.value.popup?.length + 1}`,
       width: "50%",
       value: {
         type: "JSExpression",
-        value: `dialogVisible${PageConfig.value.popup.length || ""}`,
+        value: `dialogVisible${PageConfig.value.popup?.length || ""}`,
         model: {
           prop: "modelValue",
         },

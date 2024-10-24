@@ -2,10 +2,17 @@
   "pageInfo": {
     "name": "摄影官网ai",
     "schema": {
-      "ref": {},
+      "ref": {
+        "dialogVisible": false
+      },
       "lifeCycles": {},
       "state": {},
-      "methods": {},
+      "methods": {
+        "onClick": {
+          "type": "JSFunction",
+          "value": "function onClick(event){\ndialogVisible.value = true\n}"
+        }
+      },
       "componentName": "摄影官网ai",
       "props": {
         "style": {
@@ -13,6 +20,24 @@
           "overflow": "auto"
         }
       },
+      "popup": [
+        {
+          "componentName": "ElDialog",
+          "props": {
+            "style": {},
+            "title": "弹窗1",
+            "width": "50%",
+            "value": {
+              "type": "JSExpression",
+              "value": "dialogVisible",
+              "model": {
+                "prop": "modelValue"
+              }
+            }
+          },
+          "children": []
+        }
+      ],
       "children": [
         {
           "componentName": "div",
@@ -103,7 +128,11 @@
                           "justifyContent": "space-between"
                         },
                         "type": "primary",
-                        "plain": true
+                        "plain": true,
+                        "onClick": {
+                          "type": "JSExpression",
+                          "value": "onClick"
+                        }
                       },
                       "id": "button1"
                     }
@@ -475,7 +504,7 @@
                   "componentName": "div",
                   "props": {
                     "style": {
-                      "height": "500px",
+                      "height": "fit-content",
                       "display": "flex",
                       "padding": "15px",
                       "alignItems": "center",
@@ -520,8 +549,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -533,8 +561,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -547,8 +574,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -561,8 +587,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -575,8 +600,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -589,8 +613,7 @@
                           "componentName": "ElImage",
                           "props": {
                             "style": {
-                              "width": "33%",
-                              "height": "33%"
+                              "width": "33%"
                             },
                             "class": "",
                             "fit": "cover",
@@ -614,7 +637,8 @@
                       "padding": "5px",
                       "backgroundColor": "#fff",
                       "marginBottom": "20px",
-                      "height": "fit-content"
+                      "height": "fit-content",
+                      "marginTop": "40px"
                     },
                     "class": ""
                   },
@@ -625,10 +649,11 @@
                         "style": {
                           "width": "fit-content",
                           "color": "#000",
-                          "fontSize": "24px",
+                          "fontSize": "28px",
                           "marginLeft": "auto",
                           "marginRight": "auto",
-                          "display": "block"
+                          "display": "block",
+                          "fontWeight": "bold"
                         },
                         "class": ""
                       },
@@ -655,9 +680,9 @@
                             "style": {
                               "width": "100%",
                               "height": "100%",
-                              "margin": "0px 10px",
                               "backgroundColor": "#F9F9F9",
-                              "borderRadius": "5px"
+                              "borderRadius": "5px",
+                              "border": "1px solid #f1f1f1"
                             },
                             "class": "",
                             "fit": "cover",
@@ -676,7 +701,8 @@
                               "justifyContent": "center",
                               "height": "100%",
                               "lineHeight": "30px",
-                              "letterSpacing": "2px"
+                              "letterSpacing": "2px",
+                              "padding": "15px"
                             },
                             "class": ""
                           },

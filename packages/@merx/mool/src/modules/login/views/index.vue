@@ -9,14 +9,13 @@
 					<span v-for="text in app.info.name" :key="text">{{ text }}</span>
 				</div>
 			</div> -->
-
       <div>
         <svg>
           <use xlink:href="#icon-website" />
         </svg>
       </div>
       <p class="desc" style="font-size: 28px; font-weight: bold; letter-spacing: 5px;margin-top:20px">
-        MlDesigner低代码官网CMS
+        MoolEngine低代码官网
       </p>
 
       <div class="form">

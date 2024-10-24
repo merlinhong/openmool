@@ -1,5 +1,5 @@
 <template>
-  <div :class="['page-design-content', 'h-full']" ref="canvasRef" :style="customStyle">
+  <div :class="['page-design-content', 'h-full']" ref="canvasRef" :style="{width:'100%',height:'100%',...customStyle}">
     <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
     <div
       :class="[
@@ -89,7 +89,7 @@ const props = defineProps({
   },
   customStyle: {
     type: Object,
-    default: () => ({ width: "100%" }),
+    default: () => ({ width: "100%",height:'100%' }),
   },
   doc: {
     type: Object as PropType<Document | null>,
@@ -122,7 +122,6 @@ type CurrAEl = {
 
 const canvasRef = ref<HTMLElement>();
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
-console.log(PageSchema.value);
 
 const currAEl = ref<CurrAEl>({
   clickId: null,
