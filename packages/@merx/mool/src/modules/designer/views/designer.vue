@@ -7,10 +7,16 @@ import CanvasFrame from "../components/CanvasFrame.vue"; // 导入 CanvasFrame �
 import ConfigPlane from "../components/settings.vue";
 import useLoading from "@/mool/hooks/loading";
 import { useStore } from "@/mool/store";
+import { useMool } from "@/mool";
 import { useMagicKeys, useEventListener } from "@vueuse/core";
+const {route} = useMool();
 const { loading, setLoading } = useLoading(true);
 const { canvas } = useStore();
 const canvasFrameRef = ref<InstanceType<typeof CanvasFrame> | null>(null);
+
+const projectName = ref('');
+const pageName = ref('');
+
 const pageConfig = ref<Page>({
   ref: {},
   lifeCycles: {},
@@ -109,28 +115,33 @@ const handleKeyDown = (e: KeyboardEvent) => {
 };
 // 修改组件挂载逻辑
 onMounted(() => {
-  querySchema();
+  projectName.value = route.query?.projectName as string;
+  pageName.value = route.query?.pageName as string;
+  querySchema(route.query?.id as string);
 });
 
 const openPanel = ref<Record<"js" | "ref", boolean>>({
   js: false,
   ref: false,
 });
+const back = ()=>{
+  window.history.go(-1)
+}
 </script>
 
 <template>
   <div class="common-layout">
     <el-container>
       <el-header style="display: flex; align-items: center; background: #fff">
-        <el-page-header style="flex: 1" content="网页设计">
+        <el-page-header style="flex: 1" content="网页设计" @back="back()">
           <template #title>
             <div>
-              {{ "未命名项目" }}
+              {{ projectName}}
             </div>
           </template>
           <template #content>
             <div style="display: flex; align-items: center; justify-content: end; width: 45vw">
-              <span class="text-large font-600 mr-3"> 网页设计 </span>
+              <span class="text-large font-600 mr-3"> {{ pageName }} </span>
             </div>
           </template>
           <template #extra>

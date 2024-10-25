@@ -1,5 +1,4 @@
 <template>
-
   <div class="page-login">
 
     <div class="box">
@@ -9,12 +8,12 @@
 					<span v-for="text in app.info.name" :key="text">{{ text }}</span>
 				</div>
 			</div> -->
-      <div>
+      <!-- <div>
         <svg>
           <use xlink:href="#icon-website" />
         </svg>
-      </div>
-      <p class="desc" style="font-size: 28px; font-weight: bold; letter-spacing: 5px;margin-top:20px">
+      </div> -->
+      <p class="desc" style="font-size: 28px; font-weight: bold; letter-spacing: 5px;">
         MoolEngine低代码官网
       </p>
 
@@ -34,8 +33,8 @@
               <input v-model="form.verifyCode" placeholder="图片验证码" maxlength="4" />
 
               <pic-captcha v-model="form.captchaId" @change="() => {
-                  form.verifyCode = '';
-                }
+                form.verifyCode = '';
+              }
                 " />
             </div>
           </el-form-item>
@@ -46,30 +45,25 @@
         </el-form>
       </div>
     </div>
-    <div class="bg">
+    <div class="bg relative">
       <svg class="cl-svg cl-svg__bg">
         <use xlink:href="#icon-bg" />
       </svg>
     </div>
-
+    <svg class="absolute inset-[240px] w-[300px] h-[300px]">
+      <use xlink:href="#icon-website" />
+    </svg>
     <a href="https://cool-js.com" class="copyright"> Copyright © MlDesign </a>
   </div>
 </template>
 
 <script lang="tsx" name="login" setup>
 import { reactive, ref } from "vue";
-// import { useCool } from "/@/cool";
+import { useMool } from "@/mool";
 // import { useBase } from "/$/base";
 import PicCaptcha from "../components/pic-captcha.vue";
 // import { storage } from "/@/cool/utils";
-const useCool = () => {
-  return {
-    refs: {},
-    setRefs: {},
-    router: {},
-    service: {},
-  };
-};
+
 const useBase = () => {
   return {
     user: {},
@@ -77,7 +71,7 @@ const useBase = () => {
   };
 };
 
-const { refs, setRefs, router, service } = useCool();
+const { refs, setRefs, router } = useMool();
 const { user, app } = useBase();
 
 // 状态
@@ -96,6 +90,7 @@ const form = reactive({
 
 // 登录
 async function toLogin() {
+  return router.push("/project");
   if (!form.username) {
     return ElMessage.error("用户名不能为空");
   }

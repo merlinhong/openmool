@@ -12,8 +12,8 @@ export const theme = {
 export default {
     pages: [
 		{
-		  path: "/applyManagement",
-          name: "applyManagement",
+		  path: "/project",
+          name: "project",
 		  component: () => import("./views/index.vue"),
 		},
 	  ]

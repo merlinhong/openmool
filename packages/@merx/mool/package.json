@@ -24,6 +24,7 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vue/shared": "^3.5.10",
     "@vueuse/core": "^11.1.0",
+    "@vueuse/motion": "^2.2.6",
     "Tesseract.js": "npm:tesseract.js@^5.1.1",
     "axios": "^1.6.5",
     "cors": "^2.8.5",

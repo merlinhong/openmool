@@ -94,7 +94,7 @@ const renderForm: {
           <el-carousel>
             {col?.props.option?.map((item) => {
               return (
-                <el-carousel-item {...item}>{item.schema && CanvasComp(item.schema, false, true)}</el-carousel-item>
+                <el-carousel-item {...item} >{item.schema && CanvasComp(item.schema, false, true)}</el-carousel-item>
               );
             })}
           </el-carousel>

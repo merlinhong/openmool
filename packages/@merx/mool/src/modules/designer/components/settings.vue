@@ -1093,6 +1093,7 @@ const saveRender = () => {
     const option = Current.value.props?.option ?? [];
 
     option[currCarouselIndex.value ?? 0].schema = schema;
+    option[currCarouselIndex.value ?? 0].style = {height:'auto'};
   }
   renderDialogVisible.value = false;
 };

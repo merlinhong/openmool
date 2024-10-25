@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Pages" v-model="dialogVisible" @close="handleClose">
+  <el-dialog title="当前应用页面列表" v-model="dialogVisible" @close="handleClose">
     <el-table :data="pages" style="width: 100%">
       <el-table-column prop="name" label="页面列表">
         <template #default="scope">

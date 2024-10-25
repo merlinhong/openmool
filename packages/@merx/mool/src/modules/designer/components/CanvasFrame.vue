@@ -3,7 +3,6 @@ import { ref, onMounted, watch, nextTick, onUnmounted, Ref } from "vue";
 import BasicCanvas from "./BasicCanvas.vue";
 import { Page, Col } from "@/mool/types";
 import { useMagicKeys, useEventListener } from "@vueuse/core";
-
 const props = defineProps<{
   pageConfig: Page;
   currentConf?: Col;

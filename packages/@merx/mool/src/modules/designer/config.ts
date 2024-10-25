@@ -6,9 +6,9 @@ export default {
       component: () => import("$/designer/demo/base.vue"),
     },
     {
-      path: "/page",
-      name: "page",
-      component: () => import("$/designer/views/page.vue"),
+      path: "/designer",
+      name: "Designer ",
+      component: () => import("$/designer/views/designer.vue"),
       children: [],
       meta: {
         title: "MoolEngine",

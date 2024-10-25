@@ -1,5 +1,5 @@
 import { isArray, isNumber, isString, orderBy } from "lodash-es";
-import { hyphenate,camelize } from '@vue/shared';
+import { hyphenate, camelize } from '@vue/shared';
 import { resolveComponent } from "vue";
 import storage from "./storage";
 
@@ -16,11 +16,20 @@ export function getNames(value: any) {
 }
 
 // 获取地址栏参数
-export function getUrlParam(name: string): string | null {
+export function getUrlParam(name: string, isHash: boolean = false, target: Window | null = window,): string | null {
 	const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-	const r = window.location.search.substring(1).match(reg);
-	if (r != null) return decodeURIComponent(r[2]);
-	return null;
+	if (isHash) {
+		const hash = target?.location.hash;
+		// // 创建 URL 对象，注意去掉 # 符号
+		const urlObj = new URL((hash ?? '').slice(1), window.location.origin);
+		// // 使用 URLSearchParams 获取查询参数
+		const params = new URLSearchParams(urlObj.search);
+		return params.get(name)
+	} else {
+		const r = target?.location.search.substring(1).match(reg);
+		if (r != null) return decodeURIComponent(r[2]);
+		return null;
+	}
 }
 
 // 文件名
@@ -66,18 +75,18 @@ export function _uuid(separator = "-"): string {
 
 // 组件id
 export function uuid(e: number = 8) {
-    e = e || 8;
-  
-    const t = "abcdefhijkmnprstwxyz2345678";
-  
-    const a = t.length;
-  
-    let n = "";
-  
-    for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
-  
-    return n;
-  }
+	e = e || 8;
+
+	const t = "abcdefhijkmnprstwxyz2345678";
+
+	const a = t.length;
+
+	let n = "";
+
+	for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+
+	return n;
+}
 // 浏览器信息
 export function getBrowser() {
 	const { clientHeight, clientWidth } = document.documentElement;
@@ -315,67 +324,67 @@ export function sleep(duration: number) {
 const IV = new Uint8Array([2, 2, 4, 8, 5, 7, 7, 8, 0, 9, 1, 4, 3, 8, 5, 6]); //初始向量
 
 export async function encrypt(data: string, base64Key: string) {
-  // 将 Base64 编码的密钥解码为 Uint8Array
-  const key = await window.crypto.subtle.importKey(
-    "raw",
-    Uint8Array.from(atob(base64Key), (c) => c.charCodeAt(0)),
-    "AES-GCM",
-    true,
-    ["encrypt"],
-  );
+	// 将 Base64 编码的密钥解码为 Uint8Array
+	const key = await window.crypto.subtle.importKey(
+		"raw",
+		Uint8Array.from(atob(base64Key), (c) => c.charCodeAt(0)),
+		"AES-GCM",
+		true,
+		["encrypt"],
+	);
 
-  // 生成随机 IV
-  // const iv = window.crypto.getRandomValues(new Uint8Array(12));
-  // 将数据编码为 Uint8Array
-  const encodedData = new TextEncoder().encode(data);
+	// 生成随机 IV
+	// const iv = window.crypto.getRandomValues(new Uint8Array(12));
+	// 将数据编码为 Uint8Array
+	const encodedData = new TextEncoder().encode(data);
 
-  // 使用 AES-GCM 加密数据
-  const encryptedBytes = await window.crypto.subtle.encrypt(
-    {
-      name: "AES-GCM",
-      iv: IV,
-      tagLength: 128,
-    },
-    key,
-    encodedData,
-  );
+	// 使用 AES-GCM 加密数据
+	const encryptedBytes = await window.crypto.subtle.encrypt(
+		{
+			name: "AES-GCM",
+			iv: IV,
+			tagLength: 128,
+		},
+		key,
+		encodedData,
+	);
 
-  // 将 IV 和加密数据一起编码为 Base64 字符串
-  const encryptedDataWithIv = new Uint8Array(12 + encryptedBytes.byteLength);
-  encryptedDataWithIv.set(IV);
-  encryptedDataWithIv.set(new Uint8Array(encryptedBytes), 12);
+	// 将 IV 和加密数据一起编码为 Base64 字符串
+	const encryptedDataWithIv = new Uint8Array(12 + encryptedBytes.byteLength);
+	encryptedDataWithIv.set(IV);
+	encryptedDataWithIv.set(new Uint8Array(encryptedBytes), 12);
 
-  return btoa(String.fromCharCode(...encryptedDataWithIv));
+	return btoa(String.fromCharCode(...encryptedDataWithIv));
 }
 export const omit = (obj: Record<string, unknown>, arr: string[]) => {
-  let newobj: Record<string, unknown> = {};
-  for (const key in obj) {
-    if (!arr.includes(key)) {
-      const element = obj[key];
-      newobj[key] = element;
-    }
-  }
+	let newobj: Record<string, unknown> = {};
+	for (const key in obj) {
+		if (!arr.includes(key)) {
+			const element = obj[key];
+			newobj[key] = element;
+		}
+	}
 
-  return newobj;
+	return newobj;
 };
 
 export const deepClone = (obj: any) => {
-  if (typeof obj != "object") return obj;
-  // 写一个循环递归深拷贝
-  let newobj: any = {};
-  for (const key in obj) {
-    const element = obj[key];
-    if (typeof element === "object") {
-      newobj[key] = deepClone(element);
-    } else {
-      newobj[key] = element;
-    }
-  }
-  console.log(newobj);
-  return newobj;
+	if (typeof obj != "object") return obj;
+	// 写一个循环递归深拷贝
+	let newobj: any = {};
+	for (const key in obj) {
+		const element = obj[key];
+		if (typeof element === "object") {
+			newobj[key] = deepClone(element);
+		} else {
+			newobj[key] = element;
+		}
+	}
+	console.log(newobj);
+	return newobj;
 };
 export { storage };
-export {hyphenate,camelize};
+export { hyphenate, camelize };
 export * from "./loading";
 export * from "./request";
 export * from "./storage";
