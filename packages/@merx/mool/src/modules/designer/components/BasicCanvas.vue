@@ -1,5 +1,9 @@
 <template>
-  <div :class="['page-design-content', 'h-full']" ref="canvasRef" :style="{width:'100%',height:'100%',...customStyle}">
+  <div
+    :class="['page-design-content', 'h-full']"
+    ref="canvasRef"
+    :style="{ width: '100%', height: '100%', ...customStyle }"
+  >
     <!-- 表单为空时的占位：从左侧拖拽来添加表单 -->
     <div
       :class="[
@@ -47,6 +51,8 @@
       @click="getCurrent()"
     >
       <BasicPage
+        :ctx="ctx"
+        :isPreview="isPreview"
         :popup="PageSchema?.popup"
         v-for="(box, ind) in PageSchema?.children"
         :key="ind"
@@ -70,12 +76,7 @@ import { ref, PropType, toRaw, watch, onMounted, nextTick, Ref, onUnmounted, def
 import { BasicFormConfig, Col, Page } from "@/mool";
 import { DragUtil, type RemoveDrag } from "@/mool/utils";
 import BasicPage from "$/designer/components/canvasContainer.vue";
-
-defineComponent({
-  components: {
-    ResizeObserver,
-  },
-});
+import { inject } from "vue";
 
 const props = defineProps({
   pageConfig: {
@@ -89,12 +90,20 @@ const props = defineProps({
   },
   customStyle: {
     type: Object,
-    default: () => ({ width: "100%",height:'100%' }),
+    default: () => ({ width: "100%", height: "100%" }),
   },
   doc: {
     type: Object as PropType<Document | null>,
     default: () => window.document,
   },
+  isPreview:{
+    type:Boolean,
+    default:false
+  },
+  ctx:{
+    type:Function,
+    default:()=>{}
+  }
 });
 
 type CurrAEl = {
@@ -211,6 +220,7 @@ defineExpose({
     color: #32adf7;
     z-index: 999;
   }
+
   &::after {
     content: "";
     position: absolute;
@@ -222,8 +232,10 @@ defineExpose({
     pointer-events: none;
   }
 }
+
 .active {
   position: relative;
+
   &::after {
     content: "";
     position: absolute;

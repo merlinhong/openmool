@@ -3,13 +3,18 @@ import { ref, onMounted, watch, nextTick, onUnmounted, Ref } from "vue";
 import BasicCanvas from "./BasicCanvas.vue";
 import { Page, Col } from "@/mool/types";
 import { useMagicKeys, useEventListener } from "@vueuse/core";
+import BasicPage from "$/designer/components/canvasContainer.vue";
+
 const props = defineProps<{
   pageConfig: Page;
   currentConf?: Col;
   hasActive?: boolean;
   customStyle?: { width?: string; margin?: string };
   loading: boolean;
+  isPreview?: boolean;
+  ctx?: Function;
 }>();
+
 const pageConfig = defineModel<Page>("pageConfig");
 const currentConf = defineModel<Col | null>("current");
 const emit = defineEmits<{
@@ -139,7 +144,7 @@ onMounted(() => {
       } else if (ctrlV || metaV) {
         // 粘贴
         paste();
-      } else if(ctrlX || metaX) {
+      } else if (ctrlX || metaX) {
         // 删除
         canvasRef.value?.del(currentConf.value?.id as string);
       }
@@ -156,7 +161,7 @@ const copy = () => {
 };
 const paste = () => {
   if (pasteIframe.value) {
-    currentConf.value?.children?.push({...pasteIframe.value,id:Date.now().toString().substring(8)});
+    currentConf.value?.children?.push({ ...pasteIframe.value, id: Date.now().toString().substring(8) });
   }
 };
 watch(
@@ -182,32 +187,28 @@ const handleActive = (val: Col) => {
 const updatePageConfig = (newConfig: Page) => {
   emit("update:pageConfig", newConfig);
 };
+console.log(props.isPreview);
+
 </script>
 
 <template>
-  <div class="iframe-container" >
-    <iframe
-      class="iframe-content"
-      ref="iframeRef"
-      frameborder="0"
-      :style="{
-        width: '100%',
-        height: '100%',
-        border: 'none',
-        backgroundColor: '#f5f6f7',
-      }"
-    >
+  <div class="iframe-container">
+    <iframe class="iframe-content" ref="iframeRef" frameborder="0" :style="{
+      width: '100%',
+      height: '100%',
+      border: 'none',
+      backgroundColor: '#f5f6f7',
+    }">
       <template v-if="iframeRef">
         <Teleport :to="iframeRef.contentDocument?.body.querySelector('#canvas-container') || 'body'">
-          <BasicCanvas
-            ref="canvasRef"
-            :pageConfig="pageConfig"
-            :hasActive="hasActive"
-            v-loading="loading"
-            @active="handleActive"
-            @update:pageConfig="updatePageConfig"
-            :doc="iframeRef.contentDocument"
-          />
+          <template v-if="!isPreview">
+            <BasicCanvas ref="canvasRef" :pageConfig="pageConfig" :hasActive="hasActive" v-loading="loading"
+              @active="handleActive" @update:pageConfig="updatePageConfig" :doc="iframeRef.contentDocument" />
+          </template>
+          <template v-else>
+            <BasicPage isPreview v-for="(box, ind) in pageConfig.children" :key="ind" :schema="box" :ctx="ctx"
+              :popup="pageConfig?.popup" />
+          </template>
         </Teleport>
       </template>
     </iframe>
@@ -217,6 +218,7 @@ const updatePageConfig = (newConfig: Page) => {
 <style scoped>
 .iframe-container {
   width: v-bind('props.customStyle?.width || "100%"');
+  height: 100%;
   overflow: hidden;
   margin: v-bind('props.customStyle?.margin || "20px 160px"');
 }

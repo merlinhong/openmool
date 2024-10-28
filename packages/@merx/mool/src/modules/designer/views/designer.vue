@@ -7,9 +7,9 @@ import CanvasFrame from "../components/CanvasFrame.vue"; // 导入 CanvasFrame �
 import ConfigPlane from "../components/settings.vue";
 import useLoading from "@/mool/hooks/loading";
 import { useStore } from "@/mool/store";
-import { useMool } from "@/mool";
+import { router, useMool } from "@/mool";
 import { useMagicKeys, useEventListener } from "@vueuse/core";
-const {route} = useMool();
+const { route } = useMool();
 const { loading, setLoading } = useLoading(true);
 const { canvas } = useStore();
 const canvasFrameRef = ref<InstanceType<typeof CanvasFrame> | null>(null);
@@ -27,7 +27,7 @@ const pageConfig = ref<Page>({
     style: {
       marginBottom: "18px",
       backgroundColor: "#fff",
-      overflow:'auto'
+      overflow: 'auto'
     },
   },
   popup: [],
@@ -53,7 +53,21 @@ const changeSize = (option: { size: string; isPC: boolean }) => {
   canvas.setCanvasType(option.isPC ? "pc" : "mobile");
   containerStyle.value.width = option.size;
 };
-
+watch(() => route.query, (n, o) => {
+  querySchema(n.id as string);
+  pageName.value = n.pageName as string
+})
+const openPage = (args: string[]) => {
+  router.push({
+    path: '/designer',
+    query: {
+      id: args[0],
+      projectName: route.query.projectName,
+      pageName: args[1]
+    }
+  })
+  querySchema(args[0])
+}
 const querySchema = (id: string = "cmef4ey5") => {
   setLoading(true);
   Object.assign(pageConfig.value, clonePageConfig);
@@ -124,7 +138,7 @@ const openPanel = ref<Record<"js" | "ref", boolean>>({
   js: false,
   ref: false,
 });
-const back = ()=>{
+const back = () => {
   window.history.go(-1)
 }
 </script>
@@ -136,7 +150,7 @@ const back = ()=>{
         <el-page-header style="flex: 1" content="网页设计" @back="back()">
           <template #title>
             <div>
-              {{ projectName}}
+              {{ projectName }}
             </div>
           </template>
           <template #content>
@@ -159,40 +173,22 @@ const back = ()=>{
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- @change 事件用于监听侧边栏的打开或关闭 -->
-        <SideBar
-          v-model:pageConfig="pageConfig"
-          @change="openBar"
-          :current-conf="currentConf"
-          @editPage="querySchema"
-          v-model:openPanel="openPanel"
-        />
+        <SideBar v-model:pageConfig="pageConfig" @change="openBar" :current-conf="currentConf" @editPage="openPage"
+          v-model:openPanel="openPanel" />
         <!-- 画布组件，用于显示和编辑页面内容 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <!-- :hasActive 用于控制画布的激活状态 -->
         <!-- @active 事件用于监听画布的激活状态 -->
-        <CanvasFrame
-          ref="canvasFrameRef"
-          v-model:pageConfig="pageConfig"
-          v-model:current="currentConf"
-          :hasActive="hasActive"
-          :customStyle="containerStyle"
-          :loading="loading"
-          @active="activeCurrent"
-          @keydown="handleKeyDown"
-          tabindex="-1"
-        />
+        <CanvasFrame ref="canvasFrameRef" v-model:pageConfig="pageConfig" v-model:current="currentConf"
+          :hasActive="hasActive" :customStyle="containerStyle" :loading="loading" @active="activeCurrent"
+          @keydown="handleKeyDown" tabindex="-1" />
 
         <!-- 侧边栏组件，用于显示和编辑页面配置 -->
         <!-- v-model:current 用于双向绑定当前配置项 -->
         <!-- v-model:pageConfig 用于双向绑定页面配置 -->
         <el-aside class="page-design-config" style="background-color: #fff; width: 260px">
-          <config-plane
-            :is-show-config="true"
-            v-model:current="currentConf"
-            v-model:pageConfig="pageConfig"
-            @openJs="openPanel.js = true"
-            @openRef="openPanel.ref = true"
-          />
+          <config-plane :is-show-config="true" v-model:current="currentConf" v-model:pageConfig="pageConfig"
+            @openJs="openPanel.js = true" @openRef="openPanel.ref = true" />
         </el-aside>
       </el-container>
     </el-container>
@@ -208,7 +204,8 @@ const back = ()=>{
 
 .common-layout {
   position: relative;
-  outline: none; /* 添加这行以去除 focus 时的轮廓 */
+  outline: none;
+  /* 添加这行以去除 focus 时的轮廓 */
 }
 
 .enter_page {

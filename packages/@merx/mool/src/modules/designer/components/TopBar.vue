@@ -1,20 +1,18 @@
 <template>
-  <div
-    class="toolbar shadow-xl flex justify-between items-center bg-white py-2.5 px-5 border-t border-b border-gray-200"
-  >
+  <div class="toolbar shadow-xl flex justify-between items-center bg-white py-2.5 px-5 border-t border-b border-gray-200">
     <span class="text-xs text-blue-400 font-bold">查看新手引导</span>
 
     <!--PC/移动端切换图标-->
     <div class="flex items-center space-x-2">
       <el-tooltip content="PC端" placement="top">
-        <el-button type="text" @click="switchToPC" :class="{ 'icon-active': isPC }">
+        <el-button type="text" @click="switchToPC(0)" :class="{ 'icon-active': isPC }">
           <el-icon class="custom-icon">
             <Monitor />
           </el-icon>
         </el-button>
       </el-tooltip>
       <el-tooltip content="移动端" placement="top">
-        <el-button type="text" @click="switchToMobile" :class="{ 'icon-active': !isPC }">
+        <el-button type="text" @click="switchToMobile(0)" :class="{ 'icon-active': !isPC }">
           <el-icon class="custom-icon">
             <Iphone />
           </el-icon>
@@ -65,39 +63,46 @@
     </div>
   </div>
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
-    <div class="">
-      <BasicPage
-        :isPreview="previewRef"
-        v-for="(box, ind) in PageSchema.children"
-        :key="ind"
-        :schema="box"
-        :ctx="ctx"
-        :popup="PageSchema?.popup"
-      />
+    <div class="flex flex-col  h-full">
+      <div class="flex items-center my-2 mx-auto">
+        <el-tooltip content="PC端" placement="top">
+          <el-button type="text" @click="switchToPC(1)" :class="{ 'icon-active': _isPC }">
+            <el-icon class="custom-icon">
+              <Monitor />
+            </el-icon>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="移动端" placement="top">
+          <el-button type="text" @click="switchToMobile(1)" :class="{ 'icon-active': !_isPC }">
+            <el-icon class="custom-icon">
+              <Iphone />
+            </el-icon>
+          </el-button>
+        </el-tooltip>
+      </div>
+      <div class="border p-1 h-full" :style="{...containerStyle}">
+        <CanvasFrame ref="canvasFrameRef" v-model:pageConfig="PageSchema" :customStyle="{margin:containerStyle.margin}"  :loading="false" isPreview :ctx="ctx"/>
+      </div>
     </div>
   </el-drawer>
   <div class="">
-    <el-result
-    class="w-80 absolute bg-white left-1/2 top-[40%] -translate-x-1/2 z-50 border border-gray-200"
-    v-if="generateCoding"
-    :icon="statuIcon"
-    :title="statuTitle"
-  >
-    <template #extra v-if="statuIcon == 'success'">
-      <el-button type="primary" @click="generateCoding = false">好的</el-button>
-    </template>
-  </el-result>
+    <el-result class="w-80 absolute bg-white left-1/2 top-[40%] -translate-x-1/2 z-50 border border-gray-200"
+      v-if="generateCoding" :icon="statuIcon" :title="statuTitle">
+      <template #extra v-if="statuIcon == 'success'">
+        <el-button type="primary" @click="generateCoding = false">好的</el-button>
+      </template>
+    </el-result>
   </div>
 </template>
 
 <script setup lang="tsx">
 import { ref, Ref, PropType, watch } from "vue";
 import { Page, Col } from "@/mool/types";
-import BasicPage from "$/designer/components/canvasContainer.vue";
+import CanvasFrame from "../components/CanvasFrame.vue"; // 导入 CanvasFrame 组件
 import { Monitor, Iphone, RefreshLeft, RefreshRight, View, Download, Upload } from "@element-plus/icons-vue";
 
 const PCSize = "100%";
-const MobileSize = "22%";
+const MobileSize = "25%";
 
 const emit = defineEmits(["changeSize"]);
 const PageSchema = defineModel<Page>("pageConfig", { required: true });
@@ -108,7 +113,7 @@ const generateCoding = ref(false);
 
 const previewRef = ref(false);
 
-const ctx = ref<Function>(function () {});
+const ctx = ref<Function>(function () { });
 
 const preview = () => {
   previewRef.value = true;
@@ -123,12 +128,11 @@ const executeCode = (code: string) => {
     `
           ${code}
           return {
-            ${
-              code
-                .match(/(?:var|let|const|function)\s+(\w+)/g)
-                ?.map((decl) => decl.split(/\s+/)[1])
-                .join(", ") || ""
-            }
+            ${code
+      .match(/(?:var|let|const|function)\s+(\w+)/g)
+      ?.map((decl) => decl.split(/\s+/)[1])
+      .join(", ") || ""
+    }
           };
         `,
   );
@@ -320,16 +324,27 @@ const saveSchema = () => {
 
 // 新增的响应式变量和方法
 const isPC = ref(true);
+const _isPC = ref(true);
 
-const switchToPC = () => {
-  isPC.value = true;
+const containerStyle = ref<{ width?: string; margin?: string }>({ margin: '0' });
+const switchToPC = (type?: number) => {
   // 这里可以添加切换到PC视图的逻辑
+  if (type) {
+    _isPC.value = true;
+    return containerStyle.value.width = '100%'
+  }
+  isPC.value = true;
+
   emit("changeSize", { size: PCSize, isPC: true });
 };
 
-const switchToMobile = () => {
-  isPC.value = false;
+const switchToMobile = (type?: number) => {
   // 这里可以添加切换到移动端视图的逻辑
+  if (type) {
+    _isPC.value = false;
+    return (containerStyle.value.width = '25%',containerStyle.value.margin="auto")
+  }
+  isPC.value = false;
   emit("changeSize", { size: MobileSize, isPC: false });
 };
 

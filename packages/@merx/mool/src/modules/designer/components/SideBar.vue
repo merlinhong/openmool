@@ -4,7 +4,7 @@
       <div class="top-buttons">
         <div v-for="item in btnGroup" :key="item.name" style="padding: 5px; width: 100%;"
           :class="[{ 'active-button': item.active }]">
-          <button @click="openPanel(item.name as any)" :class="item.className" style="margin:auto">
+          <button @click="openPanel(item.name as any)" :class="item.className" style="margin: 5px auto;">
             {{ item.name }}
           </button>
         </div>
@@ -207,7 +207,7 @@ const openPagePanel = () => {
 };
 const selectPage = (row: { id: string; name: string; schema: any }) => {
   showPagePanel.value = false;
-  emit("editPage", row.id);
+  emit("editPage", [row.id, row.name]);
 };
 const openPanel = (panel: "+" | "schema" | "JS" | "ref" | "var" | "setVar" | "Page") => {
   // 检查当前点击的面板是否已经打开
@@ -229,7 +229,7 @@ const openPanel = (panel: "+" | "schema" | "JS" | "ref" | "var" | "setVar" | "Pa
   if (isCurrentPanelOpen) {
 
     btnGroup.value.forEach((item) => {
-      if (item.name == panel&&panel!='setVar') {
+      if (item.name == panel && panel != 'setVar') {
         item.active = false;
       }
     });
@@ -239,7 +239,7 @@ const openPanel = (panel: "+" | "schema" | "JS" | "ref" | "var" | "setVar" | "Pa
     if (item.name == panel) {
       item.active = true;
     } else {
-      panel!='setVar'&&(item.active = false);
+      panel != 'setVar' && (item.active = false);
     }
   });
 
