@@ -119,7 +119,7 @@ const toDesign = (page) => {
   console.log('编辑页面:', props.name);
   // 实现编辑页面的逻辑
   router.push({
-    path: '/designer',
+    path: '/editor',
     query: {
       id: page.id,
       projectName: route.query.name,

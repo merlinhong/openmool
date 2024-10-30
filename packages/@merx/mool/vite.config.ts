@@ -111,7 +111,7 @@ export default ({ mode }) => {
     server: {
       port: 3008,
 
-      open: "#/login",
+      open: "/mool-engine#/",
       proxy: {
         [`${env.VITE_APP_BASE_API}`]: {
           target: env.VITE_APP_PROXY,

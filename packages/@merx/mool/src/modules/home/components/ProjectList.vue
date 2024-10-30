@@ -52,7 +52,7 @@ export default {
       // const hash = window.location.hash.split('/');
       // window.location.hash = hash.join('/') + `?name=${project.name}`;
       router.replace({
-        path:'/project',query:{name:project.name}
+        path:'/apply',query:{name:project.name}
       })
       this.currPro = project.name
       // 实现打开项目的逻辑
@@ -67,7 +67,7 @@ export default {
       
       // window.location.hash = hash[1].split('?')[0];
       router.replace({
-        path:'/project'
+        path:'/apply'
       })
       this.isProject = val
     }

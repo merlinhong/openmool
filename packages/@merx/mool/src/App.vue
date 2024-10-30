@@ -9,6 +9,7 @@ onMounted(() => {
 
 <template>
   <el-container direction="vertical">
+    
     <RouterView></RouterView>
   </el-container>
 </template>

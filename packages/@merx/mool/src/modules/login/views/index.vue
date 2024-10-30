@@ -90,7 +90,7 @@ const form = reactive({
 
 // 登录
 async function toLogin() {
-  return router.push("/project");
+  return router.push("./");
   if (!form.username) {
     return ElMessage.error("用户名不能为空");
   }

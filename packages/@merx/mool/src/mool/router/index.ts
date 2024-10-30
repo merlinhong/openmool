@@ -28,18 +28,7 @@ const routes: RouteRecordRaw[] = [
     name: "404",
     component: () => import("$/designer/views/error/404.vue"),
   },
-  {
-    path: "/login",
-    name: "login",
-    component: () => import("$/login/views/index.vue"),
-    children: [],
-    meta: {
-      title: "MoolEngine",
-      keywords: "低码组件，设计器，低代码开发，可视化",
-      description:
-        "MlDesigner低代码设计器,拖拽式可视化开发,可生成源码进行二开,快速构建vue3页面",
-    },
-  },
+
 ];
 
 // 创建路由器
@@ -75,7 +64,7 @@ router.onError((err: Error) => {
 });
 
 // 添加试图，页面路由
-router.append = function (data) {
+router.append = async function (data) {
   const list = isArray(data) ? data : [data];
 
   list.forEach((d) => {
@@ -98,7 +87,10 @@ router.append = function (data) {
           // d.component = files["/src/" + url.replace("cool/", "")];
         }
       } else {
-        d.redirect = "/404";
+        if (d.redirect == '/404' || !d.redirect) {
+          d.redirect = "/404";
+        }
+
       }
     }
 
@@ -126,7 +118,11 @@ router.clear = function () {
 
 // 找路由
 router.find = function (path: string) {
+  console.log(router.getRoutes());
+
   return router.getRoutes().find((e) => {
+    console.log(e);
+
     if (path == "/") {
       return e.path == path && e.name != "index";
     } else {
@@ -137,8 +133,7 @@ router.find = function (path: string) {
 
 // 注册
 router.register = async function (path: string) {
-  console.log(router.find(path));
-  
+
   // 当前路由是否注册
   const isReg = Boolean(router.find(path));
 
@@ -160,8 +155,8 @@ router.register = async function (path: string) {
     // });
 
     // 本地模块数据
-    module.list.forEach((e) => {
-      
+    module.list.forEach(async (e) => {
+
       if (e.views) {
         list.push(...e.views);
       }
@@ -177,13 +172,17 @@ router.register = async function (path: string) {
         );
       }
     });
+    console.log(list);
 
     // 需要注册的路由
     const r = list.find((e) => e.path == path);
-    
+    console.log(r);
+
     if (r) {
-      router.append(r);
+      await router.append(r);
     }
+    console.log(router.find(path));
+
   }
 
   return { route: router.find(path), isReg };
@@ -191,15 +190,16 @@ router.register = async function (path: string) {
 
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
+
   // 数据缓存
   const { user } = useStore();
-  console.log(module.list);
-  
+
   // 预先注册路由
   const { isReg, route } = await router.register(to.path);
-
+  console.log(isReg, route, to);
+  
   // 组件不存在、路由不存在
-  if (!route?.components) {
+  if (!route?.components&&(!route?.redirect || route.redirect == "/404")) {
     next(user.token ? "/404" : "/login");
   } else {
     if (!isReg) {

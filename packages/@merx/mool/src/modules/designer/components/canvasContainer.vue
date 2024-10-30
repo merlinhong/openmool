@@ -40,6 +40,7 @@ const props = defineProps({
   },
 });
 const ctx = props.ctx?.(vue);
+console.log(ctx);
 
 type KeyType = "render" | "append" | "tooltip" | "toolbar" | "columns";
 

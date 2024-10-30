@@ -6,8 +6,8 @@ export default {
       component: () => import("$/designer/demo/base.vue"),
     },
     {
-      path: "/designer",
-      name: "Designer ",
+      path: "/editor",
+      name: "editor ",
       component: () => import("$/designer/views/designer.vue"),
       children: [],
       meta: {

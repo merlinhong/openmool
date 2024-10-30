@@ -4,20 +4,16 @@
 
     <!--PC/移动端切换图标-->
     <div class="flex items-center space-x-2">
-      <el-tooltip content="PC端" placement="top">
-        <el-button type="text" @click="switchToPC(0)" :class="{ 'icon-active': isPC }">
-          <el-icon class="custom-icon">
-            <Monitor />
-          </el-icon>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="移动端" placement="top">
-        <el-button type="text" @click="switchToMobile(0)" :class="{ 'icon-active': !isPC }">
-          <el-icon class="custom-icon">
-            <Iphone />
-          </el-icon>
-        </el-button>
-      </el-tooltip>
+      <el-button type="text" @click="switchToPC(0)" :class="{ 'icon-active': isPC }">
+        <el-icon class="custom-icon">
+          <Monitor />
+        </el-icon>
+      </el-button>
+      <el-button type="text" @click="switchToMobile(0)" :class="{ 'icon-active': !isPC }">
+        <el-icon class="custom-icon">
+          <Iphone />
+        </el-icon>
+      </el-button>
     </div>
 
     <div class="flex items-center space-x-2">
@@ -65,23 +61,20 @@
   <el-drawer v-model="previewRef" size="98%" direction="btt" :with-header="false" destroy-on-close>
     <div class="flex flex-col  h-full">
       <div class="flex items-center my-2 mx-auto">
-        <el-tooltip content="PC端" placement="top">
-          <el-button type="text" @click="switchToPC(1)" :class="{ 'icon-active': _isPC }">
-            <el-icon class="custom-icon">
-              <Monitor />
-            </el-icon>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="移动端" placement="top">
-          <el-button type="text" @click="switchToMobile(1)" :class="{ 'icon-active': !_isPC }">
-            <el-icon class="custom-icon">
-              <Iphone />
-            </el-icon>
-          </el-button>
-        </el-tooltip>
+        <el-button type="text" @click="switchToPC(1)" :class="{ 'icon-active': _isPC }">
+          <el-icon class="custom-icon">
+            <Monitor />
+          </el-icon>
+        </el-button>
+        <el-button type="text" @click="switchToMobile(1)" :class="{ 'icon-active': !_isPC }">
+          <el-icon class="custom-icon">
+            <Iphone />
+          </el-icon>
+        </el-button>
       </div>
-      <div class="border p-1 h-full" :style="{...containerStyle}">
-        <CanvasFrame ref="canvasFrameRef" v-model:pageConfig="PageSchema" :customStyle="{margin:containerStyle.margin}"  :loading="false" isPreview :ctx="ctx"/>
+      <div class="border p-1 h-full" :style="{ ...containerStyle }">
+        <CanvasFrame ref="canvasFrameRef" v-model:pageConfig="PageSchema" :customStyle="{ margin: containerStyle.margin }"
+          :loading="false" isPreview :ctx="ctx" />
       </div>
     </div>
   </el-drawer>
@@ -342,7 +335,7 @@ const switchToMobile = (type?: number) => {
   // 这里可以添加切换到移动端视图的逻辑
   if (type) {
     _isPC.value = false;
-    return (containerStyle.value.width = '25%',containerStyle.value.margin="auto")
+    return (containerStyle.value.width = '25%', containerStyle.value.margin = "auto")
   }
   isPC.value = false;
   emit("changeSize", { size: MobileSize, isPC: false });

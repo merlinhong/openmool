@@ -2,41 +2,7 @@
   "pageInfo": {
     "name": "main",
     "schema": {
-      "ref": {
-        "formData": {
-          "strategyId": "",
-          "strategyName": "",
-          "crownCode": "",
-          "catOneCode": "",
-          "catTwoCode": "",
-          "catThreeCode": "",
-          "benefitCode": "",
-          "createUser": "",
-          "taskId": "",
-          "contentId": "",
-          "title": "",
-          "caption": "",
-          "testConf": "",
-          "status": ""
-        },
-        "searchParams": {
-          "type": "SearchParams",
-          "value": [
-            {
-              "url": "/v1/task/list",
-              "method": "POST",
-              "headers": {
-                "content-type": "application/json"
-              },
-              "data": {}
-            }
-          ]
-        },
-        "datetimerange0": {
-          "type": "ComputedRef",
-          "value": ""
-        }
-      },
+      "ref": {},
       "lifeCycles": {
         "onMounted": {
           "type": "JSFunction",

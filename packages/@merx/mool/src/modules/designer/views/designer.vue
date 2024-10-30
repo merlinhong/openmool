@@ -59,7 +59,7 @@ watch(() => route.query, (n, o) => {
 })
 const openPage = (args: string[]) => {
   router.push({
-    path: '/designer',
+    path: '/editor',
     query: {
       id: args[0],
       projectName: route.query.projectName,
@@ -139,7 +139,13 @@ const openPanel = ref<Record<"js" | "ref", boolean>>({
   ref: false,
 });
 const back = () => {
-  window.history.go(-1)
+  router.push({
+    path: "apply",
+    query:{
+      name: route.query?.projectName as string
+    }
+  })
+
 }
 </script>
 
