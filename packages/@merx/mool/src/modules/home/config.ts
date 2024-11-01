@@ -54,6 +54,30 @@ export default {
       ]
     },
     {
+      path: '/template',
+      name: 'template',
+      component: () => import("./views/index.vue"),
+      children: [
+        {
+          path: '',
+          name: '',
+          component: () => import('./pages/template.vue'),
+        },
+      ]
+    },
+    {
+      path: '/plugin',
+      name: 'plugin',
+      component: () => import("./views/index.vue"),
+      children: [
+        {
+          path: '',
+          name: '',
+          component: () => import('./pages/plugin.vue'),
+        },
+      ]
+    },
+    {
       path: '/my-designer',
       name: 'UserProfile',
       component: () => import("./views/index.vue"),

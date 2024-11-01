@@ -12,6 +12,10 @@ export default {
     {
       path: "/index1",
       component: () => import("./admin/index1.vue"),
+    },
+    {
+      path: "/ball",
+      component: () => import("./ceshi/ball.vue"),
     }
   ],
 };

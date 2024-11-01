@@ -8,7 +8,6 @@
                 <use xlink:href="#icon-banner" />
             </svg>
         </section>
-        插件
     </div>
 </template>
     
