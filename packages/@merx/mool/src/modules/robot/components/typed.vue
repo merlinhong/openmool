@@ -57,7 +57,6 @@ export default defineComponent({
     };
     const options: TypedOptions = {
       strings: [messages.value.content],
-
       typeSpeed: 15,
 
       backSpeed: 25,

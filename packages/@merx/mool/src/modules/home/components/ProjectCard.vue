@@ -10,10 +10,21 @@
       </div>
     </div>
     <el-divider class="!m-auto " border-style="dashed"></el-divider>
-    <div class="card-actions">
-      <button @click.stop="$emit('open', project)">打开</button>
-      <el-divider direction="vertical" class="!m-auto !h-[30px]"></el-divider>
-      <button @click.stop="$emit('delete', project)" class="delete-btn">删除</button>
+    <div class="card-actions  item-center">
+      <div class="flex-1 cursor-pointer text-center">
+        <el-tooltip content="设置" effect="light">
+          <i-ep-setting class="w-[15px]"/>
+        </el-tooltip>
+        <el-tooltip content="删除" effect="light">
+          <svg @click.stop="$emit('delete', page.id)" class="delete-btn" xmlns="http://www.w3.org/2000/svg" width="19"
+            height="19" viewBox="0 0 24 24">
+            <path fill="#333333"
+              d="M7.616 20q-.672 0-1.144-.472T6 18.385V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.153T16.384 20zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.23 0 .423-.192t.192-.424zM9.808 17h1V8h-1zm3.384 0h1V8h-1zM7 6v13z" />
+          </svg>
+        </el-tooltip>
+      </div>
+      <el-button class="flex-1 hover:!bg-gray-100 !px-0" text size="small"
+        @click.stop="$emit('open', project)">进入页面</el-button>
     </div>
   </div>
 </template>
@@ -67,6 +78,7 @@ p {
 .card-actions {
   display: flex;
   background-color: #fff;
+  padding: 10px;
 }
 
 button {
