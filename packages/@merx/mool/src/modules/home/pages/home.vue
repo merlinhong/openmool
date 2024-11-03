@@ -2,9 +2,9 @@
   <div class="overflow-auto flex flex-col bg-white">
     <main class="flex-grow flex flex-col">
       <section
-        class="text-black bg-blue-100 py-40 !px-60 flex justify-between relative item-center max-md:justify-center max-md:!px-6"
+        class="container_bg text-black bg-white py-40 !px-60 flex justify-between relative item-center max-md:justify-center max-md:!px-6"
       >
-        <div class="px-4 text-left py-5 flex flex-col max-md:items-center">
+        <div class="px-4 text-left py-5 flex flex-1 flex-col max-md:items-center">
           <h1 class="text-5xl font-bold mb-4 !leading-snug h-[8rem] max-md:text-2xl">
             <span :ref="setRefs('web_title')"></span>
           </h1>
@@ -18,19 +18,11 @@
             </el-button>
           </div>
         </div>
-        <div class="max-md:hidden flex flex-col">
-          <div>
-            <svg class="">
-              <use xlink:href="#icon-design" />
-            </svg>
-            <svg class="h-full ml-12">
-              <use xlink:href="#icon-platform" />
-            </svg>
-          </div>
-          <svg class="mt-20">
+        <!-- <div class="max-md:hidden h-full"> -->
+          <svg class="h-full flex-1 max-md:hidden ">
             <use xlink:href="#icon-building" />
           </svg>
-        </div>
+        <!-- </div> -->
       </section>
       <section class="py-16 bg-gray-100">
         <div class="container mx-auto px-4">
@@ -154,7 +146,7 @@ const features = [
 ];
 const { refs, setRefs } = useMool();
 const options: TypedOptions = {
-  strings: [`MoolEngine低代码引擎<br/>专为开发者定制的低代码平台`],
+  strings: [`MoolEngine低代码引擎 ^500 <br/>专为开发者定制的低代码平台`],
   typeSpeed: 80,
   backSpeed: 0,
   showCursor: true,
@@ -164,7 +156,6 @@ const options: TypedOptions = {
       new Typed(refs.web_title, options);
     }, 2000);
   },
-  
 };
 onMounted(() => {
   new Typed(refs.web_title, options);
@@ -173,5 +164,34 @@ onMounted(() => {
 
 <style scoped>
 /* 这里可以添加页面级的样式 */
+.container_bg {
 
+    --color: #E1E1E1;
+  background-color: #fff;
+  background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+      linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+  background-size: 55px 55px;
+
+  /*  */
+  /* transform: rotate(45deg); 旋转45度 */
+  /* transform-origin: center; 旋转中心点为元素中心 */
+  /* background: #000000;
+  --gap: 5em;
+  --line: 1px;
+  --color: rgba(255, 255, 255, 0.2);
+
+  background-image: linear-gradient(
+      -90deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    ),
+    linear-gradient(
+      0deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    );
+  background-size: var(--gap) var(--gap); */
+}
 </style>

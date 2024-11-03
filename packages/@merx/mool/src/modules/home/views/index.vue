@@ -1,6 +1,6 @@
 <template>
   <div class="project-manager">
-    <header class="top-nav max-md:!px-1">
+    <header class="top-nav max-md:!px-1 ">
       <div class="max-md:!block hidden" @click="showMenu = true">
         <svg class="w-6 h-6">
           <use xlink:href="#icon-menu" />
@@ -10,7 +10,7 @@
         class="cursor-pointer tracking-in-expand text-transparent text-3xl bg-clip-text bg-gradient-to-r from-blue-400 to-pink-600  font-extrabold">
         <i>MoolEngine</i>
       </h1>
-      <el-tabs @tab-change="toggle" v-model="active" class="max-md:!hidden">
+      <el-tabs @tab-change="toggle" v-model="active" class="max-md:!hidden" >
         <el-tab-pane label="我的应用" name="0"> </el-tab-pane>
         <el-tab-pane label="模板中心" name="1"></el-tab-pane>
         <el-tab-pane label="设计器" name="2"></el-tab-pane>
@@ -134,11 +134,13 @@ vue.onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid v-bind("theme.border");
+  /* border-bottom: 1px solid v-bind("theme.border"); */
   padding: 0.5rem 3rem;
 }
 
-
+:deep(.el-tabs__item) {
+  /* color:#fff */
+}
 
 .top-nav nav {
   display: flex;
