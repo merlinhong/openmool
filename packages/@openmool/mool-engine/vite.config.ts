@@ -1,22 +1,16 @@
-import { defineConfig, loadEnv } from "vite";
-import { fileURLToPath, URL } from "node:url";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import { resolve, join } from "path";
-import Icons from "unplugin-icons/vite";
-import IconsResolver from "unplugin-icons/resolver";
-import AutoImport from "unplugin-auto-import/vite";
-import Components from "unplugin-vue-components/vite";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
-import seoPrerender from "vite-plugin-seo-prerender";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import ElementPlus from "unplugin-element-plus/vite";
+import { defineConfig, loadEnv } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import { resolve, join } from 'path';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import seoPrerender from 'vite-plugin-seo-prerender';
+import ElementPlus from 'unplugin-element-plus/vite';
 
-import { mool } from "./src/mool/vite-plugin/src/index";
-// import basicSsl from '@vitejs/plugin-basic-ssl'
-// import tailwindcss from 'tailwindcss'
-// import autoprefixer from 'autoprefixer'
 function toPath(dir: string) {
   return fileURLToPath(new URL(dir, import.meta.url));
 }
@@ -25,12 +19,10 @@ export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return defineConfig({
-    base: "./",
+    base: './',
     plugins: [
       vue(),
       vueJsx(),
-      // basicSsl(),
-      mool(),
       ElementPlus({}),
       AutoImport({
         resolvers: [
@@ -38,106 +30,50 @@ export default ({ mode }) => {
           // 自动导入图标组件
           IconsResolver({}),
         ],
-        dts: "src/auto-import.d.ts",
+        dts: 'src/auto-import.d.ts',
       }),
       Components({
         resolvers: [
           // Auto register icon components
           // 自动注册图标组件
           IconsResolver({
-            enabledCollections: ["ep"],
+            enabledCollections: ['ep'],
           }),
           ElementPlusResolver(),
         ],
-        dts: "src/components.d.ts",
+        dts: 'src/components.d.ts',
       }),
       Icons({
         autoInstall: true,
       }),
-      // seo预渲染插件
-      seoPrerender({
-        hashHistory: true,
-        puppeteer: {}, // puppeteer参数配置，可选
-        routes: ["/page", "/login"], // 需要生成的路由，必填
-        removeStyle: true, // 是否移除多余样式，默认true。在启动服务vite preview时会产生一些多余样式，如若丢失样式可设置为false
-        callback: (content, route) => {
-          // 可对当前页面html内容进行一些替换等处理
-          // 一些处理逻辑...
-          return content;
-        },
-        publicHtml: true,
-      }),
     ],
     resolve: {
       alias: {
-        "@": toPath("./src"),
-        $: toPath("./src/modules"),
+        '@': toPath('./src'),
+        $: toPath('./src/modules'),
       },
     },
     build: {
-      minify: "esbuild",
-      outDir: env.VITE_APP_OUTDIR,
-      // terserOptions: {
-      // 	compress: {
-      // 		drop_console: true,
-      // 		drop_debugger: true
-      // 	}
-      // },
-      sourcemap: env.NODE_ENV === "development",
-      rollupOptions: {
-        output: {
-          chunkFileNames: "static/js/[name]-[hash].js",
-          entryFileNames: "static/js/[name]-[hash].js",
-          assetFileNames: "static/[ext]/[name]-[hash].[ext]",
-          manualChunks(id) {
-            if (id.includes("node_modules")) {
-              // if (!["@cool-vue/crud"].find((e) => id.includes(e))) {
-              //   if (id.includes("prettier")) {
-              //     return;
-              //   }
-              //   return id
-              //     .toString()
-              //     .split("node_modules/")[1]
-              //     .replace(".pnpm/", "")
-              //     .split("/")[0];
-              // } else {
-              //   return "comm";
-              // }
-            }
-          },
-        },
+      minify: 'esbuild',
+      lib: {
+        entry: resolve(__dirname, 'src/index.ts'), // 库的入口文件
+        name: 'MoolEngine', // 库的名称
+        fileName: (format) => `mool-engine.${format}.js`, // 输出文件名
       },
-    },
-    server: {
-      port: 3008,
-      open: "/mool-engine#/",
-      proxy: {
-        [`${env.VITE_APP_BASE_API}`]: {
-          target: env.VITE_APP_PROXY,
-          changeOrigin: true,
-        },
-        "/api_image": {
-          target: "https://undraw.co",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api_image/, ""),
-        },
+      outDir: env.VITE_APP_OUTDIR,
+      rollupOptions: {
+        external: ['vue', 'vue-router', 'pinia'], // 确保外部化处理那些你不想打包进库的依赖
       },
     },
     css: {
       preprocessorOptions: {
         less: {
           modifyVars: {
-            hack: `true; @import (reference) "${resolve("./src/assets/less/global.less")}";`,
+            hack: `true; @import (reference) "${resolve('./src/assets/css/global.less')}";`,
           },
           javascriptEnabled: true,
         },
       },
-      // postcss: {
-      //   plugins: [
-      //     tailwindcss,
-      //     autoprefixer,
-      //   ],
-      // },
     },
   });
 };

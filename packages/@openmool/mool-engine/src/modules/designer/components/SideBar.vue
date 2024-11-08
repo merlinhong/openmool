@@ -124,8 +124,6 @@
       <MlEditorMonaco :ref="setRefs('editor')" height="85%" v-model="schemaCode" border></MlEditorMonaco>
     </div>
   </div>
-  <RobotMainVue v-if="openAiRef" :schema="props.currentConf" @update:schema="updateConf"
-    :foundationModel="foundationModel" class="robot-main" />
   <PagePanel v-if="showPagePanel" @close="showPagePanel = false" @selectPage="selectPage" />
 </template>
 
