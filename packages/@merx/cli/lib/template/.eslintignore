@@ -1,8 +1,0 @@
-src/assets/*
-src/shared/*
-tests/unit/*
-public/lib/*
-src/tool/sm2.js
-src/tool/request.js
-build/*
-dist/*
