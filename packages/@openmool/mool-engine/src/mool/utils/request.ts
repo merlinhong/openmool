@@ -1,9 +1,13 @@
-import axios, { AxiosRequestConfig, AxiosProgressEvent, ResponseType, AxiosError } from "axios";
-import { StateEnum } from "../types";
+import axios, {
+  AxiosRequestConfig,
+  AxiosProgressEvent,
+  ResponseType,
+  AxiosError,
+} from 'axios';
+import { StateEnum } from '../types';
 // import { commonStore } from "@/store/common";
-import { type } from "./type.js";
-import qs from "qs";
-import { cookie } from "./cookie.js";
+import { type } from './type.js';
+import qs from 'qs';
 // 环境变量获取当前URL
 const { VITE_APP_BASE_API } = import.meta.env;
 export type AxiosResponseError = AxiosError;
@@ -45,7 +49,9 @@ export interface DEFAULTSETTING {
   //下载进度
   downloading?: ((progressEvent: AxiosProgressEvent) => void) | undefined;
 
-  onDownloadProgress?: ((progressEvent: AxiosProgressEvent) => void) | undefined;
+  onDownloadProgress?:
+    | ((progressEvent: AxiosProgressEvent) => void)
+    | undefined;
 
   onUploadProgress?: ((progressEvent: AxiosProgressEvent) => void) | undefined;
 
@@ -60,14 +66,12 @@ export interface DEFAULTSETTING {
 }
 
 export const defaultSettings: DEFAULTSETTING = {
-  type: "post",
-  url: "",
-  data: "",
-  headers: {
-    "x-token":cookie.get('woAuth'),
-  },
+  type: 'post',
+  url: '',
+  data: '',
+  headers: {},
   timeout: 120000,
-  contentType: "application/x-www-form-urlencoded",
+  contentType: 'application/x-www-form-urlencoded',
   withCredentials: true,
   baseURL: VITE_APP_BASE_API,
   uploading: function () {},
@@ -96,7 +100,7 @@ axios.interceptors.request.use(
     // config.headers["CsrfToken"] = common.token;
 
     // 当请求token时，其他请求都需要挂起
-    if (config.url === "/csrfToken") {
+    if (config.url === '/csrfToken') {
       getCsrfToken = true;
       return config;
     } else if (!getCsrfToken) {
@@ -109,7 +113,7 @@ axios.interceptors.request.use(
               // config.headers["CsrfToken"] = common.token;
               resolve(config);
             } else {
-              reject("get csrf_token error");
+              reject('get csrf_token error');
             }
           });
         }
@@ -124,12 +128,13 @@ axios.interceptors.request.use(
 // 响应拦截器
 axios.interceptors.response.use(
   (response) => {
-    
-
     // 将请求头的Date保存，用来作为当前时间的标准，避免本地切换时区导致时间不准确
-    sessionStorage.setItem("honorCloudManagement-nowTime", response.headers.date);
+    sessionStorage.setItem(
+      'honorCloudManagement-nowTime',
+      response.headers.date,
+    );
     // 当csrfToken获取成功时，触发之前挂起的请求
-    if (response.config.url === "/csrfToken") {
+    if (response.config.url === '/csrfToken') {
       getCsrfToken = false;
       // const common = commonStore();
       // common.updateToken(response.data.data);
@@ -141,9 +146,7 @@ axios.interceptors.response.use(
     return response || {};
   },
   (error) => {
-    
-
-    if (error.config?.url === "/csrfToken") {
+    if (error.config?.url === '/csrfToken') {
       getCsrfToken = false;
       pauseList.forEach((ele) => {
         ele(true);
@@ -153,28 +156,32 @@ axios.interceptors.response.use(
     // 对响应错误做点什么
     const res = error.response || {};
     const status = parseInt(res.status);
-    if (res.data.code == StateEnum.NOT_AUTH) return ElMessage.error({ grouping: true, message: res.data.message });
+    if (res.data.code == StateEnum.NOT_AUTH)
+      return ElMessage.error({ grouping: true, message: res.data.message });
 
     switch (status) {
       // 400 请求参数错误
       case StateEnum.INVALID_REQUEST:
-        ElMessage.error({ grouping: true, message: res.data.desc || "请求参数错误" });
+        ElMessage.error({
+          grouping: true,
+          message: res.data.desc || '请求参数错误',
+        });
         break;
       // 403 权限不足
       case StateEnum.FORBIDDEN:
-        ElMessage.error({ grouping: true, message: "您的权限不足" });
+        ElMessage.error({ grouping: true, message: '您的权限不足' });
         break;
       // 401 未登录
       case StateEnum.UNAUTHORIZED:
-        ElMessage.error({ grouping: true, message: "未登录" });
+        ElMessage.error({ grouping: true, message: '未登录' });
         break;
       // 404 资源不存在或资源不属于该用户
       case StateEnum.NOT_FOUND:
-        ElMessage.error({ grouping: true, message: "资源不存在" });
+        ElMessage.error({ grouping: true, message: '资源不存在' });
         break;
       // 500 服务器发生错误，用户将无法判断发出的请求是否成功
       case StateEnum.INTERNAL_SERVER_ERROR:
-        ElMessage.error({ grouping: true, message: "服务器发生错误" });
+        ElMessage.error({ grouping: true, message: '服务器发生错误' });
         break;
       default:
         ElMessage.error({ grouping: true, message: error.message });
@@ -183,7 +190,9 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-export async function request<T = CommonResponse>(options: DEFAULTSETTING): Promise<T> {
+export async function request<T = CommonResponse>(
+  options: DEFAULTSETTING,
+): Promise<T> {
   options = Object.assign({}, defaultSettings, options);
 
   params = {
@@ -208,13 +217,11 @@ export async function request<T = CommonResponse>(options: DEFAULTSETTING): Prom
   }
 
   if (contentType) {
-    setHeader("Content-Type", contentType);
-    if (Object.prototype.toString.call(options.data) !== "[object FormData]") {
-      
-
-      if (!contentType.match("application/json")) {
-        if (options.type == "get" && type(options.data) === "object") {
-          params.url += "?";
+    setHeader('Content-Type', contentType);
+    if (Object.prototype.toString.call(options.data) !== '[object FormData]') {
+      if (!contentType.match('application/json')) {
+        if (options.type == 'get' && type(options.data) === 'object') {
+          params.url += '?';
           for (const key in options.data) {
             if (Object.prototype.hasOwnProperty.call(options.data, key)) {
               const val = options.data[key as keyof typeof options.data];
@@ -234,10 +241,12 @@ export async function request<T = CommonResponse>(options: DEFAULTSETTING): Prom
   return new Promise((resolve, reject) => {
     axios(params)
       .then((response) => {
-        
-
         const { status, statusText, data } = response;
-        if ((status !== 200 && statusText !== "OK") || typeof data.errcode === "number" || data.error) {
+        if (
+          (status !== 200 && statusText !== 'OK') ||
+          typeof data.errcode === 'number' ||
+          data.error
+        ) {
           reject(data);
           error && error(data);
         } else {
