@@ -12,7 +12,7 @@
   'pick',
   'type',
 ].forEach((m) => {
-  Object.assign(exports, require(`./lib/${m}`));
+  Object.assign(exports, require(`./node/${m}`));
 });
 
 exports.chalk = require('chalk');

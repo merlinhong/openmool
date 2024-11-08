@@ -1,10 +1,10 @@
 <script setup lang="tsx">
 import { onMounted, ref, nextTick, watch, onUnmounted } from 'vue';
 import { Page, Col } from '@/mool/types';
-import TopBar from '../components/TopBar.vue';
-import SideBar from '../components/SideBar.vue';
-import CanvasFrame from '../components/CanvasFrame.vue'; // 导入 CanvasFrame 组件
-import ConfigPlane from '../components/settings.vue';
+import TopBar from './mool/components/TopBar.vue';
+import SideBar from './mool/components/SideBar.vue';
+import CanvasFrame from './mool/components/CanvasFrame.vue'; // 导入 CanvasFrame 组件
+import ConfigPlane from './mool/components/settings.vue';
 import useLoading from '@/mool/hooks/loading';
 import { useMool } from '@/mool';
 import { useMagicKeys, useEventListener } from '@vueuse/core';

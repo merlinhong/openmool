@@ -50,19 +50,21 @@ export default defineConfig({
   },
   build: {
     minify: false,
+    cssCodeSplit: true,
     lib: {
-      entry: resolve(__dirname, 'src/index.js'), // 库的入口文件
+      entry: {
+        index: resolve(__dirname, './src/index.js'),
+      },
       name: 'MoolEngine', // 库的名称
-      fileName: (format) => `mool-engine.${format}.js`, // 输出文件名
-      formats: ['es', 'umd'], // 选择输出格式
+      fileName: (formats, entryName) => `${entryName}.js`, // 输出文件名
+      formats: ['es'], // 选择输出格式
     },
     rollupOptions: {
       external: ['vue'],
       output: {
-        // 将每个组件打包为独立的文件
         entryFileNames: (chunkInfo) => {
           // 这里可以自定义输出文件名
-          return `components/${chunkInfo.name}.js`;
+          return `mool/${chunkInfo.name}.js`;
         },
       },
     },

@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/@merx/*"
+    "packages/@openmool/*"
   ],
   "scripts": {
     "clean": "rimraf packages/**/dist/*",
